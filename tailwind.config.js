@@ -74,6 +74,7 @@ module.exports = {
     ],
     margin: ['children-last'],
     fontWeight: ['children-last'],
+    textAlign: ['children-first'],
   },
   plugins: [
     require('tailwindcss-children'),

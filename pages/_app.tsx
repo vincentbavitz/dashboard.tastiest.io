@@ -1,3 +1,4 @@
+import Layout from 'components/Layout';
 import firebase from 'firebase/app';
 import 'firebase/auth';
 import 'firebase/firestore'; // <- needed if using firestore
@@ -9,7 +10,6 @@ import { Provider as StoreProvider } from 'react-redux';
 import { ReactReduxFirebaseProvider } from 'react-redux-firebase';
 import { createStore } from 'redux';
 import { createFirestoreInstance } from 'redux-firestore';
-import Layout from '../components/layout';
 import { FIREBASE, METADATA } from '../constants';
 import { AuthProvider } from '../contexts/auth';
 import ScreenProvider from '../contexts/screen';

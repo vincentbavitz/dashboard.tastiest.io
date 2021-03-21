@@ -1,7 +1,6 @@
 import * as snippet from '@segment/snippet';
 import Document, { Head, Html, Main, NextScript } from 'next/document';
 import React from 'react';
-import { Favicon } from '../components/Favicon';
 
 export default class CustomDocument extends Document<any> {
   private renderSnippet() {
@@ -25,8 +24,11 @@ export default class CustomDocument extends Document<any> {
         <Head>
           {/* Inject the Segment snippet into the <head> of the document  */}
           <script dangerouslySetInnerHTML={{ __html: this.renderSnippet() }} />
+          <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1, maximum-scale=1"
+          ></meta>
 
-          <Favicon />
           {this.props?.styleTags}
         </Head>
         <body>

@@ -5,7 +5,6 @@ export interface ICuisine {
   name: string;
   href: string;
   svg: SVG;
-  pageSvg?: SVG;
   popularity: number;
 }
 
