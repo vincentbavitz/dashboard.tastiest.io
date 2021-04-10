@@ -24,10 +24,6 @@ export default class CustomDocument extends Document<any> {
         <Head>
           {/* Inject the Segment snippet into the <head> of the document  */}
           <script dangerouslySetInnerHTML={{ __html: this.renderSnippet() }} />
-          <meta
-            name="viewport"
-            content="width=device-width, initial-scale=1, maximum-scale=1"
-          ></meta>
 
           {this.props?.styleTags}
         </Head>

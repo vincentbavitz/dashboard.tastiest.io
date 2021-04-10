@@ -1,3 +1,4 @@
+import { useRouter } from 'next/router';
 import React, { ReactNode } from 'react';
 import Header from './Header';
 import Sidebar from './Sidebar';
@@ -7,6 +8,12 @@ interface Props {
 }
 
 export default function Layout({ children }: Props) {
+  // Render null for login page
+  const { pathname } = useRouter();
+  if (pathname === '/login') {
+    return <>{children}</>;
+  }
+
   return (
     <div
       style={{ height: '100vh' }}
@@ -18,7 +25,10 @@ export default function Layout({ children }: Props) {
         <Sidebar />
 
         <div className="relative flex-grow w-full">
-          <div className="absolute inset-0 flex h-full px-8 py-6 overflow-y-scroll bg-gray-100">
+          <div
+            style={{ minWidth: '700px' }}
+            className="absolute inset-0 flex h-full px-8 py-6 overflow-auto bg-gray-100"
+          >
             <div style={{ height: 'max-content' }} className="w-full ">
               {children}
             </div>

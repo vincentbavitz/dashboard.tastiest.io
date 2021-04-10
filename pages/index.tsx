@@ -1,7 +1,7 @@
 import TimelineBarChart from 'components/charts/TimelineBarChart';
 import InfoCard from 'components/InfoCard';
 import Table from 'components/Table';
-import { GetStaticProps, NextPage } from 'next';
+import { GetServerSideProps, NextPage } from 'next';
 import Head from 'next/head';
 import React, { useContext } from 'react';
 import { IRestaurant } from 'types/cms';
@@ -12,10 +12,24 @@ interface Props {
   resaurant?: IRestaurant;
 }
 
-export const getStaticProps: GetStaticProps = async () => {
+export const getServerSideProps: GetServerSideProps = async context => {
+  // Get user ID from cookie.
+  // const userDataApi = new RestaurantDataApi();
+  // const { userId } = await userDataApi.init(context);
+  const userId = 's34';
+
+  // If no user, redirect to home
+  if (!userId) {
+    return {
+      redirect: {
+        destination: '/login',
+        permanent: false,
+      },
+    };
+  }
+
   return {
-    props: {},
-    revalidate: 60,
+    props: { userId },
   };
 };
 
@@ -36,7 +50,7 @@ const Index: NextPage<Props> = () => {
         accessor: 'dealName',
       },
       {
-        Header: 'No. of People',
+        Header: 'Heads',
         accessor: 'heads',
       },
       {
@@ -345,10 +359,10 @@ const Index: NextPage<Props> = () => {
         ></meta>
       </Head>
 
-      <div className="flex flex-col h-full space-y-4">
+      <div className="flex flex-col h-full space-y-8">
         <Introduction restaurantName="Krust Krab" />
 
-        <div className="flex space-x-6">
+        <div className="flex pt-2 space-x-6">
           <div className="w-7/12">
             <TimelineBarChart />
           </div>

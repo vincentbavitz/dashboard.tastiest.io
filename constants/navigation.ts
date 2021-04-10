@@ -1,5 +1,4 @@
-import HomeSVG from '@svg/home.svg';
-import SupportSVG from '@svg/support.svg';
+import { HomeIcon, SupportIcon } from '@tastiest-io/tastiest-icons';
 import { FC } from 'react';
 
 export interface ISidebarItem {
@@ -9,8 +8,8 @@ export interface ISidebarItem {
 }
 
 const SIDEBAR_ITEMS: ISidebarItem[] = [
-  { label: 'Home', page: '/', icon: HomeSVG },
-  { label: 'Support', page: '/support', icon: SupportSVG },
+  { label: 'Home', page: '/', icon: HomeIcon },
+  { label: 'Support', page: '/support', icon: SupportIcon },
 ];
 
 const NAVIGATION = {

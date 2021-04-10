@@ -1,6 +1,6 @@
+import NAVIGATION from 'constants/navigation';
 import { useRouter } from 'next/router';
 import React from 'react';
-import { NAVIGATION } from '../constants';
 import SidebarItem from './SidebarItem';
 
 export default function Sidebar() {

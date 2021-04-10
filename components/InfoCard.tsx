@@ -86,7 +86,6 @@ export default function InfoCard(props: InfoCardProps) {
               type: 'linear',
               min: 'auto',
               max: 'auto',
-              stacked: true,
               reverse: false,
             }}
             yFormat=" >-.2f"
@@ -104,8 +103,6 @@ export default function InfoCard(props: InfoCardProps) {
             pointBorderWidth={2}
             pointBorderColor={{ from: 'serieColor' }}
             pointLabelYOffset={-12}
-            enableArea={true}
-            areaOpacity={0.1}
             useMesh={true}
             legends={[]}
           />
