@@ -20,20 +20,19 @@ export default function Header({ blank }: HeaderProps) {
       <div className="flex items-center flex-grow space-x-6">
         <Link href="/">
           <a>
-            <BrandIcon className="w-40" />
+            <BrandIcon className="w-40 fill-current text-primary" />
           </a>
         </Link>
 
         {!blank && (
           <div style={{ maxWidth: '300px' }} className="flex-grow">
             <Input
-              size="small"
               color="neutral"
               value={query}
               onValueChange={setQuery}
               suffix={
                 <SearchIcon
-                  className="h-8 text-gray-400 fill-current"
+                  className="h-8 text-gray-400 cursor-pointer fill-current"
                   onClick={search}
                 />
               }

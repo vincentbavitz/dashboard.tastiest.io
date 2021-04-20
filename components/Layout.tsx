@@ -1,3 +1,6 @@
+import { LoadingOutlined } from '@ant-design/icons';
+import clsx from 'clsx';
+import { useAuth } from 'hooks/useAuth';
 import { useRouter } from 'next/router';
 import React, { ReactNode } from 'react';
 import Header from './Header';
@@ -8,10 +11,34 @@ interface Props {
 }
 
 export default function Layout({ children }: Props) {
-  // Render null for login page
+  const { restaurantUser } = useAuth();
+
+  // Break default layout for certain pages
+  const pagesWithoutDefaultLayout = [
+    /^\/login/,
+    /^\/merchant-terms-and-conditions/,
+  ];
+
   const { pathname } = useRouter();
-  if (pathname === '/login') {
+  const shouldBreakLayout = pagesWithoutDefaultLayout.some(page =>
+    page.test(pathname),
+  );
+
+  if (shouldBreakLayout) {
     return <>{children}</>;
+  }
+
+  // Show loading when redirecting to /login
+  if (!restaurantUser) {
+    return (
+      <div
+        className={clsx(
+          'fixed inset-0 duration-150 flex items-center justify-center bg-white',
+        )}
+      >
+        <LoadingOutlined className="text-6xl fill-current text-primary" />
+      </div>
+    );
   }
 
   return (

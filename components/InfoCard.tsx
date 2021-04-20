@@ -7,61 +7,62 @@ interface InfoCardProps {
   chart?: boolean;
 }
 
-const data = [
-  {
-    id: 'germany',
-    data: [
-      {
-        x: 'plane',
-        y: 243,
-      },
-      {
-        x: 'helicopter',
-        y: 72,
-      },
-      {
-        x: 'boat',
-        y: 25,
-      },
-      {
-        x: 'train',
-        y: 207,
-      },
-      {
-        x: 'subway',
-        y: 299,
-      },
-      {
-        x: 'bus',
-        y: 186,
-      },
-      {
-        x: 'car',
-        y: 56,
-      },
-      {
-        x: 'moto',
-        y: 80,
-      },
-      {
-        x: 'bicycle',
-        y: 249,
-      },
-      {
-        x: 'horse',
-        y: 27,
-      },
-      {
-        x: 'skateboard',
-        y: 141,
-      },
-      {
-        x: 'others',
-        y: 155,
-      },
-    ],
-  },
-];
+// const data = [
+//   {
+//     id: 'germany',
+//     data: [
+//       {
+//         x: 'plane',
+//         y: 243,
+//       },
+//       {
+//         x: 'helicopter',
+//         y: 72,
+//       },
+//       {
+//         x: 'boat',
+//         y: 25,
+//       },
+//       {
+//         x: 'train',
+//         y: 207,
+//       },
+//       {
+//         x: 'subway',
+//         y: 299,
+//       },
+//       {
+//         x: 'bus',
+//         y: 186,
+//       },
+//       {
+//         x: 'car',
+//         y: 56,
+//       },
+//       {
+//         x: 'moto',
+//         y: 80,
+//       },
+//       {
+//         x: 'bicycle',
+//         y: 249,
+//       },
+//       {
+//         x: 'horse',
+//         y: 27,
+//       },
+//       {
+//         x: 'skateboard',
+//         y: 141,
+//       },
+//       {
+//         x: 'others',
+//         y: 155,
+//       },
+//     ],
+//   },
+// ];
+const data = [];
 
 export default function InfoCard(props: InfoCardProps) {
   const { label, info, chart } = props;

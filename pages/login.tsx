@@ -1,14 +1,15 @@
 import { Button, Input } from '@tastiest-io/tastiest-components';
-import { IRestaurant } from '@tastiest-io/tastiest-utils';
+import { IRestaurant, RestaurantDataApi } from '@tastiest-io/tastiest-utils';
 import clsx from 'clsx';
 import Header from 'components/Header';
 import { useAuth } from 'hooks/useAuth';
-import { useUserData } from 'hooks/useUserData';
-import { GetStaticProps, NextPage } from 'next';
+import { NextPage } from 'next';
 import Head from 'next/head';
+import nookies from 'nookies';
 import { ChefIllustration } from 'public/assets/illustrations';
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { useWindowSize } from 'react-use';
+import { firebaseAdmin } from 'utils/firebaseAdmin';
 import { METADATA } from '../constants';
 import { ScreenContext } from '../contexts/screen';
 
@@ -16,20 +17,37 @@ interface Props {
   resaurant?: IRestaurant;
 }
 
-export const getStaticProps: GetStaticProps = async () => {
-  return {
-    props: {},
-    revalidate: 60,
-  };
+export const getServerSideProps = async context => {
+  // Get user ID from cookie.
+  const cookieToken = nookies.get(context)?.token;
+  const restaurantDataApi = new RestaurantDataApi(firebaseAdmin);
+  const { restaurantId } = await restaurantDataApi.initFromCookieToken(
+    cookieToken,
+  );
+
+  // Redirect to dashboard if logged in
+  if (restaurantId) {
+    return {
+      redirect: {
+        destination: '/',
+        permanent: false,
+      },
+    };
+  }
+
+  return { props: {} };
 };
 
 const LogIn: NextPage<Props> = () => {
   const { isDesktop } = useContext(ScreenContext);
 
-  const { user, signIn } = useAuth();
-  const { userData } = useUserData(user);
-
+  const { signIn, error } = useAuth();
   const { height } = useWindowSize();
+
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+  //  I have read and agree to be bound by the Merchant Terms & Conditions [insert hyperlink to the T&Cs page]
 
   return (
     <>
@@ -61,15 +79,39 @@ const LogIn: NextPage<Props> = () => {
             )}
           >
             <div className="w-64">
-              <Input label={'Restaurant Email'} />
+              <Input
+                value={email}
+                onValueChange={setEmail}
+                label={'Restaurant Email'}
+              />
             </div>
             <div className="w-64">
-              <Input label={'Password'} />
+              <Input
+                value={password}
+                onValueChange={setPassword}
+                type="password"
+                label={'Password'}
+              />
             </div>
 
-            <Button wide onClick={() => signIn('s', '')}>
+            {/* <Checkbox
+              checked={false}
+              onChange={() => null}
+              label={
+                <span>
+                  "I have read and agree to be bound by the{' '}
+                  <a href="/merchant-terms-and-conditions">
+                    Merchant Terms & Conditions
+                  </a>
+                </span>
+              }
+            /> */}
+
+            <Button wide onClick={() => signIn(email, password)}>
               Sign In
             </Button>
+
+            {error && <p className="mt-3">{error}</p>}
           </div>
           <h3 className="text-2xl font-medium text-center text-secondary font-somatic">
             {METADATA.TAGLINE}
@@ -81,7 +123,7 @@ const LogIn: NextPage<Props> = () => {
         </div>
 
         {isDesktop && (
-          <div className="absolute bottom-0 right-0">
+          <div className="absolute bottom-0 right-0 pointer-events-none">
             <div
               style={{
                 width: '25rem',

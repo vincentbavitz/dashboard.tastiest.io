@@ -1,3 +1,4 @@
+import { FirebaseAuthError } from '@tastiest-io/tastiest-utils';
 import DebouncePromise from 'awesome-debounce-promise';
 import firebaseApp from 'firebase/app';
 import { useRouter } from 'next/router';
@@ -5,17 +6,14 @@ import { useContext, useState } from 'react';
 import { useFirebase } from 'react-redux-firebase';
 import { FIREBASE } from '../constants';
 import { AuthContext } from '../contexts/auth';
-import { LocalStorageItem } from '../types/data';
-import { FirebaseAuthError, UserData } from '../types/firebase';
-import { titleCase } from '../utils/text';
-import { useUserData } from './useUserData';
+import { useRestaurantData } from './useRestaurantData';
 
 export const useAuth = () => {
   const firebase = useFirebase();
   const router = useRouter();
   const [error, _setError] = useState<string>(null);
-  const { user } = useContext(AuthContext);
-  const { setUserData } = useUserData(user);
+  const { restaurantUser } = useContext(AuthContext);
+  const { setRestaurantData } = useRestaurantData(restaurantUser);
 
   // Convert firebase error code to Tastiest auth error message
   const setError = (e: { code: string; message: string }) => {
@@ -41,7 +39,7 @@ export const useAuth = () => {
       // Retry on fail
       let credential: firebaseApp.auth.UserCredential;
       let i = 0;
-      while (!user && i < FIREBASE.MAX_LOGIN_ATTEMPTS) {
+      while (!restaurantUser && i < FIREBASE.MAX_LOGIN_ATTEMPTS) {
         credential = await attemptSignIn();
         i++;
 
@@ -51,24 +49,22 @@ export const useAuth = () => {
       }
 
       if (credential) {
-        // User has accepted cookies by logging in
-        localStorage.setItem(LocalStorageItem.HAS_ACCEPTED_COOKIES, '1');
-
-        // Identify user with Segment
+        // Identify restaurant with Segment
         window.analytics.identify(credential.user.uid, {
           context: {
             userAgent: navigator?.userAgent,
           },
         });
 
-        // Track user sign in
-        window.analytics.track('User Signed In', {
-          userId: user.uid,
+        // Track restaurant sign in
+        window.analytics.track('Restaurant Signed In', {
+          userId: restaurantUser.uid,
         });
 
         return credential;
       }
     } catch (error) {
+      console.log('error', error);
       setError(error);
     }
 
@@ -93,96 +89,31 @@ export const useAuth = () => {
     }
   };
 
-  const resetPassword = async (email: string) => {
-    _setError(null);
+  // const resetPassword = async (email: string) => {
+  //   _setError(null);
 
-    //  Email must be given as a parameter because user might not be logged in.
-    if (!email?.length) {
-      return;
-    }
+  //   //  Email must be given as a parameter because user might not be logged in.
+  //   if (!email?.length) {
+  //     return;
+  //   }
 
-    try {
-      await firebase.auth().sendPasswordResetEmail(email);
-      return true;
-    } catch (error) {
-      setError(error);
-      return false;
-    }
-  };
-
-  const signUp = async (
-    displayName: string,
-    email: string,
-    password: string,
-  ) => {
-    _setError(null);
-
-    try {
-      const { user } = await firebase
-        .auth()
-        .createUserWithEmailAndPassword(email, password);
-
-      if (!user) {
-        console.log('Sign Up: No user!!!');
-        return false;
-      }
-
-      await user.updateProfile({
-        displayName: titleCase(displayName),
-      });
-      console.log('Sign Up: Updated profile');
-
-      // User data
-      setUserData(UserData.DISPLAY_NAME, displayName);
-      console.log('Sign Up: Set display name');
-
-      // Sign in user
-      await signIn(email, password);
-      console.log('Sign Up: Signed in');
-
-      // User has accepted cookies implicitly
-      localStorage.setItem(LocalStorageItem.HAS_ACCEPTED_COOKIES, '1');
-      console.log('Sign Up: set cookies');
-
-      // Send email verification email
-      firebase.auth().currentUser.sendEmailVerification();
-      console.log('Sign Up: Sent email verification');
-
-      // Identify user with Segment
-      window.analytics.identify(user.uid, {
-        context: {
-          userAgent: navigator?.userAgent,
-        },
-        traits: {
-          // name: '',
-          // address: '',
-          // birthday: undefined,
-          id: user.uid,
-          email: email,
-          createdAt: Date.now(),
-          username: user.displayName ?? null,
-        },
-      });
-
-      // Sends a confirmation email with firebase funnctions
-      console.log('Sign Up: Tracked with segment');
-
-      return true;
-    } catch (error) {
-      setError(error);
-      return false;
-    }
-  };
+  //   try {
+  //     await firebase.auth().sendPasswordResetEmail(email);
+  //     return true;
+  //   } catch (error) {
+  //     setError(error);
+  //     return false;
+  //   }
+  // };
 
   // Null if the user information has not been loaded yet. else boolean
-  const isSignedIn = user === undefined ? null : Boolean(user?.uid);
+  const isSignedIn =
+    restaurantUser === undefined ? null : Boolean(restaurantUser?.uid);
 
   return {
-    user,
-    signUp,
+    restaurantUser,
     signIn,
     signOut,
-    resetPassword,
     isSignedIn,
     error,
   };

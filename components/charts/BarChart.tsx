@@ -29,64 +29,32 @@ const theme = {
 
 const data = [
   {
-    country: 'AD',
-    burger: 36,
+    date: 'Mon',
+    covers: 0,
   },
   {
-    country: 'AE',
-    burger: 125,
+    date: 'Tue',
+    covers: 0,
   },
   {
-    country: 'AF',
-    burger: 166,
+    date: 'Wed',
+    covers: 0,
   },
   {
-    country: 'AG',
-    burger: 16,
+    date: 'Thurs',
+    covers: 0,
   },
   {
-    country: 'aa',
-    burger: 9,
+    date: 'Fri',
+    covers: 0,
   },
   {
-    country: 'bb',
-    burger: 36,
+    date: 'Sat',
+    covers: 0,
   },
   {
-    country: 'cc',
-    burger: 125,
-  },
-  {
-    country: 'AFs',
-    burger: 166,
-  },
-  {
-    country: 'AGw',
-    burger: 16,
-  },
-  {
-    country: 'AId',
-    burger: 9,
-  },
-  {
-    country: 'ADa',
-    burger: 36,
-  },
-  {
-    country: 'AE',
-    burger: 125,
-  },
-  {
-    country: 'AF',
-    burger: 166,
-  },
-  {
-    country: 'AG',
-    burger: 16,
-  },
-  {
-    country: 'AI',
-    burger: 9,
+    date: 'Sun',
+    covers: 0,
   },
 ];
 
@@ -95,8 +63,8 @@ export default function BarChart() {
     <div className="w-full h-full">
       <ResponsiveBar
         data={data}
-        keys={['burger']}
-        indexBy="country"
+        keys={['covers']}
+        indexBy="date"
         margin={{ top: 15, right: 15, bottom: 30, left: 40 }}
         padding={0.3}
         valueScale={{ type: 'linear' }}

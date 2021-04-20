@@ -1,61 +1,76 @@
-import firebaseApp from 'firebase/app';
+import { useRouter } from 'next/router';
 import nookies from 'nookies';
 import React, { createContext, useEffect, useState } from 'react';
-import { useFirebase } from 'react-redux-firebase';
-import { useTracking } from '../hooks/useTracking';
+import { dlog } from 'utils/development';
+import { firebaseClient } from '../utils/firebaseClient';
 
-export const AuthContext = createContext<{ user: firebaseApp.User | null }>({
-  user: null,
+// Example taken from  https://github1s.com/colinhacks/next-firebase-ssr/blob/HEAD/auth.tsx
+export const AuthContext = createContext<{
+  restaurantUser: firebaseClient.User | null;
+}>({
+  restaurantUser: null,
 });
 
 export function AuthProvider({ children }: any) {
   // Undefined while loading, null if not logged in
-  const [user, setUser] = useState<firebaseApp.User | null | undefined>(
-    undefined,
-  );
+  const [restaurantUser, setRestaurantUser] = useState<
+    firebaseClient.User | null | undefined
+  >(undefined);
 
-  const firebase = useFirebase();
+  // Redirects based upon login state
+  const router = useRouter();
+  useEffect(() => {
+    dlog('auth ➡️ restaurantUser:', restaurantUser);
 
-  useTracking();
+    const isLoginPage = /^\/login/.test(router.pathname);
+    // Logged in and on /login, redirect
+    if (restaurantUser !== null && isLoginPage) {
+      router.replace('/');
+    }
+
+    // Not logged in and not on /login, redirect
+    if (restaurantUser === null && !isLoginPage) {
+      router.replace('/login');
+    }
+  }, [router.pathname, restaurantUser]);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
       (window as any).nookies = nookies;
     }
 
-    firebase.auth().onIdTokenChanged(async user => {
-      console.log(`token changed!`);
-      if (!user) {
-        console.log(`no token found...`);
-        setUser(null);
+    return firebaseClient.auth().onIdTokenChanged(async _restaurantUser => {
+      dlog(`token changed!`);
+      if (!_restaurantUser) {
+        dlog(`no token found...`);
+        setRestaurantUser(null);
         nookies.destroy(null, 'token');
-        nookies.set(null, 'token', '', {});
+        nookies.set(null, 'token', '', { path: '/' });
         return;
       }
 
-      try {
-        setUser(user);
-
-        const token = await user.getIdToken();
-        nookies.destroy(null, 'token');
-        nookies.set(null, 'token', token, {});
-      } catch (e) {
-        return;
-      }
+      dlog(`updating token...`);
+      const token = await _restaurantUser.getIdToken();
+      setRestaurantUser(_restaurantUser);
+      nookies.destroy(null, 'token');
+      nookies.set(null, 'token', token, { path: '/' });
     });
+  }, []);
 
-    // Force refresh the token every 10 minutes
+  // force refresh the token every 10 minutes
+  useEffect(() => {
     const handle = setInterval(async () => {
-      console.log(`refreshing token...`);
-
-      const user = firebase.auth().currentUser;
-      if (user) await user.getIdToken(true);
+      dlog(`refreshing token...`);
+      const _restaurantUser = firebaseClient.auth().currentUser;
+      if (_restaurantUser) await _restaurantUser.getIdToken(true);
     }, 10 * 60 * 1000);
 
     return () => clearInterval(handle);
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user }}>{children}</AuthContext.Provider>
+    <AuthContext.Provider value={{ restaurantUser }}>
+      {children}
+    </AuthContext.Provider>
   );
 }
