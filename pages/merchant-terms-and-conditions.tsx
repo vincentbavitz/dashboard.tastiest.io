@@ -1,14 +1,9 @@
 /* eslint-disable no-irregular-whitespace */
 import { BrandIcon } from '@tastiest-io/tastiest-icons';
-import { IRestaurant } from '@tastiest-io/tastiest-utils';
 import Head from 'next/head';
 import React, { ReactNode } from 'react';
 import { v4 as uuid } from 'uuid';
 import { METADATA } from '../constants';
-
-interface Props {
-  resaurant?: IRestaurant;
-}
 
 const definitions: IDefinition[] = [
   {
@@ -971,31 +966,5 @@ const Section = (props: SectionProps) => {
     </div>
   );
 };
-
-// const AcceptForm = () => {
-//   const router = useRouter();
-//   const { restaurantUser } = useAuth();
-//   const { setRestaurantData } = useRestaurantData(restaurantUser);
-
-//   const submit = async () => {
-//     await setRestaurantData(RestaurantData.LEGAL, {
-//       hasAcceptedTerms: true,
-//     });
-
-//     router.replace('/');
-//   };
-
-//   return (
-//     <div className="flex flex-col items-center w-full pt-6 space-y-4 border-t border-gray-300">
-//       <p style={{ maxWidth: '500px' }} className="text-center">
-//         By a duly authorized officer, director or owner on behalf of the
-//         Merchant clicking <b className="font-bold">Accept</b>, they hereby agree
-//         to the Terms and Conditions above.
-//       </p>
-
-//       <Button onClick={submit}>Accept</Button>
-//     </div>
-//   );
-// };
 
 export default Terms;

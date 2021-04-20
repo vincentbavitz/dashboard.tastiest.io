@@ -12,13 +12,20 @@ export const AuthContext = createContext<{
 });
 
 export function AuthProvider({ children }: any) {
+  const router = useRouter();
+
   // Undefined while loading, null if not logged in
   const [restaurantUser, setRestaurantUser] = useState<
     firebaseClient.User | null | undefined
   >(undefined);
 
+  // Break default layout for certain pages
+  const pagesWithoutAuth = [/^\/login/, /^\/merchant-terms-and-conditions/];
+  const onNoAuthPage = pagesWithoutAuth.some(page =>
+    page.test(router.pathname),
+  );
+
   // Redirects based upon login state
-  const router = useRouter();
   useEffect(() => {
     dlog('auth ➡️ restaurantUser:', restaurantUser);
 
@@ -28,8 +35,8 @@ export function AuthProvider({ children }: any) {
       router.replace('/');
     }
 
-    // Not logged in and not on /login, redirect
-    if (restaurantUser === null && !isLoginPage) {
+    // Not logged in and not on a no auth page, redirect
+    if (restaurantUser === null && !onNoAuthPage) {
       router.replace('/login');
     }
   }, [router.pathname, restaurantUser]);

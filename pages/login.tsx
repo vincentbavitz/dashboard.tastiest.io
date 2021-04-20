@@ -133,14 +133,18 @@ const LogIn: NextPage<Props> = () => {
                     rel="noreferrer"
                     className="hover:underline"
                   >
-                    Merchant Terms & Conditions
+                    Merchant Terms {'&'} Conditions
                   </a>
                 </p>
               }
             />
 
-            <Button wide onClick={submit}>
-              <>Sign In {loading && <LoadingOutlined />}</>
+            <Button
+              wide
+              onClick={submit}
+              prefix={loading ? <LoadingOutlined /> : null}
+            >
+              Sign In
             </Button>
 
             {(termsError || authError) && (
