@@ -2672,10 +2672,10 @@
   dependencies:
     mini-svg-data-uri "^1.2.3"
 
-"@tastiest-io/tastiest-components@^0.22.0":
-  version "0.22.0"
-  resolved "https://npm.pkg.github.com/download/@tastiest-io/tastiest-components/0.22.0/033e7617b3b2627095cf9f3ec9afc3e8bde5fd781937a9b34c8a13551108cd0b#6bab818acbc9d77754ee9bb8694ae303cc291196"
-  integrity sha512-H8jMl55BYzOzpt619a/ld0CPzG7radC8K7Q1gE8x3OnhhnDMNguJZfOLn884/UdxPhdlshrtdl30Mvmt3sUDOw==
+"@tastiest-io/tastiest-components@^0.24.0":
+  version "0.24.0"
+  resolved "https://npm.pkg.github.com/download/@tastiest-io/tastiest-components/0.24.0/06d4f27bdc5364ef25dda7eca1d6ba0225f999b5cf826a089095e2392fccd116#c0a13b3149af5a92194c52def3374cd74706b761"
+  integrity sha512-Nute/n/ZMbWmVsGSD8XjK4oQ/YNs9GUrRcnjiYdlNSl/+Sv+t/JnjxMBkVo3/bEGqFVL0HzsB6KJC6uSwNBctw==
   dependencies:
     react-use "^17.2.3"
     styled-components "^5.2.3"

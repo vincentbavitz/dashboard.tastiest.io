@@ -1,20 +1,8 @@
 /* eslint-disable no-irregular-whitespace */
-import { Button } from '@tastiest-io/tastiest-components';
 import { BrandIcon } from '@tastiest-io/tastiest-icons';
-import {
-  dlog,
-  IRestaurant,
-  RestaurantData,
-  RestaurantDataApi,
-} from '@tastiest-io/tastiest-utils';
-import { useAuth } from 'hooks/useAuth';
-import { useRestaurantData } from 'hooks/useRestaurantData';
-import { InferGetServerSidePropsType } from 'next';
+import { IRestaurant } from '@tastiest-io/tastiest-utils';
 import Head from 'next/head';
-import { useRouter } from 'next/router';
-import nookies from 'nookies';
 import React, { ReactNode } from 'react';
-import { firebaseAdmin } from 'utils/firebaseAdmin';
 import { v4 as uuid } from 'uuid';
 import { METADATA } from '../constants';
 
@@ -792,55 +780,7 @@ const sections: ISection[] = [
   },
 ];
 
-export const getServerSideProps = async context => {
-  // Get user ID from cookie.
-  const cookieToken = nookies.get(context)?.token;
-  const restaurantDataApi = new RestaurantDataApi(firebaseAdmin);
-  const { restaurantId } = await restaurantDataApi.initFromCookieToken(
-    cookieToken,
-  );
-
-  dlog('terms ➡️ restaurantId:', restaurantId);
-
-  // If no user, redirect to login
-  if (!restaurantId) {
-    return {
-      redirect: {
-        destination: '/login',
-        permanent: false,
-      },
-    };
-  }
-
-  const restaurantLegalData = await restaurantDataApi.getRestaurantData(
-    RestaurantData.LEGAL,
-  );
-
-  dlog('terms ➡️ restaurantLegalData:', restaurantLegalData);
-
-  // Redirect to dashboard if they've already agreed.
-  if (restaurantLegalData?.hasAcceptedTerms) {
-    return {
-      redirect: {
-        destination: '/',
-        permanent: false,
-      },
-    };
-  }
-
-  return {
-    props: { restaurantId, restaurantLegalData },
-  };
-};
-
-const Terms = (
-  props: InferGetServerSidePropsType<typeof getServerSideProps>,
-) => {
-  const { restaurantLegalData } = props;
-  const { hasAcceptedTerms = false } = restaurantLegalData ?? {};
-
-  dlog('terms ➡️ hasAcceptedTerms:', hasAcceptedTerms);
-
+const Terms = () => {
   return (
     <>
       <Head>
@@ -876,7 +816,7 @@ const Terms = (
             />
           ))}
 
-          <AcceptForm />
+          {/* <AcceptForm /> */}
         </div>
       </div>
     </>
@@ -1032,30 +972,30 @@ const Section = (props: SectionProps) => {
   );
 };
 
-const AcceptForm = () => {
-  const router = useRouter();
-  const { restaurantUser } = useAuth();
-  const { setRestaurantData } = useRestaurantData(restaurantUser);
+// const AcceptForm = () => {
+//   const router = useRouter();
+//   const { restaurantUser } = useAuth();
+//   const { setRestaurantData } = useRestaurantData(restaurantUser);
 
-  const submit = async () => {
-    await setRestaurantData(RestaurantData.LEGAL, {
-      hasAcceptedTerms: true,
-    });
+//   const submit = async () => {
+//     await setRestaurantData(RestaurantData.LEGAL, {
+//       hasAcceptedTerms: true,
+//     });
 
-    router.replace('/');
-  };
+//     router.replace('/');
+//   };
 
-  return (
-    <div className="flex flex-col items-center w-full pt-6 space-y-4 border-t border-gray-300">
-      <p style={{ maxWidth: '500px' }} className="text-center">
-        By a duly authorized officer, director or owner on behalf of the
-        Merchant clicking <b className="font-bold">Accept</b>, they hereby agree
-        to the Terms and Conditions above.
-      </p>
+//   return (
+//     <div className="flex flex-col items-center w-full pt-6 space-y-4 border-t border-gray-300">
+//       <p style={{ maxWidth: '500px' }} className="text-center">
+//         By a duly authorized officer, director or owner on behalf of the
+//         Merchant clicking <b className="font-bold">Accept</b>, they hereby agree
+//         to the Terms and Conditions above.
+//       </p>
 
-      <Button onClick={submit}>Accept</Button>
-    </div>
-  );
-};
+//       <Button onClick={submit}>Accept</Button>
+//     </div>
+//   );
+// };
 
 export default Terms;

@@ -1,4 +1,5 @@
-import { Button, Input } from '@tastiest-io/tastiest-components';
+import { LoadingOutlined } from '@ant-design/icons';
+import { Button, Checkbox, Input } from '@tastiest-io/tastiest-components';
 import { IRestaurant, RestaurantDataApi } from '@tastiest-io/tastiest-utils';
 import clsx from 'clsx';
 import Header from 'components/Header';
@@ -7,8 +8,8 @@ import { NextPage } from 'next';
 import Head from 'next/head';
 import nookies from 'nookies';
 import { ChefIllustration } from 'public/assets/illustrations';
-import React, { useContext, useState } from 'react';
-import { useWindowSize } from 'react-use';
+import React, { useContext, useEffect, useState } from 'react';
+import { useLocalStorage, useWindowSize } from 'react-use';
 import { firebaseAdmin } from 'utils/firebaseAdmin';
 import { METADATA } from '../constants';
 import { ScreenContext } from '../contexts/screen';
@@ -41,13 +42,39 @@ export const getServerSideProps = async context => {
 const LogIn: NextPage<Props> = () => {
   const { isDesktop } = useContext(ScreenContext);
 
-  const { signIn, error } = useAuth();
+  const { signIn, error: authError } = useAuth();
   const { height } = useWindowSize();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
 
-  //  I have read and agree to be bound by the Merchant Terms & Conditions [insert hyperlink to the T&Cs page]
+  // Save has accepted terms to local storage so it doesn't bug them
+  const [hasAcceptedTerms, setHasAcceptedTerms] = useLocalStorage(
+    'hasAcceptedTerms',
+    false,
+  );
+
+  // Accepted terms error
+  const [termsError, setTermsError] = useState<string | null>(null);
+
+  const submit = async () => {
+    if (!hasAcceptedTerms) {
+      setTermsError('Please accept terms before continuing.');
+      return;
+    }
+
+    setLoading(true);
+    await signIn(email, password);
+    setLoading(false);
+  };
+
+  // Remove error when they click accept terms
+  useEffect(() => {
+    if (hasAcceptedTerms) {
+      setTermsError(null);
+    }
+  }, [hasAcceptedTerms]);
 
   return (
     <>
@@ -94,24 +121,33 @@ const LogIn: NextPage<Props> = () => {
               />
             </div>
 
-            {/* <Checkbox
-              checked={false}
-              onChange={() => null}
+            <Checkbox
+              checked={hasAcceptedTerms}
+              onChange={setHasAcceptedTerms}
               label={
-                <span>
-                  "I have read and agree to be bound by the{' '}
-                  <a href="/merchant-terms-and-conditions">
+                <p className="text-xs leading-tight">
+                  <p>I have read and agree to be bound by the</p>
+                  <a
+                    href="/merchant-terms-and-conditions"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="hover:underline"
+                  >
                     Merchant Terms & Conditions
                   </a>
-                </span>
+                </p>
               }
-            /> */}
+            />
 
-            <Button wide onClick={() => signIn(email, password)}>
-              Sign In
+            <Button wide onClick={submit}>
+              <>Sign In {loading && <LoadingOutlined />}</>
             </Button>
 
-            {error && <p className="mt-3">{error}</p>}
+            {(termsError || authError) && (
+              <p className="mt-3 text-xs text-center text-danger">
+                {termsError || authError}
+              </p>
+            )}
           </div>
           <h3 className="text-2xl font-medium text-center text-secondary font-somatic">
             {METADATA.TAGLINE}

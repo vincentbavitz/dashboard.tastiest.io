@@ -95,6 +95,7 @@ export default function Table(props: TableProps) {
             </thead>
             <tbody {...getTableBodyProps()}>
               {rows.map((row, i) => {
+                i;
                 prepareRow(row);
                 return (
                   <tr
