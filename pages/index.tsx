@@ -41,6 +41,8 @@ export const getServerSideProps = async context => {
     RestaurantData.DETAILS,
   );
 
+  dlog('index ➡️ restaurantData:', restaurantData);
+
   return {
     props: { restaurantId, restaurantData },
   };
@@ -82,7 +84,7 @@ const Index = (
           </div>
         </div>
 
-        <HomeCustomersTable />
+        <HomeCustomersTable restaurantId={restaurantId} />
       </div>
     </>
   );

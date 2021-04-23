@@ -11,6 +11,14 @@ interface TableProps {
   data: any[];
 
   noDataLabel?: string;
+
+  // Update data example given here
+  // https://react-table.tanstack.com/docs/examples/editable-data
+  updateData?: (
+    rowIndex: number,
+    columnId: string | number,
+    value: any | any[],
+  ) => void;
 }
 
 export type TableColumn = {
@@ -23,7 +31,13 @@ export type TableColumn = {
 }[];
 
 export default function Table(props: TableProps) {
-  const { columns, data, label, noDataLabel } = props;
+  const {
+    columns,
+    data,
+    label,
+    noDataLabel = 'No Data',
+    updateData = null,
+  } = props;
 
   const {
     getTableProps,
@@ -33,20 +47,21 @@ export default function Table(props: TableProps) {
     prepareRow,
   } = useTable(
     {
-      data,
       columns,
+      data,
+      updateData,
     },
     useSortBy,
   );
 
-  console.log('Table ➡️ getTableProps:', getTableProps());
+  console.log('Table ➡️ getTablePr5ops:', getTableProps());
   console.log('Table ➡️ headerGroups:', headerGroups);
   console.log('Table ➡️ rows:', rows);
 
   const leftAlignedColumns = [0];
 
   return (
-    <div>
+    <div className="relative">
       {label && <p className="mb-2 text-lg font-somatic">{label}</p>}
       <div
         style={{ maxWidth: '100%' }}
@@ -66,9 +81,10 @@ export default function Table(props: TableProps) {
                       key={uuid()}
                       {...column.getHeaderProps(column.getSortByToggleProps())}
                       className={clsx(
-                        !isUndefined(leftAlignedColumns.find(n => n === i)) &&
-                          'text-left',
-                        'py-4 text-sm text-gray-600 font-normal select-none',
+                        !isUndefined(leftAlignedColumns.find(n => n === i))
+                          ? 'text-left'
+                          : 'text-center',
+                        'py-4 text-sm text-gray-600 font-normal select-none whitespace-nowrap',
                       )}
                     >
                       <div className="flex items-center pr-2">
@@ -104,13 +120,16 @@ export default function Table(props: TableProps) {
                     className="border-t border-gray-300"
                   >
                     {row.cells.map((cell, j) => {
+                      console.log('Table ➡️ cell:', cell);
                       return (
                         <td
                           key={uuid()}
                           {...cell.getCellProps()}
                           className={clsx(j !== 0 && 'text-center')}
                         >
-                          <div className="py-2 pr-2">{cell.render('Cell')}</div>
+                          <div className="py-2 pr-2">
+                            {cell.render('Cell', { ...cell })}
+                          </div>
                         </td>
                       );
                     })}
@@ -121,7 +140,7 @@ export default function Table(props: TableProps) {
           </table>
         )}
 
-        {!data?.length && (
+        {(!data?.length || data.length === 0) && (
           <div className="flex items-center justify-center h-32">
             <p className="text-lg">{noDataLabel}</p>
           </div>
