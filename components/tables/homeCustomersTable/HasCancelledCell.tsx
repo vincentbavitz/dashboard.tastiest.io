@@ -47,12 +47,7 @@ export const HasCancelledCell = ({
   }, [initialValue]);
 
   return (
-    <div
-      className={clsx(
-        'flex items-center justify-center',
-        booking.hasCancelled && 'opacity-50',
-      )}
-    >
+    <div className="flex items-center justify-center">
       <ConfirmationModal
         title="Cancel Booking"
         isOpen={modalIsOpen}

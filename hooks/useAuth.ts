@@ -1,19 +1,24 @@
-import { FirebaseAuthError } from '@tastiest-io/tastiest-utils';
+import {
+  FirebaseAuthError,
+  FirestoreCollection,
+  IRestaurantLegal,
+  RestaurantData,
+} from '@tastiest-io/tastiest-utils';
 import DebouncePromise from 'awesome-debounce-promise';
 import firebaseApp from 'firebase/app';
 import { useRouter } from 'next/router';
 import { useContext, useState } from 'react';
-import { useFirebase } from 'react-redux-firebase';
+import { useFirebase, useFirestore } from 'react-redux-firebase';
 import { FIREBASE } from '../constants';
 import { AuthContext } from '../contexts/auth';
-import { useRestaurantData } from './useRestaurantData';
 
 export const useAuth = () => {
   const firebase = useFirebase();
   const router = useRouter();
   const [error, _setError] = useState<string>(null);
+
+  const firestore = useFirestore();
   const { restaurantUser } = useContext(AuthContext);
-  const { setRestaurantData } = useRestaurantData(restaurantUser);
 
   // Convert firebase error code to Tastiest auth error message
   const setError = (e: { code: string; message: string }) => {
@@ -39,30 +44,54 @@ export const useAuth = () => {
       // Retry on fail
       let credential: firebaseApp.auth.UserCredential;
       let i = 0;
-      while (!restaurantUser && i < FIREBASE.MAX_LOGIN_ATTEMPTS) {
+      while (!credential && i < FIREBASE.MAX_LOGIN_ATTEMPTS) {
         credential = await attemptSignIn();
         i++;
 
-        console.log(
-          `Attempting to log user in. (${i}/${FIREBASE.MAX_LOGIN_ATTEMPTS})`,
-        );
+        if (credential) {
+          // Identify restaurant with Segment
+          window.analytics.identify(credential.user.uid, {
+            context: {
+              userAgent: navigator?.userAgent,
+            },
+          });
+
+          // Track restaurant sign in
+          window.analytics.track('Restaurant Signed In', {
+            userId: credential.user.uid,
+          });
+
+          // If restaurant's first time accepting TOS, log this
+          const restaurantDataDoc = await firestore
+            .collection(FirestoreCollection.RESTAURANTS)
+            .doc(credential.user.uid)
+            .get();
+
+          const restaurantData = restaurantDataDoc.data();
+          const legalData = restaurantData?.legal as IRestaurantLegal;
+
+          if (!legalData.hasAcceptedTerms) {
+            // Manually update TOS acceptance, as setRestaurantData
+            // will not be defined yet
+            await firestore
+              .collection(FirestoreCollection.RESTAURANTS)
+              .doc(credential.user.uid)
+              .set(
+                {
+                  [RestaurantData.LEGAL]: { hasAcceptedTerms: true },
+                },
+                { merge: true },
+              );
+
+            // Fire off event with Segment which triggers Klaviyo email confirmation
+            window.analytics.track('Restaurant Accepted TOS', {
+              userId: credential.user.uid,
+            });
+          }
+        }
       }
 
-      if (credential) {
-        // Identify restaurant with Segment
-        window.analytics.identify(credential.user.uid, {
-          context: {
-            userAgent: navigator?.userAgent,
-          },
-        });
-
-        // Track restaurant sign in
-        window.analytics.track('Restaurant Signed In', {
-          userId: restaurantUser.uid,
-        });
-
-        return credential;
-      }
+      return credential;
     } catch (error) {
       console.log('error', error);
       setError(error);

@@ -32,12 +32,7 @@ export const BookingDateCell = ({
   }, [initialValue]);
 
   return (
-    <div
-      className={clsx(
-        'flex items-center justify-center',
-        booking.hasCancelled && 'opacity-30',
-      )}
-    >
+    <div className={clsx('flex items-center justify-center')}>
       <DatePicker
         date={date}
         onChange={onChange}

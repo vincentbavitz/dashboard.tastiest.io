@@ -1,6 +1,5 @@
 /* eslint-disable react/display-name */
 import { IBooking, postFetch, titleCase } from '@tastiest-io/tastiest-utils';
-import clsx from 'clsx';
 import Table from 'components/Table';
 import moment from 'moment';
 import React, { useEffect, useState } from 'react';
@@ -83,13 +82,7 @@ export default function HomeCustomersTable(props: Props) {
         id: 'eaterName',
         Header: 'Name',
         accessor: (row: IBooking) => {
-          return (
-            <p
-              className={clsx(row.hasCancelled && 'opacity-30', 'font-medium')}
-            >
-              {row.eaterName}
-            </p>
-          );
+          return <p className="font-medium">{row.eaterName}</p>;
         },
       },
       {
@@ -98,7 +91,7 @@ export default function HomeCustomersTable(props: Props) {
         accessor: (row: IBooking) => {
           const maxDealNameLength = 25;
           return (
-            <p className={clsx(row.hasCancelled && 'opacity-30')}>
+            <p>
               {titleCase(row.dealName).slice(0, maxDealNameLength)}
               {row.dealName.length > maxDealNameLength && '...'}
             </p>
@@ -108,36 +101,20 @@ export default function HomeCustomersTable(props: Props) {
       {
         id: 'heads',
         Header: 'Heads',
-        accessor: (row: IBooking) => {
-          return (
-            <p className={clsx(row.hasCancelled && 'opacity-30')}>
-              {row.heads}
-            </p>
-          );
-        },
+        accessor: (row: IBooking) => <p>{row.heads}</p>,
       },
       {
         id: 'orderTotal',
         Header: 'Order Total',
-        accessor: (row: IBooking) => {
-          return (
-            <p
-              className={clsx(row.hasCancelled && 'opacity-30', 'font-medium')}
-            >
-              £{row.price.final.toFixed(2)}
-            </p>
-          );
-        },
+        accessor: (row: IBooking) => (
+          <p className="font-medium">£{row.price.final.toFixed(2)}</p>
+        ),
       },
       {
         id: 'paidAt',
         Header: 'Purchased',
         accessor: (row: IBooking) => {
-          return (
-            <p className={clsx(row.hasCancelled && 'opacity-30')}>
-              {moment(row.paidAt).local().fromNow()}
-            </p>
-          );
+          return <p>{moment(row.paidAt).local().fromNow()}</p>;
         },
       },
       {

@@ -3,7 +3,7 @@ import { TriangleIcon } from '@tastiest-io/tastiest-icons';
 import clsx from 'clsx';
 import { isUndefined } from 'lodash';
 import React from 'react';
-import { useSortBy, useTable } from 'react-table';
+import { useFlexLayout, useSortBy, useTable } from 'react-table';
 import { v4 as uuid } from 'uuid';
 
 interface TableProps {
@@ -55,6 +55,7 @@ export default function Table(props: TableProps) {
       updateData,
     },
     useSortBy,
+    useFlexLayout,
   );
 
   console.log('Table ➡️ getTablePr5ops:', getTableProps());
@@ -71,11 +72,7 @@ export default function Table(props: TableProps) {
         className="w-full px-6 pb-6 overflow-x-auto bg-white rounded-xl"
       >
         {data.length > 0 && (
-          <table
-            style={{ width: 'max-content' }}
-            className="w-full"
-            {...getTableProps()}
-          >
+          <table className="w-full" {...getTableProps()}>
             <thead>
               {headerGroups.map(headerGroup => (
                 <tr key={uuid()} {...headerGroup.getHeaderGroupProps()}>
@@ -84,14 +81,14 @@ export default function Table(props: TableProps) {
                       key={uuid()}
                       {...column.getHeaderProps(column.getSortByToggleProps())}
                       className={clsx(
-                        'py-4 text-sm text-gray-600 px-3 opacity-75 font-normal select-none whitespace-nowrap',
+                        'py-4 text-sm text-gray-600 opacity-75 font-normal select-none whitespace-nowrap',
                       )}
                     >
                       <div className="flex items-center pr-2 text-center">
                         <p
                           className={clsx(
                             !isUndefined(leftAlignedColumns.find(n => n === i))
-                              ? 'text-left -ml-3'
+                              ? 'text-left'
                               : 'text-center',
                             'w-full font-medium',
                           )}
@@ -135,7 +132,7 @@ export default function Table(props: TableProps) {
                           {...cell.getCellProps()}
                           className={clsx(j !== 0 && 'text-center')}
                         >
-                          <div className="py-2 pr-2 whitespace-nowrap">
+                          <div className="py-2 pr-2 overflow-x-hidden whitespace-nowrap">
                             {cell.render('Cell', { ...cell })}
                           </div>
                         </td>

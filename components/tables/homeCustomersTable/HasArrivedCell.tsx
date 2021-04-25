@@ -63,12 +63,7 @@ export const HasArrivedCell = ({
   }, [initialValue]);
 
   return (
-    <div
-      className={clsx(
-        'flex items-center justify-center',
-        booking.hasCancelled && 'opacity-50',
-      )}
-    >
+    <div className="flex items-center justify-center">
       <Modal
         title="Confirmation Code"
         isOpen={modalIsOpen}

@@ -16,12 +16,7 @@ export default function DatePicker(props: Props) {
   const { date, onChange, openToDate, disabled = false } = props;
 
   const dateText = (
-    <p
-      className={clsx(
-        'font-medium text-gray-700 opacity-75',
-        !disabled && 'cursor-pointer',
-      )}
-    >
+    <p className={clsx('font-medium', !disabled && 'cursor-pointer')}>
       {moment(date).format('DD/M/YY')}
     </p>
   );
