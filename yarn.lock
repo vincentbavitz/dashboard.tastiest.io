@@ -2685,23 +2685,23 @@
   dependencies:
     mini-svg-data-uri "^1.2.3"
 
-"@tastiest-io/tastiest-components@^0.24.0":
-  version "0.24.0"
-  resolved "https://npm.pkg.github.com/download/@tastiest-io/tastiest-components/0.24.0/06d4f27bdc5364ef25dda7eca1d6ba0225f999b5cf826a089095e2392fccd116#c0a13b3149af5a92194c52def3374cd74706b761"
-  integrity sha512-Nute/n/ZMbWmVsGSD8XjK4oQ/YNs9GUrRcnjiYdlNSl/+Sv+t/JnjxMBkVo3/bEGqFVL0HzsB6KJC6uSwNBctw==
+"@tastiest-io/tastiest-components@^0.25.0":
+  version "0.25.0"
+  resolved "https://npm.pkg.github.com/download/@tastiest-io/tastiest-components/0.25.0/9a1ead02dfa0f2916d7380f220a7105ede46bf885e39eb627025eca3022aa737#e750df5a0a236d0c8453d5ebd40f478abeaeca31"
+  integrity sha512-mNwf15e34Tycigc4pRe95J+hMOaUKpFNAVGgYioDVQiIfHgUwMtAvYikVUcjMxHn9uQM0y1V8r1GDXUrGCqN9A==
   dependencies:
     react-use "^17.2.3"
     styled-components "^5.2.3"
 
-"@tastiest-io/tastiest-icons@^0.10.0":
-  version "0.10.0"
-  resolved "https://npm.pkg.github.com/download/@tastiest-io/tastiest-icons/0.10.0/b9fcb80911931d0aae6d34568b0c2bcd0f606bf8ce3687e5c6b8c7eaaee9d696#65bf6733f6670f365604751a451ddc0712dc0d58"
-  integrity sha512-jMWFr5NTTgPIvHr6clNXTVir3VjMOIg4MWpwAYTw5KiWCRv8pNgqCYSRarVcyYQoq8mVe5FUNlwN7cQu+6/Xag==
+"@tastiest-io/tastiest-icons@^0.14.0":
+  version "0.14.0"
+  resolved "https://npm.pkg.github.com/download/@tastiest-io/tastiest-icons/0.14.0/ead58af7649152c0f590eeedb7fa45e3a322fbd82f71fb3dff71cd07ea07104a#27d64b1bf0a25170257e4062ee0b6bda7eb20c45"
+  integrity sha512-b9PTCKFn4maI/OKZeYkqn9ODl67HbX9IKapn62YM43+oBUhAR9mvKjsv0qNraAyQkWxCE/XmhOHO7POM4Df4NA==
 
-"@tastiest-io/tastiest-utils@^0.90.0":
-  version "0.90.0"
-  resolved "https://npm.pkg.github.com/download/@tastiest-io/tastiest-utils/0.90.0/9c4d1c59ebaa1446c9db9cc8fb5513bc37bc0250503cb473883af1c710dc6815#bca1429250401ed54a32bdaab6e5fb5d6110d727"
-  integrity sha512-sPy7XgdtzikRRbAZlvDs1Kzi3oY+Na6LVkphuCjAuP6GJDNFGz3e5kbFsX7B/4UtxRnH0azZHfPiw9K7nUknXg==
+"@tastiest-io/tastiest-utils@^0.92.0":
+  version "0.92.0"
+  resolved "https://npm.pkg.github.com/download/@tastiest-io/tastiest-utils/0.92.0/e24fc7f753e9d8319d89b2e6f7a6809e9c9260364229e25e30ae3390dbc35c7a#d515522ee6218c0a77165a519ff695ad276ad343"
+  integrity sha512-azRnw3UpXFj3LKahA/xgDeRnkN8YO4qBlyjxwUIGagJmV/AVqRWJothx0h1T/lXx4IWi5asvm+Uk2ntG53jE7Q==
   dependencies:
     "@contentful/rich-text-types" "^14.1.2"
     "@stripe/stripe-js" "^1.13.2"

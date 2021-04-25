@@ -1,3 +1,4 @@
+import { LoadingOutlined } from '@ant-design/icons';
 import { TriangleIcon } from '@tastiest-io/tastiest-icons';
 import clsx from 'clsx';
 import { isUndefined } from 'lodash';
@@ -11,13 +12,14 @@ interface TableProps {
   data: any[];
 
   noDataLabel?: string;
+  isLoadingInitialData?: boolean;
 
   // Update data example given here
   // https://react-table.tanstack.com/docs/examples/editable-data
   updateData?: (
+    value: any | any[],
     rowIndex: number,
     columnId: string | number,
-    value: any | any[],
   ) => void;
 }
 
@@ -37,6 +39,7 @@ export default function Table(props: TableProps) {
     label,
     noDataLabel = 'No Data',
     updateData = null,
+    isLoadingInitialData = false,
   } = props;
 
   const {
@@ -69,7 +72,7 @@ export default function Table(props: TableProps) {
       >
         {data.length > 0 && (
           <table
-            // style={{ width: 'max-content' }}
+            style={{ width: 'max-content' }}
             className="w-full"
             {...getTableProps()}
           >
@@ -120,14 +123,13 @@ export default function Table(props: TableProps) {
                     className="border-t border-gray-300"
                   >
                     {row.cells.map((cell, j) => {
-                      console.log('Table ➡️ cell:', cell);
                       return (
                         <td
                           key={uuid()}
                           {...cell.getCellProps()}
                           className={clsx(j !== 0 && 'text-center')}
                         >
-                          <div className="py-2 pr-2">
+                          <div className="py-2 pr-2 whitespace-nowrap">
                             {cell.render('Cell', { ...cell })}
                           </div>
                         </td>
@@ -140,9 +142,14 @@ export default function Table(props: TableProps) {
           </table>
         )}
 
+        {/* Loading and no-data states */}
         {(!data?.length || data.length === 0) && (
           <div className="flex items-center justify-center h-32">
-            <p className="text-lg">{noDataLabel}</p>
+            {isLoadingInitialData ? (
+              <LoadingOutlined className="text-4xl fill-current text-primary" />
+            ) : (
+              <p className="text-lg">{noDataLabel}</p>
+            )}
           </div>
         )}
       </div>

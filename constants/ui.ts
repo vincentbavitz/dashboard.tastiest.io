@@ -8,6 +8,7 @@ const UI = {
   HEADER_HEIGHT_PX: 75,
 
   Z_INDEX_PAGE_LOADER: 33333,
+  Z_INDEX_MODAL_OVERLAY: 1033,
 };
 
 export default UI;

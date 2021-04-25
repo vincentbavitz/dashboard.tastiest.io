@@ -6,7 +6,7 @@ import {
 } from '@tastiest-io/tastiest-utils';
 import TimelineBarChart from 'components/charts/TimelineBarChart';
 import InfoCard from 'components/InfoCard';
-import HomeCustomersTable from 'components/tables/HomeCustomersTable';
+import HomeCustomersTable from 'components/tables/homeCustomersTable/HomeCustomersTable';
 import { InferGetServerSidePropsType } from 'next';
 import Head from 'next/head';
 import nookies from 'nookies';
