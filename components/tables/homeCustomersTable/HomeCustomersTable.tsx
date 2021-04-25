@@ -1,6 +1,5 @@
 /* eslint-disable react/display-name */
-import { ExitFilledIcon } from '@tastiest-io/tastiest-icons';
-import { IBooking, postFetch } from '@tastiest-io/tastiest-utils';
+import { IBooking, postFetch, titleCase } from '@tastiest-io/tastiest-utils';
 import clsx from 'clsx';
 import Table from 'components/Table';
 import moment from 'moment';
@@ -9,6 +8,7 @@ import useSWR, { mutate } from 'swr';
 import { LocalEndpoint } from 'types/api';
 import { BookingDateCell } from './BookingDateCell';
 import { HasArrivedCell } from './HasArrivedCell';
+import { HasCancelledCell } from './HasCancelledCell';
 
 enum EditableBookingFields {
   BOOKING_DATE = 'bookingDate',
@@ -27,6 +27,12 @@ async function setBookingField<T>(
   const booking = bookings[rowIndex];
   if (!booking) {
     console.log('Booking not found');
+    return;
+  }
+
+  // Can't modify a cancelled booking
+  if (booking.hasCancelled) {
+    console.log("Can't modify a cancelled booking");
     return;
   }
 
@@ -74,44 +80,70 @@ export default function HomeCustomersTable(props: Props) {
   const columns = React.useMemo(
     () => [
       {
+        id: 'eaterName',
         Header: 'Name',
-        accessor: 'eaterName',
+        accessor: (row: IBooking) => {
+          return (
+            <p
+              className={clsx(row.hasCancelled && 'opacity-30', 'font-medium')}
+            >
+              {row.eaterName}
+            </p>
+          );
+        },
       },
       {
+        id: 'dealName',
         Header: 'Deal',
-        accessor: 'dealName',
+        accessor: (row: IBooking) => {
+          const maxDealNameLength = 25;
+          return (
+            <p className={clsx(row.hasCancelled && 'opacity-30')}>
+              {titleCase(row.dealName).slice(0, maxDealNameLength)}
+              {row.dealName.length > maxDealNameLength && '...'}
+            </p>
+          );
+        },
       },
       {
+        id: 'heads',
         Header: 'Heads',
-        accessor: 'heads',
+        accessor: (row: IBooking) => {
+          return (
+            <p className={clsx(row.hasCancelled && 'opacity-30')}>
+              {row.heads}
+            </p>
+          );
+        },
       },
       {
+        id: 'orderTotal',
         Header: 'Order Total',
         accessor: (row: IBooking) => {
-          return `£${row.price.final.toFixed(2)}`;
+          return (
+            <p
+              className={clsx(row.hasCancelled && 'opacity-30', 'font-medium')}
+            >
+              £{row.price.final.toFixed(2)}
+            </p>
+          );
         },
       },
       {
         id: 'paidAt',
         Header: 'Purchased',
         accessor: (row: IBooking) => {
-          return moment(row.paidAt).local().fromNow();
+          return (
+            <p className={clsx(row.hasCancelled && 'opacity-30')}>
+              {moment(row.paidAt).local().fromNow()}
+            </p>
+          );
         },
       },
       {
         Header: 'Cancelled',
-        accessor: (row: IBooking) => {
-          return (
-            <div className="flex items-center justify-center">
-              <ExitFilledIcon
-                className={clsx(
-                  'fill-current w-8 cursor-pointer',
-                  row.hasCancelled ? 'text-primary' : 'text-gray-300',
-                )}
-              />
-            </div>
-          );
-        },
+        accessor: 'hasCancelled',
+        Cell: HasCancelledCell,
       },
       {
         Header: 'Booking Date',

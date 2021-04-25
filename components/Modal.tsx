@@ -5,6 +5,7 @@ import { useClickAway, useKey } from 'react-use';
 import { UI } from '../constants';
 
 interface Props {
+  title?: string;
   isOpen: boolean;
   children: ReactNode;
   // size: 'small' | 'regular' | 'large';
@@ -13,7 +14,7 @@ interface Props {
 }
 
 export function Modal(props: Props) {
-  const { isOpen, close, className, children } = props;
+  const { title, isOpen, close, className, children } = props;
 
   const ref = useRef(null);
   const boxRef = useRef(null);
@@ -40,14 +41,22 @@ export function Modal(props: Props) {
       <div
         ref={boxRef}
         className={classNames(
-          'relative whitespace-normal border-2 border-gray px-6 pb-4 pt-12 bg-white',
+          'relative whitespace-normal border-2 border-gray px-6 pb-4 bg-white',
           className,
         )}
       >
-        <div className="absolute top-0 right-0 z-0 flex justify-end pt-3 pr-3">
+        <div className="flex items-center justify-between w-full py-3 space-x-6">
+          <div className="w-8"></div>
+
+          <div className="flex-1 text-center">
+            {title && (
+              <h3 className="text-xl font-medium text-gray-700">{title}</h3>
+            )}
+          </div>
+
           <ExitIcon
             onClick={close}
-            className="h-8 cursor-pointer fill-current text-primary"
+            className="w-8 text-gray-300 duration-150 cursor-pointer fill-current hover:text-gray-400"
           />
         </div>
         {children}

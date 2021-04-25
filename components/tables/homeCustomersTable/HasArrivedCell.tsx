@@ -42,7 +42,11 @@ export const HasArrivedCell = ({
   const submitCode = () => {
     setCodeError(null);
 
-    if (typedCode?.length && typedCode !== code) {
+    if (!typedCode?.length) {
+      return;
+    }
+
+    if (typedCode !== code) {
       setCodeError('Invalid confirmation code');
       return;
     }
@@ -59,44 +63,54 @@ export const HasArrivedCell = ({
   }, [initialValue]);
 
   return (
-    <div className="flex items-center justify-center">
-      <Modal isOpen={modalIsOpen} close={() => setModalIsOpen(false)}>
+    <div
+      className={clsx(
+        'flex items-center justify-center',
+        booking.hasCancelled && 'opacity-50',
+      )}
+    >
+      <Modal
+        title="Confirmation Code"
+        isOpen={modalIsOpen}
+        close={() => setModalIsOpen(false)}
+      >
         <div
           style={{ maxWidth: '25rem' }}
-          className="flex flex-col mt-4 space-y-6"
+          className="flex flex-col items-center mt-4 space-y-6"
         >
           <div>
-            <p className="text-xl font-medium text-gray-700">
-              Confirmation Code
-              <br />
-            </p>
             <p className="text-sm text-gray-600">
               The user should quote this code from <br /> their email
               confirmation.
             </p>
-
-            {codeError && (
-              <div className="pt-3">
-                <p className="text-sm text-danger">{codeError}</p>
-              </div>
-            )}
           </div>
 
-          <div className="flex justify-center space-x-2">
-            <div className="flex-1">
+          <div className="flex items-center space-x-2">
+            <div className="w-20">
               <Input
                 center
                 value={typedCode}
                 onValueChange={setTypedCode}
                 placeholder={'0000'}
                 maxLength={4}
-                size="large"
               />
             </div>
-            <Button color="primary" onClick={submitCode}>
-              OK
+
+            <Button
+              color="primary"
+              size="small"
+              className="h-10"
+              onClick={submitCode}
+            >
+              Confirm
             </Button>
           </div>
+
+          {codeError && (
+            <div className="">
+              <p className="text-sm text-danger">{codeError}</p>
+            </div>
+          )}
         </div>
       </Modal>
 

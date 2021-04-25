@@ -9,31 +9,47 @@ interface Props {
   date?: Date;
   onChange: (value: Date) => void;
   openToDate?: Date;
+  disabled?: boolean;
 }
 
 export default function DatePicker(props: Props) {
-  const { date, onChange, openToDate } = props;
+  const { date, onChange, openToDate, disabled = false } = props;
+
+  const dateText = (
+    <p
+      className={clsx(
+        'font-medium text-gray-700 opacity-75',
+        !disabled && 'cursor-pointer',
+      )}
+    >
+      {moment(date).format('DD/M/YY')}
+    </p>
+  );
 
   return (
     <div className="">
-      <ReactDatePicker
-        selected={date}
-        onChange={onChange}
-        popperPlacement={'bottom-end'}
-        openToDate={openToDate}
-        customInput={
-          date ? (
-            <p className="font-medium">{moment(date).format('DD/M/YY')}</p>
-          ) : (
-            <CalendarIcon
-              className={clsx(
-                'fill-current stroke-current w-6 cursor-pointer',
-                'text-gray-300',
-              )}
-            />
-          )
-        }
-      />
+      {disabled ? (
+        <>{dateText}</>
+      ) : (
+        <ReactDatePicker
+          selected={date}
+          onChange={onChange}
+          popperPlacement={'bottom-end'}
+          openToDate={openToDate}
+          customInput={
+            date ? (
+              dateText
+            ) : (
+              <CalendarIcon
+                className={clsx(
+                  'fill-current stroke-current w-6 cursor-pointer',
+                  'text-gray-300',
+                )}
+              />
+            )
+          }
+        />
+      )}
     </div>
   );
 }

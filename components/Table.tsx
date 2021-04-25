@@ -84,14 +84,20 @@ export default function Table(props: TableProps) {
                       key={uuid()}
                       {...column.getHeaderProps(column.getSortByToggleProps())}
                       className={clsx(
-                        !isUndefined(leftAlignedColumns.find(n => n === i))
-                          ? 'text-left'
-                          : 'text-center',
-                        'py-4 text-sm text-gray-600 font-normal select-none whitespace-nowrap',
+                        'py-4 text-sm text-gray-600 px-3 opacity-75 font-normal select-none whitespace-nowrap',
                       )}
                     >
-                      <div className="flex items-center pr-2">
-                        {column.render('Header')}
+                      <div className="flex items-center pr-2 text-center">
+                        <p
+                          className={clsx(
+                            !isUndefined(leftAlignedColumns.find(n => n === i))
+                              ? 'text-left -ml-3'
+                              : 'text-center',
+                            'w-full font-medium',
+                          )}
+                        >
+                          {column.render('Header')}
+                        </p>
                         <span>
                           {column.isSorted ? (
                             <TriangleIcon
