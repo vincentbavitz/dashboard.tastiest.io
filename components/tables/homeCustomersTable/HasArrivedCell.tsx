@@ -75,8 +75,8 @@ export const HasArrivedCell = ({
         >
           <div>
             <p className="text-sm text-gray-600">
-              The user should quote this code from <br /> their email
-              confirmation.
+              Please ask the customer for the code they got in <br />
+              their confirmation email
             </p>
           </div>
 

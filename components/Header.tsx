@@ -1,5 +1,4 @@
-import { Input } from '@tastiest-io/tastiest-components';
-import { BrandIcon, SearchIcon } from '@tastiest-io/tastiest-icons';
+import { BrandIcon } from '@tastiest-io/tastiest-icons';
 import Link from 'next/link';
 import React, { useState } from 'react';
 import { HeaderAvatar } from './HeaderAvatar';
@@ -24,7 +23,7 @@ export default function Header({ blank }: HeaderProps) {
           </a>
         </Link>
 
-        {!blank && (
+        {/* {!blank && (
           <div style={{ maxWidth: '300px' }} className="flex-grow">
             <Input
               color="neutral"
@@ -38,7 +37,7 @@ export default function Header({ blank }: HeaderProps) {
               }
             />
           </div>
-        )}
+        )} */}
       </div>
 
       {!blank && <HeaderAvatar />}

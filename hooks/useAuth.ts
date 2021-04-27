@@ -1,4 +1,5 @@
 import {
+  dlog,
   FirebaseAuthError,
   FirestoreCollection,
   IRestaurantLegal,
@@ -49,8 +50,21 @@ export const useAuth = () => {
         i++;
 
         if (credential) {
+          // Ensure user is actually a restaurant not eater
+          const token = await credential.user.getIdTokenResult();
+          const isRestaurantUser = Boolean(token?.claims?.restaurant);
+
+          if (!isRestaurantUser) {
+            dlog("This user doesn't have the role of 'restaurant'");
+            signOut();
+            return;
+          }
+
           // Identify restaurant with Segment
+          dlog('useAuth ➡️ credential.user.uid:', credential.user.uid);
           window.analytics.identify(credential.user.uid, {
+            email: credential.user.email,
+            userId: credential.user.uid,
             context: {
               userAgent: navigator?.userAgent,
             },
@@ -59,6 +73,7 @@ export const useAuth = () => {
           // Track restaurant sign in
           window.analytics.track('Restaurant Signed In', {
             userId: credential.user.uid,
+            email: credential.user.email,
           });
 
           // If restaurant's first time accepting TOS, log this
@@ -86,6 +101,7 @@ export const useAuth = () => {
             // Fire off event with Segment which triggers Klaviyo email confirmation
             window.analytics.track('Restaurant Accepted TOS', {
               userId: credential.user.uid,
+              email: credential.user.email,
             });
           }
         }

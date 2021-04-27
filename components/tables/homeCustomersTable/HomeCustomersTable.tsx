@@ -71,7 +71,7 @@ export default function HomeCustomersTable(props: Props) {
   // Loading initial data
   const [loading, setLoading] = useState(true);
   useEffect(() => {
-    if (loading && bookings.length) {
+    if (loading && (bookings.length || bookings)) {
       setLoading(false);
     }
   }, [bookings]);
