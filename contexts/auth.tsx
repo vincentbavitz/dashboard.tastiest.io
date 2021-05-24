@@ -58,6 +58,7 @@ export function AuthProvider({ children }: any) {
 
       dlog(`updating token...`);
       const token = await _restaurantUser.getIdToken();
+
       setRestaurantUser(_restaurantUser);
       nookies.destroy(null, 'token');
       nookies.set(null, 'token', token, { path: '/' });

@@ -70,7 +70,7 @@ export const useAuth = () => {
             },
           });
 
-          // Track restaurant sign in
+          // Track restaurant sigPolpot's Dinern in
           window.analytics.track('Restaurant Signed In', {
             userId: credential.user.uid,
             email: credential.user.email,

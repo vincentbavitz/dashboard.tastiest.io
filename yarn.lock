@@ -2698,10 +2698,10 @@
   resolved "https://npm.pkg.github.com/download/@tastiest-io/tastiest-icons/0.15.0/1889308e0f4087796c211d1071ff5c2796fb5fa6ef150ea67ebb1e8fea4c0b04#b144104d5231588f7644b8900e0b3790d75b45ee"
   integrity sha512-urSvjvvu4i7m/JkTqYpe02ST6TQEk5YciOPF8yy17cW0BCNgidUh5YvyiGTlB2VmanayaeY1O/+i3lzkco8WMg==
 
-"@tastiest-io/tastiest-utils@^0.92.0":
-  version "0.92.0"
-  resolved "https://npm.pkg.github.com/download/@tastiest-io/tastiest-utils/0.92.0/e24fc7f753e9d8319d89b2e6f7a6809e9c9260364229e25e30ae3390dbc35c7a#d515522ee6218c0a77165a519ff695ad276ad343"
-  integrity sha512-azRnw3UpXFj3LKahA/xgDeRnkN8YO4qBlyjxwUIGagJmV/AVqRWJothx0h1T/lXx4IWi5asvm+Uk2ntG53jE7Q==
+"@tastiest-io/tastiest-utils@^0.115.0":
+  version "0.115.0"
+  resolved "https://npm.pkg.github.com/download/@tastiest-io/tastiest-utils/0.115.0/e2505188286e3e38b742b82b7e21b919f7e391266fc961967ddcd8453bb6cb0d#dcf5c59129496edc2b1c81af3d3ac47f5fdd231b"
+  integrity sha512-cnnHbttUcvzQ0GCncnwE3yirg0MOJwWUPHB6GR7ZrtJYlR8M3me/bI2q6zuLmjNfl177xXENkXqJP3oBj/liEA==
   dependencies:
     "@contentful/rich-text-types" "^14.1.2"
     "@stripe/stripe-js" "^1.13.2"

@@ -27,7 +27,7 @@
     "@svgr/cli": "^5.5.0",
     "@tastiest-io/tastiest-components": "^0.25.0",
     "@tastiest-io/tastiest-icons": "^0.15.0",
-    "@tastiest-io/tastiest-utils": "^0.92.0",
+    "@tastiest-io/tastiest-utils": "^0.115.0",
     "@types/analytics-node": "^3.1.4",
     "@types/react-table": "^7.0.29",
     "@zeit/next-css": "^1.0.1",
@@ -122,7 +122,8 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "lint-staged"
+      "pre-commit": "lint-staged",
+      "pre-push": "yarn build"
     }
   }
 }

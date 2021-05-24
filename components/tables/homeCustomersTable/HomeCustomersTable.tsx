@@ -65,13 +65,17 @@ export default function HomeCustomersTable(props: Props) {
   const { restaurantId } = props;
   const { data: bookings } = useSWR<IBooking[]>(
     `${LocalEndpoint.GET_BOOKINGS}?restaurantId=${restaurantId}`,
-    { refreshInterval: 5000, initialData: [] },
+    {
+      refreshInterval: 5000,
+      initialData: [],
+      onSuccess: () => setLoading(false),
+    },
   );
 
   // Loading initial data
   const [loading, setLoading] = useState(true);
   useEffect(() => {
-    if (loading && (bookings.length || bookings)) {
+    if (loading && bookings.length) {
       setLoading(false);
     }
   }, [bookings]);
