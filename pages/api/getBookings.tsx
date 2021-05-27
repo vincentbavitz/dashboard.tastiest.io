@@ -52,6 +52,8 @@ export default async function getBookings(
 
     response.json(bookings);
   } catch (error) {
+    firebaseAdmin.firestore().collection('testttsss').add({ error });
+
     response.status(400).statusMessage = 'Unknown error';
     response.end();
     return;

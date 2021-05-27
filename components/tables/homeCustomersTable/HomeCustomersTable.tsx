@@ -111,7 +111,7 @@ export default function HomeCustomersTable(props: Props) {
         id: 'orderTotal',
         Header: 'Order Total',
         accessor: (row: IBooking) => (
-          <p className="font-medium">£{row.price.final.toFixed(2)}</p>
+          <p className="font-medium">£{Number(row.price?.final)?.toFixed(2)}</p>
         ),
       },
       {
