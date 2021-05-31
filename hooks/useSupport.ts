@@ -4,6 +4,7 @@ import {
   ISupportMessage,
   SupportMessageDirection,
 } from '@tastiest-io/tastiest-utils';
+import moment from 'moment';
 import { useSelector } from 'react-redux';
 import { useFirestore, useFirestoreConnect } from 'react-redux-firebase';
 import { IState } from '../state/reducers';
@@ -75,11 +76,19 @@ export function useSupport() {
       updatedAt: null,
     };
 
+    window.analytics.track('Restaurant made support request', {
+      userId: restaurantUser.uid,
+      properties: {
+        ...supportRequest,
+        restaurantDetails: restaurantData.details,
+        dateOfRequest: moment(Date.now()).format('MMMM Do YYYY, h:mm:ss a'),
+      },
+    });
+
     try {
       await firestore
         .collection(FirestoreCollection.SUPPORT_RESTAURANTS)
-        .doc(restaurantUser.uid)
-        .set(supportRequest);
+        .add(supportRequest);
 
       return { success: true, errors: [] };
     } catch (_) {

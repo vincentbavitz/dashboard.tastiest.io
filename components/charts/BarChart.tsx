@@ -4,7 +4,7 @@ import React from 'react';
 const theme = {
   background: '#ffffff',
   textColor: '#333333',
-  fontSize: 11,
+  fontSize: 12,
   axis: {
     domain: {
       line: {
@@ -19,58 +19,31 @@ const theme = {
       },
     },
   },
-  grid: {
-    line: {
-      stroke: '#f2f2f2',
-      strokeWidth: 1,
-    },
-  },
 };
 
-const data = [
-  {
-    date: 'Mon',
-    covers: 0,
-  },
-  {
-    date: 'Tue',
-    covers: 0,
-  },
-  {
-    date: 'Wed',
-    covers: 0,
-  },
-  {
-    date: 'Thurs',
-    covers: 0,
-  },
-  {
-    date: 'Fri',
-    covers: 0,
-  },
-  {
-    date: 'Sat',
-    covers: 0,
-  },
-  {
-    date: 'Sun',
-    covers: 0,
-  },
-];
+interface Props {
+  data: any;
+  keys: string[];
+  indexBy: string;
+}
 
-export default function BarChart() {
+export default function BarChart(props: Props) {
+  const { data, keys, indexBy } = props;
+
   return (
     <div className="w-full h-full">
       <ResponsiveBar
         data={data}
-        keys={['covers']}
-        indexBy="date"
+        keys={keys}
+        indexBy={indexBy}
+        theme={theme}
         margin={{ top: 15, right: 15, bottom: 30, left: 40 }}
         padding={0.3}
         valueScale={{ type: 'linear' }}
         indexScale={{ type: 'band', round: true }}
         colors={{ scheme: 'yellow_orange_red' }}
         borderColor={{ from: '#ffd505' }}
+        enableGridY={false}
         axisTop={null}
         axisRight={null}
         axisBottom={{
@@ -82,6 +55,7 @@ export default function BarChart() {
           tickSize: 5,
           tickPadding: 5,
           tickRotation: 0,
+          tickValues: 4,
         }}
         labelSkipWidth={12}
         labelSkipHeight={12}

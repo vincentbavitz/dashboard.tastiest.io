@@ -75,11 +75,11 @@ const Index = (
       <div className="flex flex-col h-full space-y-8">
         <Introduction restaurantName={restaurantData?.name} />
 
-        <div className="flex pt-2 space-x-6">
-          <div className="w-7/12">
-            <TimelineBarChart />
+        <div className="flex justify-between pt-2 space-x-6">
+          <div style={{ maxWidth: '400px' }} className="w-7/12">
+            <TimelineBarChart restaurantId={restaurantId} />
           </div>
-          <div className="w-5/12">
+          <div style={{ maxWidth: '300px' }} className="w-5/12">
             <InfoCard label="Net Payout" info="£0.00" chart />
           </div>
         </div>
