@@ -11,6 +11,7 @@ import { InferGetServerSidePropsType } from 'next';
 import Head from 'next/head';
 import nookies from 'nookies';
 import React, { useContext } from 'react';
+import Stripe from 'stripe';
 import { firebaseAdmin } from 'utils/firebaseAdmin';
 import { METADATA } from '../constants';
 import { ScreenContext } from '../contexts/screen';
@@ -43,6 +44,17 @@ export const getServerSideProps = async context => {
 
   dlog('index ➡️ restaurantData:', restaurantData);
 
+  const stripe = new Stripe(
+    process.env.NODE_ENV === 'production'
+      ? process.env.STRIPE_LIVE_SECRET_KEY
+      : process.env.STRIPE_TEST_SECRET_KEY,
+    {
+      apiVersion: '2020-08-27',
+    },
+  );
+
+  stripe.accounts.retrieve({});
+
   return {
     props: { restaurantId, restaurantData },
   };
@@ -54,8 +66,8 @@ const Index = (
   const { restaurantData, restaurantId } = props;
   const { isDesktop } = useContext(ScreenContext);
 
-  dlog('index ➡️ restaurantId:', restaurantId);
-  dlog('index ➡️ restaurantData:', restaurantData);
+  console.log('index ➡️ restaurantId:', restaurantId);
+  console.log('index ➡️ restaurantData:', restaurantData);
 
   return (
     <>
