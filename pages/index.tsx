@@ -1,4 +1,8 @@
-import { IRestaurant, RestaurantDataApi } from '@tastiest-io/tastiest-utils';
+import {
+  dlog,
+  IRestaurant,
+  RestaurantDataApi,
+} from '@tastiest-io/tastiest-utils';
 import TimelineBarChart from 'components/charts/TimelineBarChart';
 import InfoCard from 'components/InfoCard';
 import HomeCustomersTable from 'components/tables/homeCustomersTable/HomeCustomersTable';
@@ -25,8 +29,6 @@ export const getServerSideProps = async context => {
     cookieToken,
   );
 
-  const restaurantData = await restaurantDataApi.getRestaurantData();
-
   // If no user, redirect to login
   if (!restaurantId) {
     return {
@@ -37,6 +39,8 @@ export const getServerSideProps = async context => {
     };
   }
 
+  const restaurantData = await restaurantDataApi.getRestaurantData();
+
   const data = await fetch(
     process.env.NODE_ENV === 'production'
       ? 'https://dashboard.tastiest.io'
@@ -45,7 +49,8 @@ export const getServerSideProps = async context => {
           `?restaurantId=${restaurantId}`,
   );
 
-  const { payoutTotal = 0, pendingBalance = 0 } = await data.json();
+  dlog('index ➡️ data:', data);
+  const { payoutTotal = 0, pendingBalance = 0 } = {}; //await data.json();
 
   return {
     props: {
