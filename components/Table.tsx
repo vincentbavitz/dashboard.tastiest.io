@@ -35,7 +35,7 @@ export type TableColumn = {
 export default function Table(props: TableProps) {
   const {
     columns,
-    data,
+    data = [],
     label,
     noDataLabel = 'No Data',
     updateData = null,

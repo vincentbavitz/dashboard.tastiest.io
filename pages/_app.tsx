@@ -58,7 +58,7 @@ function App(props: AppProps) {
 //   //   };
 //   // }
 
-//   // const restaurantData = await restaurantDataApi.getRestaurantData(
+//   // const restaurantData = await restaurantDataApi.getRestaurantField(
 //   //   RestaurantData.DETAILS,
 //   // );
 

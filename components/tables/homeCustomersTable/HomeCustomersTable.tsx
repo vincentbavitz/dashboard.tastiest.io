@@ -67,78 +67,78 @@ export default function HomeCustomersTable(props: Props) {
     `${LocalEndpoint.GET_BOOKINGS}?restaurantId=${restaurantId}`,
     {
       refreshInterval: 5000,
-      initialData: [],
-      onSuccess: () => setLoading(false),
+      initialData: null,
+      refreshWhenHidden: true,
+      compare: (a, b) => JSON.stringify(a) === JSON.stringify(b),
     },
   );
 
-  // Loading initial data
-  const [loading, setLoading] = useState(true);
+  const [isInitialLoading, setIsInitialLoading] = useState(true);
+
   useEffect(() => {
-    if (loading && bookings.length) {
-      setLoading(false);
+    if (bookings) {
+      setIsInitialLoading(false);
     }
   }, [bookings]);
 
-  const columns = React.useMemo(
-    () => [
-      {
-        id: 'eaterName',
-        Header: 'Name',
-        accessor: (row: IBooking) => {
-          return <p className="font-medium">{row.eaterName}</p>;
-        },
+  const columns = [
+    {
+      id: 'eaterName',
+      Header: 'Name',
+      accessor: (row: IBooking) => {
+        return <p className="font-medium">{row.eaterName}</p>;
       },
-      {
-        id: 'dealName',
-        Header: 'Deal',
-        accessor: (row: IBooking) => {
-          const maxDealNameLength = 25;
-          return (
-            <p>
-              {titleCase(row.dealName).slice(0, maxDealNameLength)}
-              {row.dealName.length > maxDealNameLength && '...'}
-            </p>
-          );
-        },
+    },
+    {
+      id: 'dealName',
+      Header: 'Deal',
+      accessor: (row: IBooking) => {
+        const maxDealNameLength = 25;
+        return (
+          <p>
+            {titleCase(row.dealName).slice(0, maxDealNameLength)}
+            {row.dealName.length > maxDealNameLength && '...'}
+          </p>
+        );
       },
-      {
-        id: 'heads',
-        Header: 'Heads',
-        accessor: (row: IBooking) => <p>{row.heads}</p>,
+    },
+    {
+      id: 'heads',
+      Header: 'Heads',
+      accessor: (row: IBooking) => <p>{row.heads}</p>,
+    },
+    {
+      id: 'orderTotal',
+      Header: 'Order Total',
+      accessor: (row: IBooking) => (
+        <p className="font-medium">
+          £{Number(row.price?.final * 0.75)?.toFixed(2)}
+        </p>
+      ),
+    },
+    {
+      id: 'paidAt',
+      Header: 'Purchased',
+      accessor: (row: IBooking) => {
+        return <p>{moment(row.paidAt).local().fromNow()}</p>;
       },
-      {
-        id: 'orderTotal',
-        Header: 'Order Total',
-        accessor: (row: IBooking) => (
-          <p className="font-medium">£{Number(row.price?.final)?.toFixed(2)}</p>
-        ),
-      },
-      {
-        id: 'paidAt',
-        Header: 'Purchased',
-        accessor: (row: IBooking) => {
-          return <p>{moment(row.paidAt).local().fromNow()}</p>;
-        },
-      },
-      {
-        Header: 'Cancelled',
-        accessor: 'hasCancelled',
-        Cell: HasCancelledCell,
-      },
-      {
-        Header: 'Booking Date',
-        accessor: 'bookingDate',
-        Cell: BookingDateCell,
-      },
-      {
-        Header: 'Arrived',
-        accessor: 'hasArrived',
-        Cell: HasArrivedCell,
-      },
-    ],
-    [bookings],
-  );
+    },
+    {
+      Header: 'Cancelled',
+      accessor: 'hasCancelled',
+      Cell: HasCancelledCell,
+    },
+    {
+      Header: 'Booking Date',
+      accessor: 'bookingDate',
+      Cell: BookingDateCell,
+    },
+    {
+      Header: 'Arrived',
+      accessor: 'hasArrived',
+      Cell: HasArrivedCell,
+    },
+  ];
 
   // Update data depending on the column
   const updateData = React.useMemo(
@@ -154,10 +154,10 @@ export default function HomeCustomersTable(props: Props) {
       <Table
         label="Customers"
         columns={columns}
-        data={bookings}
+        data={bookings ?? []}
         noDataLabel="No customers yet."
         updateData={updateData}
-        isLoadingInitialData={loading}
+        isLoadingInitialData={isInitialLoading}
       />
     </div>
   );

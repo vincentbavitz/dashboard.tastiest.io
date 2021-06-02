@@ -14,15 +14,17 @@ export default function TimelineBarChart({ restaurantId }: Props) {
     `${LocalEndpoint.GET_BOOKINGS}?restaurantId=${restaurantId}`,
     {
       refreshInterval: 5000,
-      initialData: [],
-      // onSuccess: () => setLoading(false),
+      initialData: null,
+      refreshWhenHidden: true,
+      compare: (a, b) => JSON.stringify(a) === JSON.stringify(b),
     },
   );
 
-  const coverHistory = bookings.map(booking => ({
-    covers: booking.heads,
-    timestamp: booking.paidAt,
-  }));
+  const coverHistory =
+    bookings?.map(booking => ({
+      covers: booking.heads,
+      timestamp: booking.paidAt,
+    })) ?? [];
 
   const startOfToday = new Date();
   startOfToday.setHours(0, 0, 0, 0);

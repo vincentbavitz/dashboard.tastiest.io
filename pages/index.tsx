@@ -1,9 +1,4 @@
-import {
-  dlog,
-  IRestaurant,
-  RestaurantData,
-  RestaurantDataApi,
-} from '@tastiest-io/tastiest-utils';
+import { IRestaurant, RestaurantDataApi } from '@tastiest-io/tastiest-utils';
 import TimelineBarChart from 'components/charts/TimelineBarChart';
 import InfoCard from 'components/InfoCard';
 import HomeCustomersTable from 'components/tables/homeCustomersTable/HomeCustomersTable';
@@ -11,10 +6,12 @@ import { InferGetServerSidePropsType } from 'next';
 import Head from 'next/head';
 import nookies from 'nookies';
 import React, { useContext } from 'react';
-import Stripe from 'stripe';
+import useSWR from 'swr';
+import { LocalEndpoint } from 'types/api';
 import { firebaseAdmin } from 'utils/firebaseAdmin';
 import { METADATA } from '../constants';
 import { ScreenContext } from '../contexts/screen';
+import { GetBalanceReturn } from './api/getBalance';
 
 interface Props {
   resaurant?: IRestaurant;
@@ -28,6 +25,8 @@ export const getServerSideProps = async context => {
     cookieToken,
   );
 
+  const restaurantData = await restaurantDataApi.getRestaurantData();
+
   // If no user, redirect to login
   if (!restaurantId) {
     return {
@@ -38,36 +37,46 @@ export const getServerSideProps = async context => {
     };
   }
 
-  const restaurantData = await restaurantDataApi.getRestaurantData(
-    RestaurantData.DETAILS,
-  );
-
-  dlog('index ➡️ restaurantData:', restaurantData);
-
-  const stripe = new Stripe(
+  const data = await fetch(
     process.env.NODE_ENV === 'production'
-      ? process.env.STRIPE_LIVE_SECRET_KEY
-      : process.env.STRIPE_TEST_SECRET_KEY,
-    {
-      apiVersion: '2020-08-27',
-    },
+      ? 'https://dashboard.tastiest.io'
+      : 'http://localhost:3333' +
+          LocalEndpoint.GET_BALANCE +
+          `?restaurantId=${restaurantId}`,
   );
 
-  stripe.accounts.retrieve({});
+  const { payoutTotal = 0, pendingBalance = 0 } = await data.json();
 
   return {
-    props: { restaurantId, restaurantData },
+    props: {
+      restaurantId,
+      restaurantDetails: restaurantData?.details ?? null,
+      pendingBalance,
+      payoutTotal,
+    },
   };
 };
 
 const Index = (
   props: InferGetServerSidePropsType<typeof getServerSideProps>,
 ) => {
-  const { restaurantData, restaurantId } = props;
-  const { isDesktop } = useContext(ScreenContext);
+  const { restaurantId, restaurantDetails } = props;
 
-  console.log('index ➡️ restaurantId:', restaurantId);
-  console.log('index ➡️ restaurantData:', restaurantData);
+  const {
+    data: { payoutTotal, pendingBalance },
+  } = useSWR<GetBalanceReturn>(
+    `${LocalEndpoint.GET_BALANCE}?restaurantId=${restaurantId}`,
+    {
+      refreshInterval: 5000,
+      initialData: {
+        payoutTotal: props.payoutTotal,
+        pendingBalance: props.pendingBalance,
+      },
+      refreshWhenHidden: true,
+    },
+  );
+
+  const { isDesktop } = useContext(ScreenContext);
 
   return (
     <>
@@ -85,14 +94,17 @@ const Index = (
       </Head>
 
       <div className="flex flex-col h-full space-y-8">
-        <Introduction restaurantName={restaurantData?.name} />
+        <Introduction
+          payoutTotal={payoutTotal}
+          restaurantName={restaurantDetails?.name}
+        />
 
         <div className="flex justify-between pt-2 space-x-6">
           <div style={{ maxWidth: '400px' }} className="w-7/12">
             <TimelineBarChart restaurantId={restaurantId} />
           </div>
           <div style={{ maxWidth: '300px' }} className="w-5/12">
-            <InfoCard label="Net Payout" info="£0.00" chart />
+            <InfoCard label="This Payout" info={`£${pendingBalance}`} chart />
           </div>
         </div>
 
@@ -102,7 +114,12 @@ const Index = (
   );
 };
 
-const Introduction = ({ restaurantName }: { restaurantName: string }) => (
+interface IntroductionProps {
+  restaurantName: string;
+  payoutTotal: number;
+}
+
+const Introduction = ({ restaurantName, payoutTotal }: IntroductionProps) => (
   <div className="flex items-center justify-between text-gray-500">
     <div>
       <h2 className="text-xl font-medium text-black font-somatic">
@@ -112,9 +129,10 @@ const Introduction = ({ restaurantName }: { restaurantName: string }) => (
     </div>
 
     <div className="text-right">
-      <p className="text-sm">All time payout</p>
+      <p className="text-sm">Total Payout</p>
       <p className="text-lg font-medium tracking-wider text-black font-somatic">
-        £0.00
+        <span className="pr-1 -mt-px font-medium">£</span>
+        {payoutTotal ?? 0}
       </p>
     </div>
   </div>
