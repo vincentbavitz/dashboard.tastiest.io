@@ -3,7 +3,7 @@ import { Input } from '@tastiest-io/tastiest-components';
 import { SearchIcon, TriangleIcon } from '@tastiest-io/tastiest-icons';
 import clsx from 'clsx';
 import { isUndefined } from 'lodash';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useFlexLayout, useSortBy, useTable } from 'react-table';
 import { v4 as uuid } from 'uuid';
 
@@ -60,6 +60,11 @@ export default function Table(props: TableProps) {
 
     setFilteredData(searchFunction(query, data) ?? []);
   };
+
+  // Set initial data for the table in the case that default useState value fails
+  useEffect(() => {
+    setFilteredData(data);
+  }, []);
 
   const {
     getTableProps,

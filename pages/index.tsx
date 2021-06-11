@@ -138,7 +138,7 @@ const Introduction = ({ restaurantName, payoutTotal }: IntroductionProps) => (
     <div className="text-right">
       <p className="text-sm">Total Payout</p>
       <p className="text-lg font-medium tracking-wider text-black font-somatic">
-        <span className="pr-1 -mt-px font-medium">£</span>
+        <span className="-mt-px font-roboto">£</span>
         {payoutTotal ?? 0}
       </p>
     </div>
