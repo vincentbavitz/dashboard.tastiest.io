@@ -16,7 +16,7 @@ if (!cert.privateKey || !cert.clientEmail || !cert.projectId) {
 if (!firebaseAdmin.apps.length) {
   firebaseAdmin.initializeApp({
     credential: firebaseAdmin.credential.cert(cert),
-    databaseURL: process.env.FIREBASE_DATABASE_URL,
+    databaseURL: process.env.NEXT_PUBLIC_FIREBASE_DATABASE_URL,
   });
 }
 

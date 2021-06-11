@@ -1,6 +1,8 @@
 import { IBooking } from '@tastiest-io/tastiest-utils';
 import clsx from 'clsx';
 import DatePicker from 'components/DatePicker';
+import { useAuth } from 'hooks/useAuth';
+import { useRestaurantData } from 'hooks/useRestaurantData';
 import React from 'react';
 
 export const BookingDateCell = ({
@@ -21,9 +23,20 @@ export const BookingDateCell = ({
     initialValue ? new Date(initialValue) : undefined,
   );
 
+  const { restaurantUser } = useAuth();
+  const { restaurantData } = useRestaurantData(restaurantUser);
+
   const onChange = (value: Date) => {
     setDate(value);
     updateData(value.getTime(), index, id);
+
+    window.analytics.track('Booking Date Updated', {
+      userId: restaurantData.details.id,
+      properties: {
+        ...booking,
+        timestamp: Date.now(),
+      },
+    });
   };
 
   // If the initialValue is changed external, sync it up with our state

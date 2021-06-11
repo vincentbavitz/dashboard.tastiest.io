@@ -1,8 +1,9 @@
 import { LoadingOutlined } from '@ant-design/icons';
-import { TriangleIcon } from '@tastiest-io/tastiest-icons';
+import { Input } from '@tastiest-io/tastiest-components';
+import { SearchIcon, TriangleIcon } from '@tastiest-io/tastiest-icons';
 import clsx from 'clsx';
 import { isUndefined } from 'lodash';
-import React from 'react';
+import React, { useState } from 'react';
 import { useFlexLayout, useSortBy, useTable } from 'react-table';
 import { v4 as uuid } from 'uuid';
 
@@ -13,6 +14,9 @@ interface TableProps {
 
   noDataLabel?: string;
   isLoadingInitialData?: boolean;
+
+  // Describes how data is filtered on search
+  searchFunction?: (query: string, data: any[]) => any[];
 
   // Update data example given here
   // https://react-table.tanstack.com/docs/examples/editable-data
@@ -40,7 +44,22 @@ export default function Table(props: TableProps) {
     noDataLabel = 'No Data',
     updateData = null,
     isLoadingInitialData = false,
+    searchFunction = () => null,
   } = props;
+
+  const [filteredData, setFilteredData] = useState(data);
+  const [searchQuery, setSearchQuery] = useState<string | null>(null);
+
+  const updateSearch = (query: string) => {
+    setSearchQuery(query);
+
+    if (!query.length) {
+      setFilteredData(data);
+      return;
+    }
+
+    setFilteredData(searchFunction(query, data) ?? []);
+  };
 
   const {
     getTableProps,
@@ -51,8 +70,8 @@ export default function Table(props: TableProps) {
   } = useTable(
     {
       columns,
-      data,
       updateData,
+      data: filteredData,
     },
     useSortBy,
     useFlexLayout,
@@ -66,7 +85,20 @@ export default function Table(props: TableProps) {
 
   return (
     <div className="relative">
-      {label && <p className="mb-2 text-lg font-somatic">{label}</p>}
+      <div className="flex items-center justify-between w-full">
+        {label && <div className="mb-2 text-lg font-somatic">{label}</div>}
+        <div style={{ width: '300px' }} className="">
+          <Input
+            size="small"
+            color="neutral"
+            className="bg-white"
+            value={searchQuery}
+            onValueChange={updateSearch}
+            suffix={<SearchIcon className="w-5 text-gray-400 fill-current" />}
+          />
+        </div>
+      </div>
+
       <div
         style={{ maxWidth: '100%' }}
         className="w-full px-6 pb-6 overflow-x-auto bg-white rounded-xl"

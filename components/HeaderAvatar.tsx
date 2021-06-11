@@ -70,8 +70,8 @@ export function HeaderAvatar(props: AvatarProps) {
             <img
               style={{ filter: 'drop-shadow(0px 0px 3px rgba(0,0,0,0.20))' }}
               className="object-cover w-full h-full rounded-full"
-              src={imageUrl}
-              alt={'Author profile picture'}
+              src={`${imageUrl}?w=50`}
+              alt={'Profile picture'}
             />
           ) : initial?.length ? (
             <div className="flex items-center justify-center w-full h-full text-xl text-white font-somatic">

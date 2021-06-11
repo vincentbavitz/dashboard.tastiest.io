@@ -56,7 +56,7 @@ export function Modal(props: Props) {
 
           <ExitIcon
             onClick={close}
-            className="w-8 text-gray-300 duration-150 cursor-pointer fill-current hover:text-gray-400"
+            className="w-5 text-gray-300 duration-150 cursor-pointer fill-current hover:text-gray-400"
           />
         </div>
         {children}

@@ -2,6 +2,8 @@ import { ExitFilledIcon } from '@tastiest-io/tastiest-icons';
 import { IBooking } from '@tastiest-io/tastiest-utils';
 import clsx from 'clsx';
 import { ConfirmationModal } from 'components/ConfirmationModal';
+import { useAuth } from 'hooks/useAuth';
+import { useRestaurantData } from 'hooks/useRestaurantData';
 import React, { useState } from 'react';
 
 export const HasCancelledCell = ({
@@ -21,6 +23,9 @@ export const HasCancelledCell = ({
   // We need to keep and update the state of the cell normally
   const [cancelled, setCancelled] = React.useState(initialValue ?? false);
 
+  const { restaurantUser } = useAuth();
+  const { restaurantData } = useRestaurantData(restaurantUser);
+
   // Update locally and on server side on change
   const onClickIcon = () => {
     // Open confirmation modal if not confirmed
@@ -31,6 +36,14 @@ export const HasCancelledCell = ({
 
     // Cancellation is final. Can't un-cancel.
     if (cancelled) {
+      window.analytics.track('Booking Cancelled', {
+        userId: restaurantData.details.id,
+        properties: {
+          ...booking,
+          timestamp: Date.now(),
+        },
+      });
+
       return;
     }
   };

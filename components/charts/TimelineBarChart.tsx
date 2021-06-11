@@ -62,7 +62,7 @@ export default function TimelineBarChart({ restaurantId }: Props) {
     return { day: dayName, covers: coversForThisDay };
   });
 
-  const totalCovers = coverHistory.reduce((a, b) => a + b.covers, 0);
+  const totalCovers = coversOverPastSevenDays.reduce((a, b) => a + b.covers, 0);
 
   return (
     <div className="px-2 py-4 bg-white rounded-xl">

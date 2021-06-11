@@ -5,7 +5,7 @@ import React from 'react';
 export default class CustomDocument extends Document<any> {
   private renderSnippet() {
     const opts = {
-      apiKey: process.env.ANALYTICS_WRITE_KEY,
+      apiKey: process.env.NEXT_PUBLIC_ANALYTICS_WRITE_KEY,
       // note: the page option only covers SSR tracking.
       // Page.js is used to track other events using `window.analytics.page()`
       page: true,

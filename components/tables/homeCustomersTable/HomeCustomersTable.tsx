@@ -149,6 +149,15 @@ export default function HomeCustomersTable(props: Props) {
     [bookings],
   );
 
+  const searchFunction = (query: string, data: IBooking[]) => {
+    return data.filter(booking => {
+      return (
+        booking.dealName.toLowerCase().includes(query) ||
+        booking.eaterName.toLowerCase().includes(query)
+      );
+    });
+  };
+
   return (
     <div>
       <Table
@@ -157,6 +166,7 @@ export default function HomeCustomersTable(props: Props) {
         data={bookings ?? []}
         noDataLabel="No customers yet."
         updateData={updateData}
+        searchFunction={searchFunction}
         isLoadingInitialData={isInitialLoading}
       />
     </div>

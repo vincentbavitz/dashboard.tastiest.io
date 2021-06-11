@@ -2693,10 +2693,10 @@
     react-use "^17.2.3"
     styled-components "^5.2.3"
 
-"@tastiest-io/tastiest-icons@^0.15.0":
-  version "0.15.0"
-  resolved "https://npm.pkg.github.com/download/@tastiest-io/tastiest-icons/0.15.0/1889308e0f4087796c211d1071ff5c2796fb5fa6ef150ea67ebb1e8fea4c0b04#b144104d5231588f7644b8900e0b3790d75b45ee"
-  integrity sha512-urSvjvvu4i7m/JkTqYpe02ST6TQEk5YciOPF8yy17cW0BCNgidUh5YvyiGTlB2VmanayaeY1O/+i3lzkco8WMg==
+"@tastiest-io/tastiest-icons@^0.24.0":
+  version "0.24.0"
+  resolved "https://npm.pkg.github.com/download/@tastiest-io/tastiest-icons/0.24.0/d9451e8f78ac4f0a4172b2dcb5c268308de93a450ce0e5e9558b210667d22248#ece4ade86e9bd8343401e9a802f52200666cc04f"
+  integrity sha512-TnkOoS2qq8WqLGtBCIAAvImfkYSyZ33J+CN0gdIPEiCjl1NoPgDr0Iph4LxVMFQiMuD6Z9rDqydI9ntxYY9yfA==
 
 "@tastiest-io/tastiest-utils@^0.127.0":
   version "0.127.0"

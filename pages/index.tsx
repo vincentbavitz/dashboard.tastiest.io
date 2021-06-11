@@ -52,6 +52,8 @@ export const getServerSideProps = async context => {
   dlog('index ➡️ data:', data);
   const { payoutTotal = 0, pendingBalance = 0 } = {}; //await data.json();
 
+  dlog('index ➡️ process.env:', process.env);
+
   return {
     props: {
       restaurantId,
