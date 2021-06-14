@@ -76,7 +76,7 @@ export function useSupport() {
       updatedAt: null,
     };
 
-    window.analytics.track('Restaurant made support request', {
+    window.analytics.track('Restaurant Support Request', {
       userId: restaurantUser.uid,
       properties: {
         ...supportRequest,

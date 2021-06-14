@@ -4,6 +4,7 @@ import clsx from 'clsx';
 import { ConfirmationModal } from 'components/ConfirmationModal';
 import { useAuth } from 'hooks/useAuth';
 import { useRestaurantData } from 'hooks/useRestaurantData';
+import moment from 'moment';
 import React, { useState } from 'react';
 
 export const HasCancelledCell = ({
@@ -41,6 +42,7 @@ export const HasCancelledCell = ({
         properties: {
           ...booking,
           timestamp: Date.now(),
+          cancelledAtDate: moment(Date.now()).format('MMMM Do YYYY, h:mm:ss a'),
         },
       });
 

@@ -91,6 +91,9 @@ export default async function updateBooking(
     // Adding hasCancelled to booking
     if (typeof hasCancelled === 'boolean') {
       updatedBooking.hasCancelled = hasCancelled;
+      updatedBooking.cancelledAt = updatedBooking.hasCancelled
+        ? Date.now()
+        : null;
     }
 
     // Adding hasCancelled to booking
