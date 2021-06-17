@@ -64,7 +64,7 @@ export default function Table(props: TableProps) {
   // Set initial data for the table in the case that default useState value fails
   useEffect(() => {
     setFilteredData(data);
-  }, []);
+  }, [data]);
 
   const {
     getTableProps,
