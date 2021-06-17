@@ -152,8 +152,8 @@ export default function HomeCustomersTable(props: Props) {
   const searchFunction = (query: string, data: IBooking[]) => {
     return data.filter(booking => {
       return (
-        booking.dealName.toLowerCase().includes(query) ||
-        booking.eaterName.toLowerCase().includes(query)
+        booking.dealName.toLowerCase().includes(query.toLowerCase()) ||
+        booking.eaterName.toLowerCase().includes(query.toLowerCase())
       );
     });
   };
