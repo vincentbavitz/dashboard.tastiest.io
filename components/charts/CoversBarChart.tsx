@@ -9,7 +9,7 @@ interface Props {
   restaurantId: string;
 }
 
-export default function TimelineBarChart({ restaurantId }: Props) {
+export default function CoversBarChart({ restaurantId }: Props) {
   const { data: bookings } = useSWR<IBooking[]>(
     `${LocalEndpoint.GET_BOOKINGS}?restaurantId=${restaurantId}`,
     {

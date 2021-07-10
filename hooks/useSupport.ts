@@ -7,6 +7,7 @@ import {
 import moment from 'moment';
 import { useSelector } from 'react-redux';
 import { useFirestore, useFirestoreConnect } from 'react-redux-firebase';
+import { v4 as uuid } from 'uuid';
 import { IState } from '../state/reducers';
 import { useAuth } from './useAuth';
 import { useRestaurantData } from './useRestaurantData';
@@ -61,7 +62,9 @@ export function useSupport() {
       recipientHasOpened: false,
     };
 
+    const requestId = uuid();
     const supportRequest: IRestaurantSupportRequest = {
+      id: requestId,
       restaurantId: restaurantUser.uid,
       email: restaurantUser.email,
       name,
@@ -88,7 +91,8 @@ export function useSupport() {
     try {
       await firestore
         .collection(FirestoreCollection.SUPPORT_RESTAURANTS)
-        .add(supportRequest);
+        .doc(requestId)
+        .set(supportRequest);
 
       return { success: true, errors: [] };
     } catch (_) {

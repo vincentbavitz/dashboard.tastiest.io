@@ -3,8 +3,8 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import { firebaseAdmin } from 'utils/firebaseAdmin';
 
 /**
- * Gets order request from Firestore
- * Requires the query parameter `orderId`
+ * Gets a restaurant's bookings from Firestore
+ * Requires the query parameter `restaurantId`
  *
  * Intended to be used exclusively with useSWR
  */
@@ -52,8 +52,6 @@ export default async function getBookings(
 
     response.json(bookings);
   } catch (error) {
-    firebaseAdmin.firestore().collection('testttsss').add({ error });
-
     response.status(400).statusMessage = 'Unknown error';
     response.end();
     return;

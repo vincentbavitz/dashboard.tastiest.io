@@ -1,10 +1,10 @@
+import { InfoCard } from '@tastiest-io/tastiest-components';
 import {
   dlog,
   IRestaurant,
   RestaurantDataApi,
 } from '@tastiest-io/tastiest-utils';
-import TimelineBarChart from 'components/charts/TimelineBarChart';
-import InfoCard from 'components/InfoCard';
+import CoversBarChart from 'components/charts/CoversBarChart';
 import HomeCustomersTable from 'components/tables/homeCustomersTable/HomeCustomersTable';
 import { InferGetServerSidePropsType } from 'next';
 import Head from 'next/head';
@@ -108,7 +108,7 @@ const Index = (
 
         <div className="flex justify-between pt-2 space-x-6">
           <div style={{ maxWidth: '400px' }} className="w-7/12">
-            <TimelineBarChart restaurantId={restaurantId} />
+            <CoversBarChart restaurantId={restaurantId} />
           </div>
           <div style={{ maxWidth: '300px' }} className="w-5/12">
             <InfoCard label="This Payout" info={`£${pendingBalance}`} chart />

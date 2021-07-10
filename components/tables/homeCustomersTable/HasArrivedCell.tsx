@@ -36,14 +36,6 @@ export const HasArrivedCell = ({
       setTypedCode(null);
       setArrived(false);
       updateData(false, index, id);
-
-      window.analytics.track('Eater Arrived', {
-        userId: '',
-        properties: {
-          ...booking,
-          timestamp: Date.now(),
-        },
-      });
     }
   };
 
