@@ -1,6 +1,6 @@
 import { FirestoreCollection, IBooking } from '@tastiest-io/tastiest-utils';
 import { NextApiRequest, NextApiResponse } from 'next';
-import { firebaseAdmin } from 'utils/firebaseAdmin';
+import { db } from 'utils/firebaseAdmin';
 
 /**
  * Gets a restaurant's bookings from Firestore
@@ -31,9 +31,7 @@ export default async function getBookings(
   }
 
   try {
-    const query = await firebaseAdmin
-      .firestore()
-      .collection(FirestoreCollection.BOOKINGS);
+    const query = await db(FirestoreCollection.BOOKINGS);
 
     const bookingsSnapshot = await query
       .where('restaurantId', '==', restaurantId)

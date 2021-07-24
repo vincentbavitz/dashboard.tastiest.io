@@ -50,14 +50,14 @@ export function HeaderAvatar(props: AvatarProps) {
     setIsDropdownOpen(!isDropdownOpen);
   };
 
-  const imageUrl = restaurantData?.details?.profilePicture?.imageUrl ?? null;
+  const url = restaurantData?.details?.profilePicture?.url ?? null;
 
   return (
     <div>
       <div
         className={classNames(
           'relative flex justify-center items-center rounded-full cursor-pointer duration-300 bg-opacity-75 hover:bg-opacity-100',
-          !imageUrl && 'bg-primary',
+          !url && 'bg-primary',
           `h-${size} w-${size}`,
         )}
       >
@@ -65,12 +65,12 @@ export function HeaderAvatar(props: AvatarProps) {
           className="flex items-center justify-center w-full h-full"
           onClick={onAvatarClick}
         >
-          {imageUrl ? (
+          {url ? (
             // Custom Avatar Image
             <img
               style={{ filter: 'drop-shadow(0px 0px 3px rgba(0,0,0,0.20))' }}
               className="object-cover w-full h-full rounded-full"
-              src={`${imageUrl}?w=50`}
+              src={`${url}?w=50`}
               alt={'Profile picture'}
             />
           ) : initial?.length ? (

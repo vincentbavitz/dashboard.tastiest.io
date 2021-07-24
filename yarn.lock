@@ -3892,10 +3892,10 @@
   dependencies:
     mini-svg-data-uri "^1.2.3"
 
-"@tastiest-io/tastiest-components@^0.42.0":
-  version "0.42.0"
-  resolved "https://npm.pkg.github.com/download/@tastiest-io/tastiest-components/0.42.0/299add626547981709661ec434c7e33150cce774a0ddf821b23995067a3d79e9#a2669a35d4a6f86f30d7ad5cf7ed81a42d3951c1"
-  integrity sha512-PCOG344Fs2tzi9eJWgREkPY4bmayAS82brfowsa6MD2AOjkplpvhvbPmKGlRQhvYrIaVryd+oS4DIIegr2BbAQ==
+"@tastiest-io/tastiest-components@^0.52.0":
+  version "0.52.0"
+  resolved "https://npm.pkg.github.com/download/@tastiest-io/tastiest-components/0.52.0/404fff1b3e8fc5f61c6b4d0820ff670de4e486b11dc3ac2f5d6f4d994bf3c24c#9da8a87c478452994aa64f465d3f56bd68ea3d58"
+  integrity sha512-YttpzfX7zK4ZfvhHc1ITk9af51Mu+cU/tINmgoLEbGypGQ3j+4t866YqtbNSBojd2m7mw/uQe337PpXhGVSIEg==
   dependencies:
     "@nivo/core" "^0.72.0"
     "@nivo/line" "^0.72.0"
@@ -3947,10 +3947,10 @@
     moment "^2.29.1"
     stripe "^8.143.0"
 
-"@tastiest-io/tastiest-utils@^0.157.0":
-  version "0.157.0"
-  resolved "https://npm.pkg.github.com/download/@tastiest-io/tastiest-utils/0.157.0/9b10f2bff129435e0e1bd2a614ceda41d9960738a60dd19f6debc2f171681e92#675277effec9eee3cbfcf1e91fc15141127c8dba"
-  integrity sha512-qVCJiFIL57yCiaQV0AnyTicdjGILb1ba5cFs42VF0RVQSRiKpl9pnNkc5Bg7GyuqgKcRCQrUYpOGn24X2i1n9Q==
+"@tastiest-io/tastiest-utils@^0.172.0":
+  version "0.172.0"
+  resolved "https://npm.pkg.github.com/download/@tastiest-io/tastiest-utils/0.172.0/496e20e97639c7c44d15a99ef24bb45d50f70b43fa810428588ec6fd86f48e96#ef8eaa21896e6f91930d7794e6033275ff73fa7b"
+  integrity sha512-O1DVr8zmZYktMv3ACSuJmdkdsEKYHoElYFQE5oaQm99PG2EFKeWvDTwu3ghBbg3uDo4RC+iX2rYgoy0/Z9fdLQ==
   dependencies:
     "@contentful/rich-text-types" "^14.1.2"
     "@shopify/shopify-api" "^1.4.0"
@@ -16877,14 +16877,9 @@ uuid@^8.0.0:
   resolved "https://registry.yarnpkg.com/uuid/-/uuid-8.3.1.tgz"
   integrity sha512-FOmRr+FmWEIG8uhZv6C2bTgEVXsHk08kE7mPlrBbEe+c3r9pjceVPgupIfNIhc4yx55H69OXANrUaSuu9eInKg==
 
-uuid@^8.3.0, uuid@^8.3.1:
+uuid@^8.3.0, uuid@^8.3.1, uuid@^8.3.2:
   version "8.3.2"
   resolved "https://registry.yarnpkg.com/uuid/-/uuid-8.3.2.tgz"
-  integrity sha512-+NYs2QeMWy+GWFOEm9xnn6HCDp0l7QBD7ml8zLUmJ+93Q5NF0NocErnwkTkXVFNiX3/fpC6afS8Dhb/gz7R7eg==
-
-uuid@^8.3.2:
-  version "8.3.2"
-  resolved "https://registry.yarnpkg.com/uuid/-/uuid-8.3.2.tgz#80d5b5ced271bb9af6c445f21a1a04c606cefbe2"
   integrity sha512-+NYs2QeMWy+GWFOEm9xnn6HCDp0l7QBD7ml8zLUmJ+93Q5NF0NocErnwkTkXVFNiX3/fpC6afS8Dhb/gz7R7eg==
 
 v8-compile-cache@^2.0.3:
