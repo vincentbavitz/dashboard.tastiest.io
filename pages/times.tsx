@@ -1,4 +1,5 @@
 import { Button } from '@tastiest-io/tastiest-components';
+import { HotIcon } from '@tastiest-io/tastiest-icons';
 import {
   CmsApi,
   dlog,
@@ -277,18 +278,39 @@ const BoostTablesSection: FC<Props> = props => {
   const cms = new CmsApi();
   const [offers, setOffers] = useState<ITastiestDish[] | null>(null);
 
+  const [boosting, setBoosting] = useState(false);
+  const [notifying, setNotifying] = useState(false);
+
   useEffect(() => {
     cms.getTastiestDishes().then(({ dishes }) => {
       setOffers(dishes);
     });
   }, []);
 
+  const notify = () => {
+    setNotifying(true);
+    setTimeout(() => {
+      setNotifying(false);
+      setBoosting(true);
+    }, 2500);
+  };
+
   return (
     <div className="">
       <div className="flex items-end justify-between pb-4">
         <p className="text-lg leading-none font-somatic">Boost</p>
-        <Button size="small">Notify {numFollowers} Followers</Button>
+        {boosting ? (
+          <div className="flex items-center space-x-2 text-lg font-medium text-red-400">
+            <HotIcon className="h-4 fill-current" />
+            <div>Boosting Active</div>
+          </div>
+        ) : (
+          <Button onClick={notify} loading={notifying} size="small">
+            Notify {numFollowers} Followers
+          </Button>
+        )}
       </div>
+
       <p className="">
         Boosting sends out notifications to all of your followers, letting them
         know that you have tables available. Your followers will receive a
