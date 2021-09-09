@@ -1,6 +1,7 @@
 import { IBooking } from '@tastiest-io/tastiest-utils';
 import useSWR from 'swr';
 import { LocalEndpoint } from 'types/api';
+import { TIME } from '../../constants';
 import BarChart from './BarChart';
 
 const ONE_DAY_IN_MS = 86400000;
@@ -30,8 +31,6 @@ export default function CoversBarChart({ restaurantId }: Props) {
   startOfToday.setHours(0, 0, 0, 0);
   const startOfTodayTimestamp = startOfToday.getTime();
 
-  const daysOfTheWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thurs', 'Fri', 'Sat'];
-
   // Day of the week corresponds to Date.getDay() numerals;
   // where Sunday = 0 and Saturday = 6.
   const pastSevenDays = [
@@ -48,7 +47,7 @@ export default function CoversBarChart({ restaurantId }: Props) {
   const coversOverPastSevenDays = pastSevenDays.map(timestamp => {
     // First, let's just do today.
     let coversForThisDay = 0;
-    const dayName = daysOfTheWeek[new Date(timestamp).getDay()];
+    const dayName = TIME.DAYS_OF_THE_WEEK[new Date(timestamp).getDay()];
 
     coverHistory.forEach(coverRecord => {
       if (

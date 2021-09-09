@@ -1,4 +1,4 @@
-import { HomeIcon, SupportIcon } from '@tastiest-io/tastiest-icons';
+import { HomeIcon, HotIcon, SupportIcon } from '@tastiest-io/tastiest-icons';
 import { FC } from 'react';
 
 export interface ISidebarItem {
@@ -9,6 +9,7 @@ export interface ISidebarItem {
 
 const SIDEBAR_ITEMS: ISidebarItem[] = [
   { label: 'Home', page: '/', icon: HomeIcon },
+  { label: 'Times', page: '/times', icon: HotIcon },
   { label: 'Support', page: '/support', icon: SupportIcon },
 ];
 
