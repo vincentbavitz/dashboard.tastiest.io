@@ -86,6 +86,7 @@ export const HasArrivedCell = ({
                 center
                 value={typedCode}
                 onValueChange={setTypedCode}
+                className="bg-primary bg-opacity-10"
                 placeholder={'0000'}
                 maxLength={4}
               />

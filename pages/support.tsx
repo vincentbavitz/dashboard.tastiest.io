@@ -74,6 +74,7 @@ const Support: NextPage<Props> = () => {
                 <Input
                   color="neutral"
                   placeholder="Name"
+                  className="bg-primary bg-opacity-10"
                   value={name}
                   onValueChange={setName}
                 />
@@ -83,6 +84,7 @@ const Support: NextPage<Props> = () => {
                 <Input
                   color="neutral"
                   placeholder="Subject"
+                  className="bg-primary bg-opacity-10"
                   value={subject}
                   onValueChange={setSubject}
                 />
