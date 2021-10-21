@@ -5,7 +5,6 @@ import moment from 'moment';
 import React, { useEffect, useState } from 'react';
 import useSWR, { mutate } from 'swr';
 import { LocalEndpoint } from 'types/api';
-import { BookingDateCell } from './BookingDateCell';
 import { HasArrivedCell } from './HasArrivedCell';
 import { HasCancelledCell } from './HasCancelledCell';
 
@@ -128,11 +127,11 @@ export default function HomeCustomersTable(props: Props) {
       accessor: 'hasCancelled',
       Cell: HasCancelledCell,
     },
-    {
-      Header: 'Booking Date',
-      accessor: 'bookingDate',
-      Cell: BookingDateCell,
-    },
+    // {
+    //   Header: 'Booking Date',
+    //   accessor: 'bookingDate',
+    //   Cell: BookingDateCell,
+    // },
     {
       Header: 'Arrived',
       accessor: 'hasArrived',
