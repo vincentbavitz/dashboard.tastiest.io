@@ -2,20 +2,25 @@ import { Button } from '@tastiest-io/tastiest-components';
 import {
   CmsApi,
   dlog,
+  formatCurrency,
+  humanTimeIntoMins,
   IPost,
   IRestaurantData,
+  minsIntoHumanTime,
   RestaurantDataApi,
 } from '@tastiest-io/tastiest-utils';
 import BookingSlotsBlock from 'components/blocks/BookingSlotsBlock';
 import QuietTimesBlock from 'components/blocks/QuietTimesBlock';
 import LiveExperienceAdMetrics from 'components/LiveExperienceAdMetrics';
+import { Modal } from 'components/Modal';
 import OnlineOrb from 'components/OnlineOrb';
 import { useAuth } from 'hooks/useAuth';
 import { useRestaurantData } from 'hooks/useRestaurantData';
 import { NextPage } from 'next';
 import Head from 'next/head';
 import nookies from 'nookies';
-import React, { FC, useContext, useEffect, useState } from 'react';
+import React, { FC, useContext, useEffect, useMemo, useState } from 'react';
+import { RangeSlider, Slider } from 'rsuite';
 import { firebaseAdmin } from 'utils/firebaseAdmin';
 import { METADATA } from '../constants';
 import { ScreenContext } from '../contexts/screen';
@@ -135,6 +140,7 @@ const BoostTablesSection: FC<Props> = props => {
 
   const cms = new CmsApi();
   const [experiences, setExperiences] = useState<IPost[] | null>([]);
+  const [isFillTablesModalOpen, setIsFillTablesModalOpen] = useState(false);
 
   const [boosting, setBoosting] = useState(false);
   const [notifying, setNotifying] = useState(false);
@@ -150,7 +156,9 @@ const BoostTablesSection: FC<Props> = props => {
   }, [restaurantData]);
 
   const startAI = () => {
+    setIsFillTablesModalOpen(false);
     setNotifying(true);
+
     setTimeout(() => {
       setNotifying(false);
       setBoosting(true);
@@ -159,10 +167,19 @@ const BoostTablesSection: FC<Props> = props => {
 
   return (
     <div className="">
+      <FillTablesModal
+        onConfirm={startAI}
+        isOpen={isFillTablesModalOpen}
+        close={() => setIsFillTablesModalOpen(false)}
+      />
+
       <div className="flex items-end justify-between pb-4">
         <p className="text-xl text-dark leading-none">AI Table Selection</p>
 
-        <Button onClick={startAI} loading={notifying}>
+        <Button
+          onClick={() => (boosting ? null : setIsFillTablesModalOpen(true))}
+          loading={notifying}
+        >
           {boosting ? (
             <>
               <OnlineOrb size={3} /> <span className="pl-2">Running</span>
@@ -191,6 +208,79 @@ const BoostTablesSection: FC<Props> = props => {
         </div>
       </div>
     </div>
+  );
+};
+
+interface FillTablesModalProps {
+  isOpen: boolean;
+  close: () => void;
+  onConfirm: () => void;
+}
+
+const FillTablesModal = (props: FillTablesModalProps) => {
+  const { close, onConfirm } = props;
+
+  const [range, setRange] = useState([540, 1440]);
+  const [coversRequired, setCoversRequired] = useState(1);
+
+  const humanRange = `${minsIntoHumanTime(range[0])} > ${minsIntoHumanTime(
+    range[1],
+  )}`;
+
+  const cost = useMemo(() => {
+    const duration = range[1] - range[0];
+    return (duration / 60) * 3 * (coversRequired / 20);
+  }, [coversRequired, range]);
+
+  return (
+    <Modal title={'Fill Tables'} {...props}>
+      <div style={{ minWidth: '300px' }}>
+        <div className="flex pb-2 pt-4 justify-between">
+          <div>What time?</div>
+          <div>{humanRange}</div>
+        </div>
+
+        <RangeSlider
+          defaultValue={[1080, 1140]}
+          step={15}
+          min={540}
+          max={humanTimeIntoMins(24, 0)}
+          onChange={setRange}
+          tooltip={false}
+        />
+      </div>
+
+      <div className="pt-6">
+        <div className="flex pb-2 justify-between">
+          <div>Covers required?</div>
+          <div>{coversRequired}</div>
+        </div>
+
+        <Slider
+          defaultValue={coversRequired}
+          step={1}
+          min={1}
+          max={50}
+          progress
+          onChange={setCoversRequired}
+        />
+      </div>
+
+      <div className="pt-6 flex justify-between text-base">
+        <div>Estimated Cost</div>
+        <p className="font-medium">£{formatCurrency(cost)}</p>
+      </div>
+
+      <div className="pt-10">
+        <div className="flex space-x-2 justify-end">
+          <Button color="light" onClick={close}>
+            Cancel
+          </Button>
+
+          <Button onClick={onConfirm}>Confirm</Button>
+        </div>
+      </div>
+    </Modal>
   );
 };
 
