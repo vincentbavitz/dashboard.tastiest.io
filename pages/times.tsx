@@ -191,11 +191,7 @@ const BoostTablesSection: FC<Props> = props => {
       </div>
 
       <p className="">
-        Boosting sends out notifications to all of your followers, letting them
-        know that you have tables available. Your followers will receive a
-        notification letting them know that you have a special spot saved for
-        them. In addition, ads for your selected offers will be set to LIVE for
-        the next 2 hours.
+        Run ads with our AI to fill your tables at the last minute
       </p>
 
       <div className="flex flex-col pt-10 pb-12">
