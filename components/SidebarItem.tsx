@@ -17,7 +17,7 @@ export default function SidebarItem(props: Props) {
           <props.icon
             className={classNames(
               selected && 'text-primary',
-              'h-6 stroke-current fill-current',
+              'h-6 text-xl w-6 stroke-current fill-current',
             )}
           />
           <p className={classNames(selected && 'text-primary')}>{label}</p>

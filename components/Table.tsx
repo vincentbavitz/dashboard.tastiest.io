@@ -91,12 +91,10 @@ export default function Table(props: TableProps) {
   return (
     <div className="relative">
       <div className="flex items-center justify-between w-full">
-        {label && <div className="mb-2 text-lg font-somatic">{label}</div>}
+        {label && <div className="mb-2 text-lg font-primary">{label}</div>}
         <div style={{ width: '300px' }} className="">
           <Input
             size="small"
-            color="neutral"
-            className="bg-white"
             value={searchQuery}
             onValueChange={updateSearch}
             suffix={<SearchIcon className="w-5 text-gray-400 fill-current" />}

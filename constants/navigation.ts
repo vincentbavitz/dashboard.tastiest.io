@@ -1,4 +1,5 @@
-import { HomeIcon, HotIcon, SupportIcon } from '@tastiest-io/tastiest-icons';
+import { ClockCircleOutlined } from '@ant-design/icons';
+import { HomeIcon, SupportIcon } from '@tastiest-io/tastiest-icons';
 import { FC } from 'react';
 
 export interface ISidebarItem {
@@ -9,7 +10,7 @@ export interface ISidebarItem {
 
 const SIDEBAR_ITEMS: ISidebarItem[] = [
   { label: 'Home', page: '/', icon: HomeIcon },
-  { label: 'Times', page: '/times', icon: HotIcon },
+  { label: 'Times', page: '/times', icon: ClockCircleOutlined },
   { label: 'Support', page: '/support', icon: SupportIcon },
 ];
 

@@ -1,4 +1,6 @@
 import * as snippet from '@segment/snippet';
+import Favicon from 'components/Favicon';
+import Fonts from 'components/Fonts';
 import Document, { Head, Html, Main, NextScript } from 'next/document';
 import React from 'react';
 
@@ -24,8 +26,10 @@ export default class CustomDocument extends Document<any> {
         <Head>
           {/* Inject the Segment snippet into the <head> of the document  */}
           <script dangerouslySetInnerHTML={{ __html: this.renderSnippet() }} />
-
           {this.props?.styleTags}
+
+          <Fonts />
+          <Favicon />
         </Head>
         <body>
           <Main />

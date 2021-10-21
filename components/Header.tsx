@@ -1,4 +1,4 @@
-import { BrandIcon } from '@tastiest-io/tastiest-icons';
+import { TastiestBrand } from '@tastiest-io/tastiest-components';
 import Link from 'next/link';
 import React, { useState } from 'react';
 import { HeaderAvatar } from './HeaderAvatar';
@@ -19,7 +19,7 @@ export default function Header({ blank }: HeaderProps) {
       <div className="flex items-center flex-grow space-x-6">
         <Link href="/">
           <a>
-            <BrandIcon className="w-40 fill-current text-primary" />
+            <TastiestBrand type="full" size={10} />
           </a>
         </Link>
 

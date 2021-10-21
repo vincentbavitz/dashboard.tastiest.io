@@ -1,6 +1,7 @@
 import { InfoCard } from '@tastiest-io/tastiest-components';
 import {
   dlog,
+  formatCurrency,
   IRestaurant,
   RestaurantDataApi,
 } from '@tastiest-io/tastiest-utils';
@@ -111,7 +112,11 @@ const Index = (
             <CoversBarChart restaurantId={restaurantId} />
           </div>
           <div style={{ maxWidth: '300px' }} className="w-5/12">
-            <InfoCard label="This Payout" info={`£${pendingBalance}`} chart />
+            <InfoCard
+              label="This Payout"
+              info={`£${formatCurrency(pendingBalance)}`}
+              chart
+            />
           </div>
         </div>
 
@@ -126,23 +131,27 @@ interface IntroductionProps {
   payoutTotal: number;
 }
 
-const Introduction = ({ restaurantName, payoutTotal }: IntroductionProps) => (
-  <div className="flex items-center justify-between text-gray-500">
-    <div>
-      <h2 className="text-xl font-medium text-black font-somatic">
-        {restaurantName}
-      </h2>
-      <p className="">Welcome to your dashboard</p>
-    </div>
+const Introduction = ({ restaurantName, payoutTotal }: IntroductionProps) => {
+  const payout = formatCurrency(payoutTotal ?? 0);
 
-    <div className="text-right">
-      <p className="text-sm">Total Payout</p>
-      <p className="text-lg font-medium tracking-wider text-black font-somatic">
-        <span className="-mt-px font-roboto">£</span>
-        {payoutTotal ?? 0}
-      </p>
+  return (
+    <div className="flex items-center justify-between text-gray-500">
+      <div>
+        <h2 className="text-xl font-medium text-black font-primary">
+          {restaurantName}
+        </h2>
+        <p className="">Welcome to your dashboard</p>
+      </div>
+
+      <div className="text-right">
+        <p className="text-sm">Total Payout</p>
+        <p className="text-lg font-medium tracking-wider text-black">
+          <span className="-mt-px font-secondary">£</span>
+          {payout}
+        </p>
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 export default Index;

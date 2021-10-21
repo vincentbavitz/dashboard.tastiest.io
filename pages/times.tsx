@@ -5,26 +5,19 @@ import {
   dlog,
   IRestaurantData,
   ITastiestDish,
-  postFetch,
   RestaurantDataApi,
 } from '@tastiest-io/tastiest-utils';
-import {
-  TimeSlots,
-  WeekTimeSlots,
-} from '@tastiest-io/tastiest-utils/dist/types/time';
-import clsx from 'clsx';
+import BookingSlotsBlock from 'components/blocks/BookingSlotsBlock';
+import QuietTimesBlock from 'components/blocks/QuietTimesBlock';
 import { useAuth } from 'hooks/useAuth';
 import { useRestaurantData } from 'hooks/useRestaurantData';
-import lodash from 'lodash';
 import { NextPage } from 'next';
 import Head from 'next/head';
 import nookies from 'nookies';
 import React, { FC, useContext, useEffect, useState } from 'react';
-import { LocalEndpoint } from 'types/api';
 import { firebaseAdmin } from 'utils/firebaseAdmin';
-import { METADATA, TIME } from '../constants';
+import { METADATA } from '../constants';
 import { ScreenContext } from '../contexts/screen';
-import { SetQuietSlotsParams } from './api/setQuietSlots';
 
 interface Props {
   restaurantId: string;
@@ -85,23 +78,6 @@ const DefineSlotsSection: FC<Props> = props => {
   const { restaurantUser } = useAuth();
   const { restaurantData } = useRestaurantData(restaurantUser);
 
-  const [day, setDay] = useState(0);
-  const [slots, setSlots] = useState<TimeSlots>(
-    props.restaurantData.metrics.quietTimes?.[day],
-  );
-
-  const [saved, setSaved] = useState(true);
-  const [saving, setSaving] = useState(false);
-
-  const [updatedSlots, setUpdatedSlots] = useState<WeekTimeSlots | null>(null);
-
-  dlog('times ➡️ slots:', slots);
-
-  // Update slots
-  useEffect(() => {
-    setSlots(props.restaurantData.metrics.quietTimes?.[day]);
-  }, [day]);
-
   // Make the UX like a wizard / typeform flow. Next -> next etc.
   // Turn off when X number of people have booked.
   // Slots make up blocks.
@@ -117,6 +93,10 @@ const DefineSlotsSection: FC<Props> = props => {
   // --> Push out ads
   //
   // Remove follower count from restaurant dashboard.
+  // Separate pages: quiet times
+  //                 boost --> schedule a boost
+  //                       --> link them to the ads
+  //                       --> how much we've spent on you
   //
   // Make the dishes for ads in restaurant dashboard more about experiences;
   // eg. Piccania Steak --> Tasting Menu
@@ -127,147 +107,17 @@ const DefineSlotsSection: FC<Props> = props => {
   // For each of their followers, if they have the notification bell on, it puts them into a
   // segment in Klaviyo which will send out an email to them; "There are only X numbers left!".
   // So if it's sold out when a user goes to the page, tell them "Sorry - this is sold out".
-  //
-  //
-  // 1. Restaurants now have openSlots and quietSlots defined in their profiles
-  //    - They are in 15 minute increments
-  //    - This will automatically generate their opening hours on the restaurant page.
-  //    - They can modify the quietSlots as they like. openSlots are not yet modifiable.
-  // 2. Eaters can now follow restaurants which does three things;
-  //    - Fires off an event to Segment of `User Followed Restaurant`
-  //    - Adds user to restaurant's followers and add's restaurant to user's follow list.
-  //    - Sets up Google Cloud Functions for notifications to user emails. Emails don't send yet.
-  // 3. Events for everything.
-  //
-  //
-  //
-
-  // const setInitial = async () => {
-  //   const result = await postFetch<SetQuietSlotsParams>(
-  //     LocalEndpoint.SET_QUIET_SLOTS,
-  //     {
-  //       restaurantId,
-  //       slots: {
-  //         [0]: (Array(96).fill(1) as never) as TimeSlots,
-  //         [1]: (Array(96).fill(1) as never) as TimeSlots,
-  //         [2]: (Array(96).fill(0) as never) as TimeSlots,
-  //         [3]: (Array(96).fill(0) as never) as TimeSlots,
-  //         [4]: (Array(96).fill(0) as never) as TimeSlots,
-  //         [5]: (Array(96).fill(0) as never) as TimeSlots,
-  //         [6]: (Array(96).fill(0) as never) as TimeSlots,
-  //       },
-  //     },
-  //   );
-
-  //   dlog('times ➡️ result:', result);
-  // };
-
-  // useEffect(() => {
-  //   setInitial();
-  // }, [day]);
-
-  const updateSlot = (slot: number, available: boolean) => {
-    const week = lodash.cloneDeep(
-      updatedSlots ?? restaurantData?.metrics?.quietTimes,
-    );
-
-    if (!week || !week[day]) {
-      return;
-    }
-
-    week[day][slot] = available ? 1 : 0;
-    setUpdatedSlots(week);
-    setSaved(false);
-  };
-
-  // Save updated to server
-  const save = async () => {
-    setSaving(true);
-    const { success } = await postFetch<SetQuietSlotsParams>(
-      LocalEndpoint.SET_QUIET_SLOTS,
-      {
-        restaurantId,
-        slots: updatedSlots,
-      },
-    );
-
-    setSaving(false);
-    if (success) {
-      setSaved(true);
-    }
-  };
 
   return (
     <div>
-      <div className="flex items-end justify-between pb-4">
-        <p className="text-lg font-somatic">Define available time slots</p>
-        <Button onClick={save} size="small" disabled={saved} loading={saving}>
-          Save
-        </Button>
-      </div>
+      <div className="flex space-x-4">
+        <div className="flex-1">
+          <BookingSlotsBlock restaurantData={restaurantData} />
+        </div>
 
-      <div
-        className="flex w-full space-x-2"
-        style={{
-          maxWidth: '800px',
-        }}
-      >
-        {TIME.DAYS_OF_THE_WEEK.map((_, key) => {
-          const selected = key === day;
-
-          return (
-            <div
-              key={key}
-              className={clsx(
-                'flex py-1 justify-center cursor-pointer duration-300 rounded-md items-center flex-1',
-                selected ? 'bg-secondary bg-opacity-75' : 'bg-gray-200',
-              )}
-              onClick={() => setDay(key)}
-            >
-              {TIME.DAYS_OF_THE_WEEK[key]}
-            </div>
-          );
-        })}
-      </div>
-
-      <div
-        className="grid grid-cols-6 gap-0 mt-3 overflow-hidden text-sm rounded-md tablet:grid-cols-8 desktop:grid-cols-12"
-        style={{
-          maxWidth: '800px',
-        }}
-      >
-        {(updatedSlots?.[day] ?? slots)?.map((available, key) => {
-          dlog('times ➡️ available:', available);
-          const minsInterval = 15;
-
-          const startHours = Math.floor(key / 4);
-          const startMins = (key % 4) * minsInterval;
-          const endHours = startMins === 45 ? startHours + 1 : startHours;
-          const endMins = startMins === 45 ? 0 : startMins + minsInterval;
-
-          // prettier-ignore
-          const start = `${startHours < 10 ? '0' : ''}${startHours}:${startMins < 10 ? '0' : ''}${startMins}`;
-          const end = `${endHours < 10 ? '0' : ''}${endHours}:${
-            endMins < 10 ? '0' : ''
-          }${endMins}`;
-
-          return (
-            <div
-              key={key}
-              className={clsx(
-                'flex flex-col py-1 items-center leading-none justify-center',
-                'border border-gray-50 cursor-pointer',
-                available
-                  ? 'bg-primary-2 bg-opacity-75 text-white'
-                  : 'bg-gray-300 text-gray-500',
-              )}
-              onClick={() => updateSlot(key, !available)}
-            >
-              <div>{start}</div>
-              <div>{end}</div>
-            </div>
-          );
-        })}
+        <div className="flex-1">
+          <QuietTimesBlock restaurantData={restaurantData} />
+        </div>
       </div>
     </div>
   );
@@ -298,7 +148,7 @@ const BoostTablesSection: FC<Props> = props => {
   return (
     <div className="">
       <div className="flex items-end justify-between pb-4">
-        <p className="text-lg leading-none font-somatic">Boost</p>
+        <p className="text-lg leading-none font-primary">Boost</p>
         {boosting ? (
           <div className="flex items-center space-x-2 text-lg font-medium text-red-400">
             <HotIcon className="h-4 fill-current" />
@@ -306,7 +156,7 @@ const BoostTablesSection: FC<Props> = props => {
           </div>
         ) : (
           <Button onClick={notify} loading={notifying} size="small">
-            Notify {numFollowers} Followers
+            Notify Followers
           </Button>
         )}
       </div>
@@ -320,7 +170,7 @@ const BoostTablesSection: FC<Props> = props => {
       </p>
 
       <div className="flex flex-col pt-4 pb-12">
-        <p className="pb-4 text-lg leading-none font-somatic">Current Ads</p>
+        <p className="pb-4 text-lg leading-none font-primary">Current Ads</p>
 
         {offers?.map((offer, key) => (
           <div
@@ -340,7 +190,7 @@ const BoostTablesSection: FC<Props> = props => {
             </div>
 
             <div className="flex items-center py-2 pr-4">
-              <Button className="">LIVE</Button>
+              <Button>LIVE</Button>
             </div>
           </div>
         ))}

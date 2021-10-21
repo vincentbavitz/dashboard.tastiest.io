@@ -44,7 +44,7 @@ export default function Layout({ children }: Props) {
   return (
     <div
       style={{ height: '100vh' }}
-      className="relative flex flex-col overflow-hidden font-roboto"
+      className="relative flex flex-col overflow-hidden font-secondary"
     >
       <Header />
 

@@ -1,11 +1,10 @@
 import { Dropdown, DropdownItem } from '@tastiest-io/tastiest-components';
-import { LogoIcon } from '@tastiest-io/tastiest-icons';
 import { titleCase } from '@tastiest-io/tastiest-utils';
-import classNames from 'classnames';
 import { useAuth } from 'hooks/useAuth';
 import { useRestaurantData } from 'hooks/useRestaurantData';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
+import { Avatar } from './Avatar';
 
 interface IProfileDropdownItems {
   id: string;
@@ -54,35 +53,7 @@ export function HeaderAvatar(props: AvatarProps) {
 
   return (
     <div>
-      <div
-        className={classNames(
-          'relative flex justify-center items-center rounded-full cursor-pointer duration-300 bg-opacity-75 hover:bg-opacity-100',
-          !url && 'bg-primary',
-          `h-${size} w-${size}`,
-        )}
-      >
-        <div
-          className="flex items-center justify-center w-full h-full"
-          onClick={onAvatarClick}
-        >
-          {url ? (
-            // Custom Avatar Image
-            <img
-              style={{ filter: 'drop-shadow(0px 0px 3px rgba(0,0,0,0.20))' }}
-              className="object-cover w-full h-full rounded-full"
-              src={`${url}?w=50`}
-              alt={'Profile picture'}
-            />
-          ) : initial?.length ? (
-            <div className="flex items-center justify-center w-full h-full text-xl text-white font-somatic">
-              {initial[0]}
-            </div>
-          ) : (
-            // Default Tastiest Avatar
-            <LogoIcon className="h-4 text-white fill-current" />
-          )}
-        </div>
-      </div>
+      <Avatar initial={restaurantData?.details?.name[0] ?? 'T'} />
 
       <Dropdown
         isOpen={isDropdownOpen}
