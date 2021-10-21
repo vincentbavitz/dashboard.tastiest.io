@@ -9,7 +9,7 @@ export default function Sidebar() {
   console.log('Sidebar ➡️ router.pathname:', router.pathname);
 
   return (
-    <div className="flex flex-col h-full py-4 space-y-6 border-r-2 border-gray-200">
+    <div className="flex flex-col h-full pb-4 border-r-2 border-gray-200">
       {NAVIGATION.SIDEBAR_ITEMS.map(item => (
         <SidebarItem
           key={item.page}

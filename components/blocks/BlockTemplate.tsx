@@ -35,13 +35,13 @@ export default function BlockTemplate(props: Props) {
           `bg-${theme}`,
         )}
       >
-        <div className="text-lg font-medium text-white">{title}</div>
+        <div className="text-lg font-medium text-dark">{title}</div>
 
         {Icon ? (
           <div>
             <Icon
               onClick={onIconClick}
-              className="text-lg text-gray-200 duration-300 cursor-pointer hover:text-white"
+              className="text-lg text-gray-700 duration-300 cursor-pointer hover:text-dark"
             />
           </div>
         ) : null}

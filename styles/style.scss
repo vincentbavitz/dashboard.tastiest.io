@@ -7,6 +7,15 @@
   src: url(/fonts/SourceCodePro.ttf) format('truetype');
 }
 
+a {
+  @apply cursor-pointer;
+
+  &:not(.no-underline):hover {
+    @apply underline;
+  }
+}
+
+
 body {
   min-width: 350px;
 }
@@ -16,7 +25,7 @@ body {
 }
 
 body {
-  @apply bg-white font-secondary;
+  @apply bg-white font-secondary font-normal;
   font-smooth: antialiased;
 
   ::selection {

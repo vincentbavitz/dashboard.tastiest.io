@@ -31,8 +31,7 @@ export const QuietTimesSelectorHoursSection = () => {
 
       <div className="flex justify-center pt-6 space-x-2">
         <Button
-          color="secondary"
-          type="outline"
+          color="light"
           onClick={() => setStep(QuietTimesSelectorSteps.DAYS)}
         >
           Back

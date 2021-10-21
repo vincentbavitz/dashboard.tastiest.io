@@ -91,12 +91,7 @@ export const HasArrivedCell = ({
               />
             </div>
 
-            <Button
-              color="primary"
-              size="small"
-              className="h-10"
-              onClick={submitCode}
-            >
+            <Button color="primary" size="small" onClick={submitCode}>
               Confirm
             </Button>
           </div>

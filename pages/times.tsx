@@ -1,14 +1,15 @@
 import { Button } from '@tastiest-io/tastiest-components';
-import { HotIcon } from '@tastiest-io/tastiest-icons';
 import {
   CmsApi,
   dlog,
+  IPost,
   IRestaurantData,
-  ITastiestDish,
   RestaurantDataApi,
 } from '@tastiest-io/tastiest-utils';
 import BookingSlotsBlock from 'components/blocks/BookingSlotsBlock';
 import QuietTimesBlock from 'components/blocks/QuietTimesBlock';
+import LiveExperienceAdMetrics from 'components/LiveExperienceAdMetrics';
+import OnlineOrb from 'components/OnlineOrb';
 import { useAuth } from 'hooks/useAuth';
 import { useRestaurantData } from 'hooks/useRestaurantData';
 import { NextPage } from 'next';
@@ -108,15 +109,21 @@ const DefineSlotsSection: FC<Props> = props => {
   // segment in Klaviyo which will send out an email to them; "There are only X numbers left!".
   // So if it's sold out when a user goes to the page, tell them "Sorry - this is sold out".
 
+  dlog('times ➡️ restaurantData:', restaurantData);
+
   return (
     <div>
       <div className="flex space-x-4">
         <div className="flex-1">
-          <BookingSlotsBlock restaurantData={restaurantData} />
+          {restaurantData ? (
+            <BookingSlotsBlock restaurantData={restaurantData} />
+          ) : null}
         </div>
 
         <div className="flex-1">
-          <QuietTimesBlock restaurantData={restaurantData} />
+          {restaurantData ? (
+            <QuietTimesBlock restaurantData={restaurantData} />
+          ) : null}
         </div>
       </div>
     </div>
@@ -124,20 +131,25 @@ const DefineSlotsSection: FC<Props> = props => {
 };
 
 const BoostTablesSection: FC<Props> = props => {
-  const numFollowers = 4;
+  const { restaurantData } = props;
+
   const cms = new CmsApi();
-  const [offers, setOffers] = useState<ITastiestDish[] | null>(null);
+  const [experiences, setExperiences] = useState<IPost[] | null>([]);
 
   const [boosting, setBoosting] = useState(false);
   const [notifying, setNotifying] = useState(false);
 
   useEffect(() => {
-    cms.getTastiestDishes().then(({ dishes }) => {
-      setOffers(dishes);
-    });
-  }, []);
+    if (restaurantData?.details) {
+      cms
+        .getPostsOfRestaurant(restaurantData.details.uriName)
+        .then(({ posts }) => {
+          setExperiences(posts);
+        });
+    }
+  }, [restaurantData]);
 
-  const notify = () => {
+  const startAI = () => {
     setNotifying(true);
     setTimeout(() => {
       setNotifying(false);
@@ -148,17 +160,17 @@ const BoostTablesSection: FC<Props> = props => {
   return (
     <div className="">
       <div className="flex items-end justify-between pb-4">
-        <p className="text-lg leading-none font-primary">Boost</p>
-        {boosting ? (
-          <div className="flex items-center space-x-2 text-lg font-medium text-red-400">
-            <HotIcon className="h-4 fill-current" />
-            <div>Boosting Active</div>
-          </div>
-        ) : (
-          <Button onClick={notify} loading={notifying} size="small">
-            Notify Followers
-          </Button>
-        )}
+        <p className="text-xl text-dark leading-none">AI Table Selection</p>
+
+        <Button onClick={startAI} loading={notifying}>
+          {boosting ? (
+            <>
+              <OnlineOrb size={3} /> <span className="pl-2">Running</span>
+            </>
+          ) : (
+            'Fill tables'
+          )}
+        </Button>
       </div>
 
       <p className="">
@@ -169,31 +181,14 @@ const BoostTablesSection: FC<Props> = props => {
         the next 2 hours.
       </p>
 
-      <div className="flex flex-col pt-4 pb-12">
-        <p className="pb-4 text-lg leading-none font-primary">Current Ads</p>
+      <div className="flex flex-col pt-10 pb-12">
+        <p className="pb-4 text-xl text-dark leading-none">Current Ads</p>
 
-        {offers?.map((offer, key) => (
-          <div
-            key={key}
-            className="flex w-full mb-2 space-x-4 bg-gray-200 rounded-lg"
-          >
-            <img
-              src={offer.image.url}
-              className="object-cover w-20 h-16 rounded-l-lg"
-            />
-
-            <div className="flex flex-col flex-grow py-2">
-              <h4 className="text-lg font-medium">{offer.name}</h4>
-              <p className="duration-300 opacity-50 hover:opacity-100">
-                Reach: 10,000 - 15,0000
-              </p>
-            </div>
-
-            <div className="flex items-center py-2 pr-4">
-              <Button>LIVE</Button>
-            </div>
-          </div>
-        ))}
+        <div className="grid gap-4 grid-cols-2">
+          {[...experiences, ...experiences]?.map((experience, key) => (
+            <LiveExperienceAdMetrics key={key} experience={experience} />
+          ))}
+        </div>
       </div>
     </div>
   );

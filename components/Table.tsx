@@ -91,7 +91,7 @@ export default function Table(props: TableProps) {
   return (
     <div className="relative">
       <div className="flex items-center justify-between w-full">
-        {label && <div className="mb-2 text-lg font-primary">{label}</div>}
+        {label && <div className="mb-2 text-lg">{label}</div>}
         <div style={{ width: '300px' }} className="">
           <Input
             size="small"

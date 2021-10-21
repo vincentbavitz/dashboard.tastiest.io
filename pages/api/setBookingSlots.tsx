@@ -3,7 +3,7 @@ import {
   RestaurantData,
   RestaurantDataApi,
 } from '@tastiest-io/tastiest-utils';
-import { OpenTimesArray } from 'components/blocks/BookingSlotsSelector';
+import { OpenTimesArray } from 'components/blocks/BookingSlotsSelector/BookingSlotsContext';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { firebaseAdmin } from 'utils/firebaseAdmin';
 

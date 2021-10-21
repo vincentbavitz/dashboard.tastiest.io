@@ -10,9 +10,9 @@ import { HasArrivedCell } from './HasArrivedCell';
 import { HasCancelledCell } from './HasCancelledCell';
 
 enum EditableBookingFields {
-  BOOKING_DATE = 'bookingDate',
   HAS_ARRIVED = 'hasArrived',
   HAS_CANCELLED = 'hasCancelled',
+  BOOKED_FOR_TIMESTAMP = 'bookedForTimestamp',
 }
 
 // Update any field in the current booking

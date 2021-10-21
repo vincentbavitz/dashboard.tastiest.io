@@ -40,7 +40,7 @@ export const BookingSlotsSelectorDaysSection = () => {
         </h4>
 
         <div className="flex flex-col items-center flex-grow space-y-4">
-          <div className="flex flex-col w-full overflow-hidden rounded-md">
+          <div className="flex flex-col w-full overflow-hidden rounded-md border-primary border-opacity-10 border shadow-md">
             {TIME.DAYS_OF_THE_WEEK.map((day, key) => {
               const selected = openTimesMetric[key].open;
 
@@ -48,16 +48,16 @@ export const BookingSlotsSelectorDaysSection = () => {
                 <div
                   key={key}
                   className={clsx(
-                    'flex items-center justify-between cursor-pointer  duration-300 flex-1 px-2 py-2',
+                    'flex items-center justify-between cursor-pointer duration-300 flex-1 px-2 py-2',
                     selected
-                      ? 'bg-secondary'
+                      ? 'bg-secondary text-light'
                       : 'bg-secondary-2 bg-opacity-50 hover:bg-opacity-100',
                   )}
                   onClick={() => toggleDay(key)}
                 >
                   <div className="w-5"></div>
                   <div>
-                    <span className="font-medium text-opacity-75 duration-300 hover:text-opacity-100 text-alt">
+                    <span className="font-medium text-opacity-75 hover:text-opacity-100 text-alt">
                       {titleCase(day)}
                     </span>
                   </div>

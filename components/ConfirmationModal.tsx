@@ -40,7 +40,7 @@ export function ConfirmationModal(props: Props) {
             {acceptText}
           </Button>
           {onReject && (
-            <Button size="small" onClick={onReject} color="neutral">
+            <Button size="small" onClick={onReject} color="light">
               {rejectText}
             </Button>
           )}

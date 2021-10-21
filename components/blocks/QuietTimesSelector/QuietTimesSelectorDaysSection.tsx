@@ -38,7 +38,7 @@ export const QuietTimesSelectorDaysSection = () => {
         </h4>
 
         <div className="flex flex-col items-center flex-grow space-y-4">
-          <div className="flex flex-col w-full overflow-hidden rounded-md">
+          <div className="flex flex-col w-full overflow-hidden rounded-md border-primary border-opacity-10 border shadow-md">
             {TIME.DAYS_OF_THE_WEEK.map((day, key) => {
               const selected = days[key].active;
 
@@ -46,9 +46,9 @@ export const QuietTimesSelectorDaysSection = () => {
                 <div
                   key={key}
                   className={clsx(
-                    'flex items-center justify-between cursor-pointer  duration-300 flex-1 px-2 py-2',
+                    'flex items-center justify-between cursor-pointer flex-1 px-2 py-2',
                     selected
-                      ? 'bg-secondary'
+                      ? 'bg-secondary text-light'
                       : 'bg-secondary-2 bg-opacity-50 hover:bg-opacity-100',
                   )}
                   onClick={() => toggleDay(key)}

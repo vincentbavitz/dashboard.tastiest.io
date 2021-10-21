@@ -18,7 +18,7 @@ export type UpdateBookingReturn = FunctionsResponse<{
  *  ```
  *    hasArrived: string;
  *    hasCancelled: string;
- *    bookingDate: number | null;
+ *    bookedForTimestamp: number | null;
  *  ```
  *
  * Returns updated booking object on success
@@ -45,7 +45,7 @@ export default async function updateBooking(
     bookingId = null,
     hasArrived = null,
     hasCancelled = null,
-    bookingDate = null,
+    bookedForTimestamp = null,
   } = body;
 
   // Booking ID is required
@@ -93,8 +93,8 @@ export default async function updateBooking(
     }
 
     // Adding hasCancelled to booking
-    if (typeof bookingDate === 'number') {
-      updatedBooking.bookingDate = bookingDate;
+    if (typeof bookedForTimestamp === 'number') {
+      updatedBooking.bookedForTimestamp = bookedForTimestamp;
     }
 
     // Sync with Firestore

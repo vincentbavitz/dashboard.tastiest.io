@@ -96,7 +96,7 @@ const Support: NextPage<Props> = () => {
               onValueChange={setMessage}
             />
             <Button
-              off={!sendable}
+              disabled={!sendable}
               onClick={submit}
               suffix={
                 hasSent && !sendable ? (
