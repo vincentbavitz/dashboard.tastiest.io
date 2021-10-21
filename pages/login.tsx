@@ -115,7 +115,7 @@ const LogIn: NextPage<Props> = () => {
               <Input
                 value={email}
                 onValueChange={setEmail}
-                className="bg-primary bg-opacity-10"
+                style={{ background: 'rgb(229, 231, 235)' }}
                 label={'Admin Email'}
               />
             </div>
@@ -123,7 +123,7 @@ const LogIn: NextPage<Props> = () => {
               <Input
                 value={password}
                 onValueChange={setPassword}
-                className="bg-primary bg-opacity-10"
+                style={{ background: 'rgb(229, 231, 235)' }}
                 type="password"
                 label={'Password'}
               />

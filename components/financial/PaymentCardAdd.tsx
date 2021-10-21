@@ -43,22 +43,14 @@ export default function PaymentCard(props: Props) {
         close={() => setAddModalOpen(false)}
       >
         <div className="pt-6 flex flex-col space-y-4">
-          <Input
-            label="Card Number"
-            className="bg-primary bg-opacity-10"
-            value=""
-          />
-          <Input
-            label="Cardholder's Name"
-            className="bg-primary bg-opacity-10"
-            value=""
-          />
+          <Input label="Card Number" className="bg-gray-200" value="" />
+          <Input label="Cardholder's Name" className="bg-gray-200" value="" />
 
           <div className="flex space-x-8">
             <div className="w-20">
               <Input
                 label="Expiry"
-                className="bg-primary bg-opacity-10"
+                style={{ background: 'rgb(229, 231, 235)' }}
                 placeholder="12/33"
                 value=""
               />
@@ -67,7 +59,7 @@ export default function PaymentCard(props: Props) {
             <div className="w-16">
               <Input
                 label="BSB"
-                className="bg-primary bg-opacity-10"
+                style={{ background: 'rgb(229, 231, 235)' }}
                 placeholder="123"
                 value=""
               />

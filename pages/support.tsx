@@ -74,7 +74,7 @@ const Support: NextPage<Props> = () => {
                 <Input
                   color="neutral"
                   placeholder="Name"
-                  className="bg-primary bg-opacity-10"
+                  style={{ background: 'rgb(229, 231, 235)' }}
                   value={name}
                   onValueChange={setName}
                 />
@@ -84,7 +84,7 @@ const Support: NextPage<Props> = () => {
                 <Input
                   color="neutral"
                   placeholder="Subject"
-                  className="bg-primary bg-opacity-10"
+                  style={{ background: 'rgb(229, 231, 235)' }}
                   value={subject}
                   onValueChange={setSubject}
                 />

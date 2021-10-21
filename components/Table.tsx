@@ -95,7 +95,7 @@ export default function Table(props: TableProps) {
         <div style={{ width: '300px' }} className="">
           <Input
             size="small"
-            className="bg-primary bg-opacity-10"
+            style={{ background: 'rgb(229, 231, 235)' }}
             value={searchQuery}
             onValueChange={updateSearch}
             suffix={<SearchIcon className="w-5 text-gray-400 fill-current" />}
