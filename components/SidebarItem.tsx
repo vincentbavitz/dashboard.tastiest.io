@@ -1,36 +1,39 @@
 import clsx from 'clsx';
-import { ISidebarItem } from 'constants/navigation';
 import Link from 'next/link';
 import React from 'react';
+import { ISidebarItem } from './Sidebar';
 
 export interface Props extends ISidebarItem {
   selected?: boolean;
+  collapsed?: boolean;
 }
 
 export default function SidebarItem(props: Props) {
-  const { label, page, selected } = props;
+  const { label, page, selected, collapsed } = props;
 
   return (
-    <Link href={page} as={page}>
+    <Link href={page}>
       <a className="no-underline">
         <div
           className={clsx(
-            'px-6 text-gray-400 py-3 duration-150',
-            selected
-              ? 'bg-secondary bg-opacity-75'
-              : 'hover:bg-secondary hover:bg-opacity-10',
+            'text-gray-400 duration-150 hover:text-primary py-4 bg-primary filter',
+            collapsed ? 'px-6' : 'px-4',
+            selected && '-bg-primary-1',
+            'hover:brightness-95',
           )}
         >
-          <div className="flex items-center space-x-2 font-medium">
+          <div
+            className={clsx(
+              'flex items-center space-x-2 font-medium',
+              collapsed && 'justify-center',
+              selected ? 'text-light' : 'text-gray-300',
+            )}
+          >
             <props.icon
-              className={clsx(
-                'flex items-center justify-center h-6 text-xl w-6 stroke-current fill-current',
-                selected ? 'text-light' : 'text-primary',
-              )}
+              className={clsx('h-6 stroke-current w-6 text-xl fill-current')}
             />
-            <p className={clsx(selected ? 'text-light' : 'text-primary')}>
-              {label}
-            </p>
+
+            {!collapsed && <p className={clsx()}>{label}</p>}
           </div>
         </div>
       </a>

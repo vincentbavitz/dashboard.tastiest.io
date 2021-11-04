@@ -2929,10 +2929,10 @@
   dependencies:
     mini-svg-data-uri "^1.2.3"
 
-"@tastiest-io/tastiest-components@^0.77.0":
-  version "0.77.0"
-  resolved "https://npm.pkg.github.com/download/@tastiest-io/tastiest-components/0.77.0/63aed153bcd922f43e84162d42b4577f6c04edce1edbee7f144026663157951e#e6c23c0c393b7fae97500d4d89bbb9e8dbba2bf4"
-  integrity sha512-wkhPKqUXRjZ1SDaJTFG2abVzN6Tcb6zXh1hhTBrG8rSHYsvVQvbJJdr0hKozsBnFhIOXOdOI3JI2WjIdXHGZPQ==
+"@tastiest-io/tastiest-components@^0.80.0":
+  version "0.80.0"
+  resolved "https://npm.pkg.github.com/download/@tastiest-io/tastiest-components/0.80.0/b827453b8f26a5dd6bca101347f592f79d4bec92c18c63ce6b1589024a5debf8#dac7d6fa8a0e0dd2864b949893f841f1997e3394"
+  integrity sha512-nCGbcXncNg+HhWKpFINBkTDqD7Ef7KUf13CTk8Jao9AA3SgwLPV/DmNmeozh/c8Od4jLQ+t8YIJjuDU0Gy37VQ==
   dependencies:
     "@ant-design/icons" "^4.6.2"
     "@nivo/core" "^0.72.0"
@@ -12336,6 +12336,11 @@ react-dom@^17.0.0:
     loose-envify "^1.1.0"
     object-assign "^4.1.1"
     scheduler "^0.20.0"
+
+react-email-editor@^1.4.0:
+  version "1.4.0"
+  resolved "https://registry.yarnpkg.com/react-email-editor/-/react-email-editor-1.4.0.tgz#5c8bf6eca72533dec64032418688358a83562cff"
+  integrity sha512-nXVBeJPYHtqw21NoPXmgL7VBPezR7Ob/GLwZ6EHd6m5pFqmQ+Za4/vbCtuqFk4lzHOByzHx57e74ucdRqGruqw==
 
 react-fit@^1.0.3:
   version "1.3.1"

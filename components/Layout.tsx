@@ -3,7 +3,6 @@ import clsx from 'clsx';
 import { useAuth } from 'hooks/useAuth';
 import { useRouter } from 'next/router';
 import React, { ReactNode } from 'react';
-import Header from './Header';
 import Sidebar from './Sidebar';
 
 interface Props {
@@ -46,8 +45,6 @@ export default function Layout({ children }: Props) {
       style={{ height: '100vh' }}
       className="relative flex flex-col overflow-hidden font-secondary"
     >
-      <Header />
-
       <div className="flex h-full">
         <Sidebar />
 
