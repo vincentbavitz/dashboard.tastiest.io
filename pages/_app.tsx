@@ -5,14 +5,11 @@ import LayoutHandler from 'layouts/LayoutHandler';
 import type { AppProps } from 'next/app';
 import Head from 'next/head';
 import React from 'react';
+import 'rsuite/dist/styles/rsuite-default.min.css';
 import { METADATA } from '../constants';
 import { AuthProvider } from '../contexts/auth';
 import ScreenProvider from '../contexts/screen';
 import '../styles/style.scss';
-
-// interface Props extends AppProps {
-//   restaurantData: IRestaurant;
-// }
 
 function App(props: AppProps) {
   const { Component, router, pageProps } = props;

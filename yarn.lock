@@ -2953,10 +2953,10 @@
   resolved "https://npm.pkg.github.com/download/@tastiest-io/tastiest-icons/0.24.0/d9451e8f78ac4f0a4172b2dcb5c268308de93a450ce0e5e9558b210667d22248#ece4ade86e9bd8343401e9a802f52200666cc04f"
   integrity sha512-TnkOoS2qq8WqLGtBCIAAvImfkYSyZ33J+CN0gdIPEiCjl1NoPgDr0Iph4LxVMFQiMuD6Z9rDqydI9ntxYY9yfA==
 
-"@tastiest-io/tastiest-utils@^1.16.0":
-  version "1.16.0"
-  resolved "https://npm.pkg.github.com/download/@tastiest-io/tastiest-utils/1.16.0/3cfad6a01361bbcf0ebfc9764582c9f26988719d59e7e7a407afef998e2f9519#ddded7219868b656d6cf0fdf3b6f61bd181f6e1b"
-  integrity sha512-oZeCo8553L1enELHLwueR3MDNSZc9kbJDMy99BOlIhFhl76GipuVXB6e7Laz8IgSXPzwKcSVe1kRp2Jxcw2idw==
+"@tastiest-io/tastiest-utils@^1.19.0":
+  version "1.19.0"
+  resolved "https://npm.pkg.github.com/download/@tastiest-io/tastiest-utils/1.19.0/4bac539626dd62e259e6e2a104b1abb15f1e0c8634f16b8d5a41b02d1814ab5d#a0fdcb4ae0d71e9c3023e70c4e12b2a203562876"
+  integrity sha512-nk0Hzp+iMRiDGQwYKYlYX20BEeq/0jLZYYiyC+orFD/xL/p+EbfmrzyXUNG6kiWbMzx7LK5Ykk51Xr9zgR1e9g==
   dependencies:
     "@contentful/rich-text-types" "^14.1.2"
     "@shopify/shopify-api" "^1.4.0"
@@ -3233,6 +3233,11 @@
   version "4.0.1"
   resolved "https://registry.yarnpkg.com/@types/long/-/long-4.0.1.tgz"
   integrity sha512-5tXH6Bx/kNGd3MgffdmP4dy2Z+G4eaXw0SE81Tq3BNadtnMR5/ySMzX4SLEzHJzSmPNn4HIdpQsBvXMUykr58w==
+
+"@types/luxon@^2.0.5":
+  version "2.0.5"
+  resolved "https://registry.yarnpkg.com/@types/luxon/-/luxon-2.0.5.tgz#29d3b095d55ee50df8f4cf109b16009334d9828e"
+  integrity sha512-GKrG5v16BOs9XGpouu33hOkAFaiSDi3ZaDXG9F2yAoyzHRBtksZnI60VWY5aM/yAENCccBejrxw8jDY+9OVlxw==
 
 "@types/mime@*":
   version "2.0.3"
@@ -6401,6 +6406,11 @@ date-fns@^2.0.1:
   version "2.21.1"
   resolved "https://registry.yarnpkg.com/date-fns/-/date-fns-2.21.1.tgz#679a4ccaa584c0706ea70b3fa92262ac3009d2b0"
   integrity sha512-m1WR0xGiC6j6jNFAyW4Nvh4WxAi4JF4w9jRJwSI8nBmNcyZXPcP9VUQG+6gHQXAmqaGEKDKhOqAtENDC941UkA==
+
+date-fns@^2.25.0:
+  version "2.25.0"
+  resolved "https://registry.yarnpkg.com/date-fns/-/date-fns-2.25.0.tgz#8c5c8f1d958be3809a9a03f4b742eba894fc5680"
+  integrity sha512-ovYRFnTrbGPD4nqaEqescPEv1mNwvt+UTqI3Ay9SzNtey9NZnYu6E2qCcBBgJ6/2VF1zGGygpyTDITqpQQ5e+w==
 
 debounce-promise@^3.1.0:
   version "3.1.2"

@@ -10,5 +10,7 @@ export enum LocalEndpoint {
   SET_BOOKING_SLOTS = '/api/setBookingSlots',
 
   // Emails
+  GET_EMAIL_TEMPLATES = '/api/getEmailTemplates',
   SAVE_EMAIL_TEMPLATE = '/api/saveEmailTemplate',
+  DELETE_EMAIL_TEMPLATE = '/api/deleteEmailTemplate',
 }

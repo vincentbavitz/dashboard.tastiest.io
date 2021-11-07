@@ -1,14 +1,13 @@
-import {
-  EmailTemplate,
-  RestaurantData,
-  RestaurantDataApi,
-} from '@tastiest-io/tastiest-utils';
+import { RestaurantData, RestaurantDataApi } from '@tastiest-io/tastiest-utils';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { firebaseAdmin } from 'utils/firebaseAdmin';
 
-export interface SaveEmailTemplateParams extends EmailTemplate {
-  id: string;
+export interface SaveEmailTemplateParams {
   restaurantId: string;
+  id: string;
+  name: string;
+  html: string;
+  design: any;
 }
 
 /**
@@ -70,8 +69,27 @@ export default async function saveEmailTemplate(
       restaurantId,
     );
 
+    // Does it already exist?
+    const restaurantData = await restaurantDataApi.getRestaurantData();
+    const templates = restaurantData?.email?.templates;
+    const existingKey = Object.keys(templates).find(key => key === id);
+    const existing = templates[existingKey];
+
+    const createdAt = existing?.createdAt ?? Date.now();
+
+    // Saving always sets it to un-approved.
     restaurantDataApi.setRestaurantData(RestaurantData.EMAIL, {
-      templates: { [id]: { name, html, design } },
+      templates: {
+        [id]: {
+          name,
+          html,
+          design,
+          createdAt,
+          editedAt: Date.now(),
+          isApproved: false,
+          approvedAt: null,
+        },
+      },
     });
 
     response.json({ success: true, error: null, data: null });

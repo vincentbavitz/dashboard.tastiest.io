@@ -16,6 +16,9 @@ export default function LayoutWrapper({
       style={{ height: '100vh' }}
       className="relative flex flex-col overflow-hidden font-secondary"
     >
+      {/* Modals (inside portal) */}
+      <div id="modal-root" className="absolute"></div>
+
       <div className="flex h-full">
         <Sidebar />
 
