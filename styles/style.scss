@@ -15,13 +15,8 @@ a {
   }
 }
 
-
 body {
   min-width: 350px;
-}
-
-.__next {
-  overflow-x: hidden;
 }
 
 body {
@@ -32,9 +27,6 @@ body {
     @apply bg-primary bg-opacity-25 text-light;
   }
 
-  & > div {
-    overflow-x: hidden;
-  }
 }
 
 .glass {

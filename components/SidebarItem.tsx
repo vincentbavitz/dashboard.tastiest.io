@@ -16,9 +16,9 @@ export default function SidebarItem(props: Props) {
       <a className="no-underline">
         <div
           className={clsx(
-            'text-gray-400 duration-150 hover:text-primary py-4 bg-primary filter',
+            'text-gray-400 duration-150 hover:text-primary py-4 filter',
             collapsed ? 'px-6' : 'px-4',
-            selected && '-bg-primary-1',
+            selected ? '-bg-primary-1' : 'bg-primary',
             'hover:brightness-95',
           )}
         >

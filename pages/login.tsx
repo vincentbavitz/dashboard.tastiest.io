@@ -3,7 +3,7 @@ import { IRestaurant, RestaurantDataApi } from '@tastiest-io/tastiest-utils';
 import clsx from 'clsx';
 import Header from 'components/Header';
 import { useAuth } from 'hooks/useAuth';
-import { NextPage } from 'next';
+import { Layouts } from 'layouts/LayoutHandler';
 import Head from 'next/head';
 import nookies from 'nookies';
 import React, { useContext, useEffect, useState } from 'react';
@@ -37,7 +37,7 @@ export const getServerSideProps = async context => {
   return { props: {} };
 };
 
-const LogIn: NextPage<Props> = () => {
+const LogIn = (props: Props) => {
   const { isDesktop } = useContext(ScreenContext);
 
   const { signIn, error: authError } = useAuth();
@@ -161,4 +161,5 @@ const LogIn: NextPage<Props> = () => {
   );
 };
 
+LogIn.layout = Layouts.AUTH;
 export default LogIn;

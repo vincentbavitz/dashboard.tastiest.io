@@ -10,7 +10,6 @@ import {
   RestaurantDataApi,
 } from '@tastiest-io/tastiest-utils';
 import BookingSlotsBlock from 'components/blocks/BookingSlotsBlock';
-import QuietTimesBlock from 'components/blocks/QuietTimesBlock';
 import LiveExperienceAdMetrics from 'components/LiveExperienceAdMetrics';
 import { Modal } from 'components/Modal';
 import OnlineOrb from 'components/OnlineOrb';
@@ -126,9 +125,9 @@ const DefineSlotsSection: FC<Props> = props => {
         </div>
 
         <div className="flex-1">
-          {restaurantData ? (
+          {/* {restaurantData ? (
             <QuietTimesBlock restaurantData={restaurantData} />
-          ) : null}
+          ) : null} */}
         </div>
       </div>
     </div>

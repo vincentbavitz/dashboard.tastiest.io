@@ -1,8 +1,7 @@
-import { dlog } from '@tastiest-io/tastiest-utils';
-import Layout from 'components/Layout';
 import AmbianceProvider from 'contexts/ambiance';
 import 'firebase/auth';
 import 'firebase/firestore'; // <- needed if using firestore
+import LayoutHandler from 'layouts/LayoutHandler';
 import type { AppProps } from 'next/app';
 import Head from 'next/head';
 import React from 'react';
@@ -16,8 +15,7 @@ import '../styles/style.scss';
 // }
 
 function App(props: AppProps) {
-  const { Component, pageProps } = props;
-  dlog('_app ➡️ props:', props);
+  const { Component, router, pageProps } = props;
 
   return (
     <AuthProvider>
@@ -31,9 +29,9 @@ function App(props: AppProps) {
             ></meta>
           </Head>
 
-          <Layout>
-            <Component {...pageProps} />
-          </Layout>
+          <LayoutHandler router={router} pageProps={pageProps}>
+            {Component}
+          </LayoutHandler>
         </ScreenProvider>
       </AmbianceProvider>
     </AuthProvider>

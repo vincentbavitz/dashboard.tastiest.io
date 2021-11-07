@@ -128,7 +128,7 @@ const TemplateCard = (props: TemplateCardProps) => {
 
 const NewTemplateCard = () => {
   return (
-    <Link href="/followers/templates/new">
+    <Link href="followers/templates/new">
       <a>
         <div className="relative w-full cursor-pointer">
           <div

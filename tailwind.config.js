@@ -36,7 +36,7 @@ module.exports = {
     extend: {
       colors: {
         primary: '#274f73',
-        '-primary-1': '1c3a54',
+        '-primary-1': '#1c3a54',
         secondary: '#3882bb',
         tertiary: '#9EB8CC',
         dark: '#07151b',
@@ -68,5 +68,9 @@ module.exports = {
     require('@tailwindcss/aspect-ratio'),
     // require('@tailwindcss/forms'),
   ],
-  purge: ['./pages/**/*.{js,ts,tsx}', './components/**/*.{js,ts,tsx}'],
+  purge: [
+    './pages/**/*.{js,ts,tsx}',
+    './components/**/*.{js,ts,tsx}',
+    './layouts/**/*.{js,ts,jsx,tsx}',
+  ],
 };

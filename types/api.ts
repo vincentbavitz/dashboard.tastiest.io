@@ -8,4 +8,7 @@ export enum LocalEndpoint {
   SET_QUIET_TIMES = '/api/setQuietTimes',
   GET_BOOKING_SLOTS = '/api/getBookingSlots',
   SET_BOOKING_SLOTS = '/api/setBookingSlots',
+
+  // Emails
+  SAVE_EMAIL_TEMPLATE = '/api/saveEmailTemplate',
 }
