@@ -8,7 +8,7 @@ import {
 } from '@tastiest-io/tastiest-utils';
 import { Modal } from 'components/Modal';
 import EmailsTable from 'components/tables/EmailsTable';
-import dateFns from 'date-fns';
+import * as dateFns from 'date-fns';
 import lodash from 'lodash';
 import { NextPage } from 'next';
 import Head from 'next/head';
