@@ -6,6 +6,7 @@ import {
 import { HomeIcon, SupportIcon } from '@tastiest-io/tastiest-icons';
 import { Sidebar } from '@tastiest-io/tastiest-ui';
 import Header, { HEADER_HEIGHT_REM } from 'components/Header';
+import { useAuth } from 'hooks/useAuth';
 import React from 'react';
 import { LayoutProps } from './LayoutHandler';
 
@@ -18,6 +19,13 @@ export default function LayoutWrapper({
   pageProps,
   children,
 }: LayoutWrapperProps) {
+  // And automatically re-route to /login if they're not logged in.
+  const { isSignedIn } = useAuth();
+  if (isSignedIn === false) {
+    router.replace('/login');
+    return null;
+  }
+
   return (
     <div
       style={{ height: '100vh' }}

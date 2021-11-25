@@ -122,7 +122,7 @@ const Template = (
 
   const saveTemplateName = () => {
     setIsEditingTemplateName(false);
-    setTemplateName(editedTemplateName);
+    setTemplateName(editedTemplateName.trim());
   };
 
   /** Load pre-existing template if it exists */

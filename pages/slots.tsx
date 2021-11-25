@@ -4,62 +4,19 @@ import {
   dlog,
   humanTimeIntoMins,
   IPost,
-  IRestaurantData,
   minsIntoHumanTime,
-  RestaurantDataApi,
 } from '@tastiest-io/tastiest-utils';
 import BookingSlotsBlock from 'components/blocks/BookingSlotsBlock';
 import LiveExperienceAdMetrics from 'components/LiveExperienceAdMetrics';
-import { useAuth } from 'hooks/useAuth';
-import { useRestaurantData } from 'hooks/useRestaurantData';
+import { DefaultAuthPageProps } from 'layouts/LayoutDefault';
 import { NextPage } from 'next';
 import Head from 'next/head';
-import nookies from 'nookies';
-import React, { FC, useContext, useEffect, useMemo, useState } from 'react';
+import React, { FC, Props, useEffect, useMemo, useState } from 'react';
 import { RangeSlider, Slider } from 'rsuite';
-import { firebaseAdmin } from 'utils/firebaseAdmin';
 import { METADATA } from '../constants';
-import { ScreenContext } from '../contexts/screen';
 
-interface Props {
-  restaurantId: string;
-  restaurantData: IRestaurantData;
-}
-
-export const getServerSideProps = async context => {
-  // Get user ID from cookie.
-  const cookieToken = nookies.get(context)?.token;
-  const restaurantDataApi = new RestaurantDataApi(firebaseAdmin);
-  const { restaurantId } = await restaurantDataApi.initFromCookieToken(
-    cookieToken,
-  );
-
-  // If no user, redirect to login
-  if (!restaurantId) {
-    return {
-      redirect: {
-        destination: '/login',
-        permanent: false,
-      },
-    };
-  }
-
-  const restaurantData = await restaurantDataApi.getRestaurantData();
-
-  return {
-    props: {
-      restaurantId,
-      restaurantData,
-    },
-  };
-};
-
-const Times: NextPage<Props> = props => {
-  const { isDesktop } = useContext(ScreenContext);
-  const [isBoosting, setIsBoosting] = useState(false);
-
-  dlog('times ➡️ restaurantId:', props.restaurantId);
-  dlog('times ➡️ props.restaurantData:', props.restaurantData);
+const Times: NextPage<DefaultAuthPageProps> = props => {
+  const { restaurantData } = props;
 
   return (
     <>
@@ -75,10 +32,8 @@ const Times: NextPage<Props> = props => {
   );
 };
 
-const DefineSlotsSection: FC<Props> = props => {
-  const { restaurantId } = props;
-  const { restaurantUser } = useAuth();
-  const { restaurantData } = useRestaurantData(restaurantUser);
+const DefineSlotsSection = (props: DefaultAuthPageProps) => {
+  const { restaurantData, restaurantUser } = props;
 
   // Make the UX like a wizard / typeform flow. Next -> next etc.
   // Turn off when X number of people have booked.

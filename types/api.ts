@@ -1,4 +1,6 @@
 export enum LocalEndpoint {
+  GET_RESTAURANT_DATA = '/api/getRestaurantData',
+
   GET_BOOKINGS = '/api/getBookings',
   GET_BALANCE = '/api/getBalance',
   UPDATE_BOOKING = '/api/updateBooking',

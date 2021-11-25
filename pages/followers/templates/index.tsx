@@ -87,24 +87,6 @@ const Templates: NextPage<InferGetServerSidePropsType<
 
       <div className="flex flex-col space-y-10">
         <div>
-          <h4 className="text-2xl leading-none pb-4 font-medium">Templates</h4>
-
-          {/* <div className="grid grid-cols-2 gap-4">
-            <TemplateCard
-              id={'none'}
-              label="New Dish"
-              description={`"Short beef on the menu - only for the next week!"`}
-            />
-
-            <TemplateCard
-              id={'none'}
-              label="New Dish"
-              description="We're now open on Sundays!"
-            />
-          </div> */}
-        </div>
-
-        <div>
           <h4 className="text-2xl leading-none pb-4 font-medium">
             My Templates
           </h4>

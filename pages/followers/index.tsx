@@ -82,12 +82,12 @@ const Followers: NextPage<Props> = props => {
             Notify Followers
           </h3>
 
-          <Button color="light" onClick={() => setIsScheduleModalOpen(true)}>
-            Schedule Email
+          <Button onClick={() => setIsScheduleModalOpen(true)}>
+            Schedule email
           </Button>
         </div>
 
-        <div className="text-justify pb-6 border-b ">
+        <div className="text-justify pb-6">
           Notifying your followers about changes in your menu or ... <br />{' '}
           Lorem ipsum dolor, sit amet consectetur adipisicing elit. Impedit,
           minima recusandae sequi delectus mollitia ab odit repellat cumque nisi
@@ -95,6 +95,29 @@ const Followers: NextPage<Props> = props => {
           facilis delectus quaerat molestiae fuga modi numquam possimus, minus
           culpa, perspiciatis repudiandae ratione sapiente rerum tempore quia
           veniam earum quidem soluta deleniti voluptatibus.
+        </div>
+
+        <div className="bg-green-100 bg-opacity-50 px-4 py-3 rounded-lg border-b-2 mb-6">
+          <p className="pb-2 text-base">
+            In order to notify your followers, you must first create an email
+            template.
+          </p>
+
+          <div className="flex space-x-2">
+            <Link href="/followers/templates/new">
+              <a className="no-underline">
+                <Button>Create template</Button>
+              </a>
+            </Link>
+
+            <div className="filter drop-shadow">
+              <Link href="/followers/templates">
+                <a className="no-underline">
+                  <Button color="light">View templates</Button>
+                </a>
+              </Link>
+            </div>
+          </div>
         </div>
 
         <div>

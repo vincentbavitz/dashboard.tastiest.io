@@ -1,34 +1,10 @@
 import { Table } from '@tastiest-io/tastiest-ui';
-import { Email } from '@tastiest-io/tastiest-utils';
 import clsx from 'clsx';
 import { DateTime } from 'luxon';
 import React from 'react';
 
 export default function EmailsTable() {
-  const emails: Email[] = [
-    {
-      id: '3471234987124183646198723',
-      subject: 'Testing Email Subject',
-      template: '2408bae7-97f0-4dab-a400-908c771b5c75',
-      to: ['vincent@bavitz.org', 'xvrain@protonmail.com'],
-      from: 'restaurants@mail.tastiest.io',
-      body: 'test email body!!',
-      isSent: false,
-      sentAt: null,
-      scheduledFor: 12873687213,
-    },
-    {
-      id: '3471234987124183646198723',
-      subject: 'Testing Email Subject',
-      template: '2408bae7-97f0-4dab-a400-908c771b5c75',
-      to: ['vincent@bavitz.org', 'xvrain@protonmail.com'],
-      from: 'restaurants@mail.tastiest.io',
-      body: 'test email body!!',
-      isSent: true,
-      sentAt: 234234897987,
-      scheduledFor: 12873687213,
-    },
-  ];
+  const emails = [];
 
   const columns = [
     {
