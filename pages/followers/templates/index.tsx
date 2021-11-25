@@ -1,64 +1,28 @@
 import { PlusOutlined } from '@ant-design/icons';
-import {
-  EmailTemplate,
-  postFetch,
-  RestaurantDataApi,
-} from '@tastiest-io/tastiest-utils';
+import { EmailTemplate, postFetch } from '@tastiest-io/tastiest-utils';
 import { EmailTemplateCard } from 'components/EmailTemplateCard';
-import { InferGetServerSidePropsType, NextPage } from 'next';
+import { DefaultAuthPageProps } from 'layouts/LayoutDefault';
+import { NextPage } from 'next';
 import Head from 'next/head';
 import Link from 'next/link';
-import nookies from 'nookies';
 import { DeleteEmailTemplateParams } from 'pages/api/deleteEmailTemplate';
 import { GetEmailTemplateReturn } from 'pages/api/getEmailTemplates';
 import React from 'react';
 import useSWR from 'swr';
 import { LocalEndpoint } from 'types/api';
-import { firebaseAdmin } from 'utils/firebaseAdmin';
 import { METADATA } from '../../../constants';
 
-export const getServerSideProps = async context => {
-  // Get user ID from cookie.
-  const cookieToken = nookies.get(context)?.token;
-  const restaurantDataApi = new RestaurantDataApi(firebaseAdmin);
-  const { restaurantId } = await restaurantDataApi.initFromCookieToken(
-    cookieToken,
-  );
+const Templates: NextPage<DefaultAuthPageProps> = props => {
+  const { restaurantId, restaurantData } = props;
 
-  // If no user, redirect to login
-  if (!restaurantId) {
-    return {
-      redirect: {
-        destination: '/login',
-        permanent: false,
-      },
-    };
-  }
-
-  const restaurantData = await restaurantDataApi.getRestaurantData();
-
-  const templates: EmailTemplate[] = Object.entries(
+  const templatesRaw: EmailTemplate[] = Object.entries(
     restaurantData?.email?.templates ?? {},
   ).map(([id, template]) => ({ id, ...template }));
-
-  return {
-    props: {
-      restaurantId,
-      restaurantData,
-      templates,
-    },
-  };
-};
-
-const Templates: NextPage<InferGetServerSidePropsType<
-  typeof getServerSideProps
->> = props => {
-  const { restaurantId } = props;
 
   const { data: templates, mutate } = useSWR<GetEmailTemplateReturn>(
     `${LocalEndpoint.GET_EMAIL_TEMPLATES}?restaurantId=${restaurantId}`,
     {
-      initialData: props.templates,
+      initialData: templatesRaw,
       refreshInterval: 30000,
       refreshWhenHidden: true,
     },

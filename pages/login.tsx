@@ -6,11 +6,10 @@ import { useAuth } from 'hooks/useAuth';
 import { Layouts } from 'layouts/LayoutHandler';
 import Head from 'next/head';
 import nookies from 'nookies';
-import React, { useContext, useEffect, useState } from 'react';
-import { useLocalStorage, useWindowSize } from 'react-use';
+import React, { useEffect, useState } from 'react';
+import { useLocalStorage } from 'react-use';
 import { firebaseAdmin } from 'utils/firebaseAdmin';
 import { METADATA } from '../constants';
-import { ScreenContext } from '../contexts/screen';
 
 interface Props {
   resaurant?: IRestaurant;
@@ -38,10 +37,7 @@ export const getServerSideProps = async context => {
 };
 
 const LogIn = (props: Props) => {
-  const { isDesktop } = useContext(ScreenContext);
-
   const { signIn, error: authError } = useAuth();
-  const { height } = useWindowSize();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');

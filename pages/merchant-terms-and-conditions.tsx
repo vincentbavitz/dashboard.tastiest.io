@@ -1,5 +1,6 @@
 /* eslint-disable no-irregular-whitespace */
-import { BrandIcon } from '@tastiest-io/tastiest-icons';
+import { TastiestBrand } from '@tastiest-io/tastiest-ui';
+import { Layouts } from 'layouts/LayoutHandler';
 import Head from 'next/head';
 import React, { ReactNode } from 'react';
 import { v4 as uuid } from 'uuid';
@@ -820,21 +821,15 @@ const Terms = () => {
 
 const BrandTitle = () => (
   <div className="relative flex flex-col items-center w-full py-8">
-    <BrandIcon className="h-8 fill-current text-primary" />
+    <TastiestBrand type="full" />
 
-    <h1 className="mt-6 text-2xl font-medium leading-none text-center">
+    <h1 className="mt-6 text-xl font-medium leading-none text-center">
       Tastiest Technologies Ltd.
       <br />
       Merchant Terms and Conditions
     </h1>
 
-    <div
-      style={{
-        clipPath:
-          'polygon(0 0, 100% 0, 100% 100%, 0 100%, 0 calc(100% - 1rem), 100% calc(100% - 1rem), 100% 1rem, 0 1rem, 0 1rem)',
-      }}
-      className="absolute inset-0 border-2 rounded-lg pointer-events-none border-secondary"
-    ></div>
+    <div className="absolute inset-0 border-b-2 pointer-events-none border-secondary"></div>
   </div>
 );
 
@@ -967,4 +962,5 @@ const Section = (props: SectionProps) => {
   );
 };
 
+Terms.layout = Layouts.LEGAL;
 export default Terms;

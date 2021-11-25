@@ -1,50 +1,15 @@
 import { Button } from '@tastiest-io/tastiest-ui';
-import {
-  CardBrand,
-  formatCurrency,
-  RestaurantDataApi,
-} from '@tastiest-io/tastiest-utils';
+import { CardBrand, formatCurrency } from '@tastiest-io/tastiest-utils';
 import PaymentCard from 'components/financial/PaymentCard';
 import PaymentCardAdd from 'components/financial/PaymentCardAdd';
-import { InferGetServerSidePropsType, NextPage } from 'next';
+import { DefaultAuthPageProps } from 'layouts/LayoutDefault';
+import { NextPage } from 'next';
 import Head from 'next/head';
-import nookies from 'nookies';
 import React, { useContext } from 'react';
-import { firebaseAdmin } from 'utils/firebaseAdmin';
 import { METADATA } from '../constants';
 import { ScreenContext } from '../contexts/screen';
 
-export const getServerSideProps = async context => {
-  // Get user ID from cookie.
-  const cookieToken = nookies.get(context)?.token;
-  const restaurantDataApi = new RestaurantDataApi(firebaseAdmin);
-  const { restaurantId } = await restaurantDataApi.initFromCookieToken(
-    cookieToken,
-  );
-
-  // If no user, redirect to login
-  if (!restaurantId) {
-    return {
-      redirect: {
-        destination: '/login',
-        permanent: false,
-      },
-    };
-  }
-
-  const restaurantData = await restaurantDataApi.getRestaurantData();
-
-  return {
-    props: {
-      restaurantId,
-      restaurantData,
-    },
-  };
-};
-
-const Financial: NextPage<InferGetServerSidePropsType<
-  typeof getServerSideProps
->> = () => {
+const Billing: NextPage<DefaultAuthPageProps> = () => {
   const { isDesktop } = useContext(ScreenContext);
 
   const balances = [
@@ -94,4 +59,4 @@ const Financial: NextPage<InferGetServerSidePropsType<
   );
 };
 
-export default Financial;
+export default Billing;

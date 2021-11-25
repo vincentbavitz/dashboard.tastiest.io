@@ -12,6 +12,7 @@ interface LayoutDefaultProps extends LayoutProps {
 }
 
 export type DefaultAuthPageProps = {
+  restaurantId: string;
   restaurantData: GetRestaurantDataReturn;
   restaurantUser: firebase.default.User;
 };
@@ -29,7 +30,7 @@ export default function LayoutDefault({
     ? `${LocalEndpoint.GET_RESTAURANT_DATA}?restaurantId=${restaurantId}`
     : null;
 
-  const { data: restaurantData } = useSWR<GetRestaurantDataReturn[]>(swrURL, {
+  const { data: restaurantData } = useSWR<GetRestaurantDataReturn>(swrURL, {
     refreshInterval: 30000,
     initialData: null,
     refreshWhenHidden: true,
@@ -48,6 +49,7 @@ export default function LayoutDefault({
               {...pageProps}
               restaurantData={restaurantData}
               restaurantUser={restaurantUser}
+              restaurantId={restaurantData.details.id}
             />
           </div>
         ) : (

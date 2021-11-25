@@ -18,7 +18,7 @@ export default function PaymentCard(props: Props) {
       <div className="">
         <div
           style={{ borderRadius: '1rem' }}
-          className="aspect-w-8 aspect-h-5 bg-gray-700"
+          className="aspect-w-8 aspect-h-5 bg-blue-900"
         >
           <div
             style={{ paddingTop: '6%', paddingLeft: '8%', paddingRight: '8%' }}

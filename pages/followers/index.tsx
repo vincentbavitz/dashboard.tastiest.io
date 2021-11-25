@@ -4,58 +4,23 @@ import {
   dlog,
   EmailTemplate,
   IRestaurantData,
-  RestaurantDataApi,
 } from '@tastiest-io/tastiest-utils';
 import clsx from 'clsx';
 import EmailsTable from 'components/tables/EmailsTable';
 import * as dateFns from 'date-fns';
+import { DefaultAuthPageProps } from 'layouts/LayoutDefault';
 import { NextPage } from 'next';
 import Head from 'next/head';
 import Link from 'next/link';
-import nookies from 'nookies';
 import { GetEmailTemplateReturn } from 'pages/api/getEmailTemplates';
 import React, { useContext, useMemo, useState } from 'react';
 import { DatePicker } from 'rsuite';
 import useSWR from 'swr';
 import { LocalEndpoint } from 'types/api';
-import { firebaseAdmin } from 'utils/firebaseAdmin';
 import { METADATA } from '../../constants';
 import { ScreenContext } from '../../contexts/screen';
 
-interface Props {
-  restaurantId: string;
-  restaurantData: IRestaurantData;
-}
-
-export const getServerSideProps = async context => {
-  // Get user ID from cookie.
-  const cookieToken = nookies.get(context)?.token;
-  const restaurantDataApi = new RestaurantDataApi(firebaseAdmin);
-  const { restaurantId } = await restaurantDataApi.initFromCookieToken(
-    cookieToken,
-  );
-
-  // If no user, redirect to login
-  if (!restaurantId) {
-    return {
-      redirect: {
-        destination: '/login',
-        permanent: false,
-      },
-    };
-  }
-
-  const restaurantData = await restaurantDataApi.getRestaurantData();
-
-  return {
-    props: {
-      restaurantId,
-      restaurantData,
-    },
-  };
-};
-
-const Followers: NextPage<Props> = props => {
+const Followers: NextPage<DefaultAuthPageProps> = props => {
   const { restaurantId, restaurantData } = props;
 
   const { isDesktop } = useContext(ScreenContext);
@@ -136,7 +101,7 @@ const Followers: NextPage<Props> = props => {
 };
 
 interface ScheduleEmailModalProps {
-  restaurantData: IRestaurantData;
+  restaurantData: Partial<IRestaurantData>;
   initialTemplates: EmailTemplate[];
   show: boolean;
   close: () => void;

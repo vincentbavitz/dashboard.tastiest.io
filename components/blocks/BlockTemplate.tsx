@@ -12,7 +12,8 @@ interface Props {
     | 'secondary-2'
     | 'alt'
     | 'alt-1'
-    | 'alt-2';
+    | 'alt-2'
+    | 'alt-3';
   children: ReactNode;
   icon?: React.ForwardRefExoticComponent<any>;
   onIconClick?: () => void;

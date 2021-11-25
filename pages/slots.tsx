@@ -1,17 +1,13 @@
-import { Button, Modal, StatusOrb } from '@tastiest-io/tastiest-ui';
+import { Button, Modal } from '@tastiest-io/tastiest-ui';
 import {
-  CmsApi,
-  dlog,
   humanTimeIntoMins,
-  IPost,
   minsIntoHumanTime,
 } from '@tastiest-io/tastiest-utils';
 import BookingSlotsBlock from 'components/blocks/BookingSlotsBlock';
-import LiveExperienceAdMetrics from 'components/LiveExperienceAdMetrics';
 import { DefaultAuthPageProps } from 'layouts/LayoutDefault';
 import { NextPage } from 'next';
 import Head from 'next/head';
-import React, { FC, Props, useEffect, useMemo, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { RangeSlider, Slider } from 'rsuite';
 import { METADATA } from '../constants';
 
@@ -65,8 +61,6 @@ const DefineSlotsSection = (props: DefaultAuthPageProps) => {
   // segment in Klaviyo which will send out an email to them; "There are only X numbers left!".
   // So if it's sold out when a user goes to the page, tell them "Sorry - this is sold out".
 
-  dlog('times ➡️ restaurantData:', restaurantData);
-
   return (
     <div>
       <div className="flex space-x-4">
@@ -86,78 +80,78 @@ const DefineSlotsSection = (props: DefaultAuthPageProps) => {
   );
 };
 
-const BoostTablesSection: FC<Props> = props => {
-  const { restaurantData } = props;
+// const BoostTablesSection: FC<Props> = props => {
+//   const { restaurantData } = props;
 
-  const cms = new CmsApi();
-  const [experiences, setExperiences] = useState<IPost[] | null>([]);
-  const [isFillTablesModalOpen, setIsFillTablesModalOpen] = useState(false);
+//   const cms = new CmsApi();
+//   const [experiences, setExperiences] = useState<IPost[] | null>([]);
+//   const [isFillTablesModalOpen, setIsFillTablesModalOpen] = useState(false);
 
-  const [boosting, setBoosting] = useState(false);
-  const [notifying, setNotifying] = useState(false);
+//   const [boosting, setBoosting] = useState(false);
+//   const [notifying, setNotifying] = useState(false);
 
-  useEffect(() => {
-    if (restaurantData?.details) {
-      cms
-        .getPostsOfRestaurant(restaurantData.details.uriName)
-        .then(({ posts }) => {
-          setExperiences(posts);
-        });
-    }
-  }, [restaurantData]);
+//   useEffect(() => {
+//     if (restaurantData?.details) {
+//       cms
+//         .getPostsOfRestaurant(restaurantData.details.uriName)
+//         .then(({ posts }) => {
+//           setExperiences(posts);
+//         });
+//     }
+//   }, [restaurantData]);
 
-  const startAI = () => {
-    setIsFillTablesModalOpen(false);
-    setNotifying(true);
+//   const startAI = () => {
+//     setIsFillTablesModalOpen(false);
+//     setNotifying(true);
 
-    setTimeout(() => {
-      setNotifying(false);
-      setBoosting(true);
-    }, 2500);
-  };
+//     setTimeout(() => {
+//       setNotifying(false);
+//       setBoosting(true);
+//     }, 2500);
+//   };
 
-  return (
-    <div className="">
-      <FillTablesModal
-        onConfirm={startAI}
-        show={isFillTablesModalOpen}
-        close={() => setIsFillTablesModalOpen(false)}
-      />
+//   return (
+//     <div className="">
+//       <FillTablesModal
+//         onConfirm={startAI}
+//         show={isFillTablesModalOpen}
+//         close={() => setIsFillTablesModalOpen(false)}
+//       />
 
-      <div className="flex items-end justify-between pb-4">
-        <p className="text-xl text-dark leading-none">AI Table Selection</p>
+//       <div className="flex items-end justify-between pb-4">
+//         <p className="text-xl text-dark leading-none">AI Table Selection</p>
 
-        <Button
-          onClick={() => (boosting ? null : setIsFillTablesModalOpen(true))}
-          loading={notifying}
-        >
-          {boosting ? (
-            <>
-              <StatusOrb status="online" size={3} />{' '}
-              <span className="pl-2">Running</span>
-            </>
-          ) : (
-            'Fill tables'
-          )}
-        </Button>
-      </div>
+//         <Button
+//           onClick={() => (boosting ? null : setIsFillTablesModalOpen(true))}
+//           loading={notifying}
+//         >
+//           {boosting ? (
+//             <>
+//               <StatusOrb status="online" size={3} />{' '}
+//               <span className="pl-2">Running</span>
+//             </>
+//           ) : (
+//             'Fill tables'
+//           )}
+//         </Button>
+//       </div>
 
-      <p className="">
-        Run ads with our AI to fill your tables at the last minute
-      </p>
+//       <p className="">
+//         Run ads with our AI to fill your tables at the last minute
+//       </p>
 
-      <div className="flex flex-col pt-10 pb-12">
-        <p className="pb-4 text-xl text-dark leading-none">Current Ads</p>
+//       <div className="flex flex-col pt-10 pb-12">
+//         <p className="pb-4 text-xl text-dark leading-none">Current Ads</p>
 
-        <div className="grid gap-4 grid-cols-2">
-          {[...experiences, ...experiences]?.map((experience, key) => (
-            <LiveExperienceAdMetrics key={key} experience={experience} />
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-};
+//         <div className="grid gap-4 grid-cols-2">
+//           {[...experiences, ...experiences]?.map((experience, key) => (
+//             <LiveExperienceAdMetrics key={key} experience={experience} />
+//           ))}
+//         </div>
+//       </div>
+//     </div>
+//   );
+// };
 
 interface FillTablesModalProps {
   show: boolean;

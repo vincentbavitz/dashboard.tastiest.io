@@ -62,9 +62,6 @@ const Template = (
 ) => {
   const { template, templateId, restaurantData, restaurantId } = props;
 
-  dlog('[id] ➡️ templateId:', templateId);
-  dlog('[id] ➡️ template:', template);
-
   const emailEditorRef = useRef(null);
   const containerId = 'email-template-container';
   const [templateName, setTemplateName] = useState(

@@ -1,26 +1,15 @@
 import { CheckIcon } from '@tastiest-io/tastiest-icons';
 import { Button, Input, TextArea } from '@tastiest-io/tastiest-ui';
-import { IRestaurant } from '@tastiest-io/tastiest-utils';
 import { useSupport } from 'hooks/useSupport';
-import { GetStaticProps, NextPage } from 'next';
+import { DefaultAuthPageProps } from 'layouts/LayoutDefault';
+import { NextPage } from 'next';
 import Head from 'next/head';
 import React, { useContext, useEffect, useState } from 'react';
 import { dlog } from 'utils/development';
 import { METADATA } from '../constants';
 import { ScreenContext } from '../contexts/screen';
 
-interface Props {
-  resaurant?: IRestaurant;
-}
-
-export const getStaticProps: GetStaticProps = async () => {
-  return {
-    props: {},
-    revalidate: 60,
-  };
-};
-
-const Support: NextPage<Props> = () => {
+const Support: NextPage<DefaultAuthPageProps> = () => {
   const { isDesktop } = useContext(ScreenContext);
   const { makeSupportRequest } = useSupport();
 

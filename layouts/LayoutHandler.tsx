@@ -3,17 +3,20 @@ import { Router } from 'next/router';
 import LayoutAuth from './LayoutAuth';
 import LayoutDefault from './LayoutDefault';
 import LayoutEmailTemplate from './LayoutEmailTemplate';
+import LayoutLegal from './LayoutLegal';
 
 export enum Layouts {
   DEFAULT = 'default',
   AUTH = 'auth',
   EMAIL_TEMPLATE = 'email-template',
+  LEGAL = 'legal',
 }
 
 const layouts = {
   [Layouts.DEFAULT]: LayoutDefault,
   [Layouts.AUTH]: LayoutAuth,
   [Layouts.EMAIL_TEMPLATE]: LayoutEmailTemplate,
+  [Layouts.LEGAL]: LayoutLegal,
 };
 
 type ChildrenWithLayout = { layout?: Layouts } & NextComponentType<
