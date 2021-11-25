@@ -6,7 +6,7 @@ import LayoutEmailTemplate from './LayoutEmailTemplate';
 
 export enum Layouts {
   DEFAULT = 'default',
-  AUTH = 'home',
+  AUTH = 'auth',
   EMAIL_TEMPLATE = 'email-template',
 }
 

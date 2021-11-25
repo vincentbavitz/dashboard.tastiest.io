@@ -8,7 +8,7 @@ interface LayoutAuthProps extends LayoutProps {
 export default function LayoutAuth({
   router,
   pageProps,
-  children,
+  children: Component,
 }: LayoutAuthProps) {
-  return <>{children}</>;
+  return <Component {...pageProps} />;
 }

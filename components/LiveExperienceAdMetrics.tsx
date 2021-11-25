@@ -1,8 +1,8 @@
 import { PoweroffOutlined } from '@ant-design/icons';
+import { StatusOrb } from '@tastiest-io/tastiest-ui';
 import { formatCurrency, IPost } from '@tastiest-io/tastiest-utils';
 import clsx from 'clsx';
 import React from 'react';
-import OnlineOrb from './OnlineOrb';
 
 interface Props {
   experience: IPost;
@@ -31,7 +31,7 @@ export default function LiveExperienceAdMetrics(props: Props) {
   const metrics = getRandomMetrics();
 
   return (
-    <div className="flex w-full mb-2 px-4 space-x-4 bg-gray-200 rounded-lg">
+    <div className="flex w-full mb-2 px-4 space-x-4 bg-white shadow-lg rounded-lg">
       {/* <img
           src={experience.deal.image.url}
           className="object-cover w-32 rounded-l-lg"
@@ -47,11 +47,11 @@ export default function LiveExperienceAdMetrics(props: Props) {
         </div>
 
         <div className="pt-3 pb-1 pl-1 font-medium">
-          <OnlineOrb size={3} />
+          <StatusOrb status="online" size={3} />
           <span className="pl-2">1H 34M</span>
         </div>
 
-        <div className="flex justify-between bg-gray-300 rounded-lg w-full px-4 py-3">
+        <div className="flex justify-between bg-gray-100 rounded-lg w-full px-4 py-3">
           <div className="leading-none">
             <p className="font-medium">Spent GBP</p>
             <p className="text-dark text-lg tracking-wider">£154.23</p>

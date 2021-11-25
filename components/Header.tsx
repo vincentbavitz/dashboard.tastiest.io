@@ -1,13 +1,13 @@
-import { TastiestBrand } from '@tastiest-io/tastiest-components';
-import Link from 'next/link';
 import React, { useState } from 'react';
 import { HeaderAvatar } from './HeaderAvatar';
 
-interface HeaderProps {
-  blank?: boolean;
-}
+export const HEADER_HEIGHT_REM = 2.5;
 
-export default function Header({ blank }: HeaderProps) {
+/**
+ * The header as shown in the dashboard.
+ * Do not get this confued with the login page header.
+ */
+export default function Header() {
   const [query, setQuery] = useState<string>();
 
   const search = () => {
@@ -15,32 +15,29 @@ export default function Header({ blank }: HeaderProps) {
   };
 
   return (
-    <div className="flex items-center w-full px-6 py-4 space-between">
+    <div
+      style={{ height: `${HEADER_HEIGHT_REM}rem` }}
+      className="flex items-center w-full px-6 space-between"
+    >
       <div className="flex items-center flex-grow space-x-6">
-        <Link href="/">
-          <a>
-            <TastiestBrand type="full" size={10} />
-          </a>
-        </Link>
-
-        {/* {!blank && (
-          <div style={{ maxWidth: '300px' }} className="flex-grow">
-            <Input
-              color="neutral"
-              value={query}
-              onValueChange={setQuery}
-              suffix={
-                <SearchIcon
-                  className="h-8 text-gray-400 cursor-pointer fill-current"
-                  onClick={search}
-                />
-              }
-            />
-          </div>
-        )} */}
+        {/* <div style={{ maxWidth: '300px' }} className="flex-grow">
+          <Input
+            size="small"
+            color="neutral"
+            value={query}
+            onValueChange={setQuery}
+            className="bg-gray-100"
+            suffix={
+              <SearchOutlined
+                className="text-gray-400 cursor-pointer fill-current"
+                onClick={search}
+              />
+            }
+          />
+        </div> */}
       </div>
 
-      {!blank && <HeaderAvatar />}
+      <HeaderAvatar size={6} />
     </div>
   );
 }

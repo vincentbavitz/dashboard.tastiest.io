@@ -1,19 +1,21 @@
 import { PlusOutlined } from '@ant-design/icons';
-import { postFetch, RestaurantDataApi } from '@tastiest-io/tastiest-utils';
+import {
+  EmailTemplate,
+  postFetch,
+  RestaurantDataApi,
+} from '@tastiest-io/tastiest-utils';
 import { EmailTemplateCard } from 'components/EmailTemplateCard';
-import lodash from 'lodash';
 import { InferGetServerSidePropsType, NextPage } from 'next';
 import Head from 'next/head';
 import Link from 'next/link';
 import nookies from 'nookies';
 import { DeleteEmailTemplateParams } from 'pages/api/deleteEmailTemplate';
 import { GetEmailTemplateReturn } from 'pages/api/getEmailTemplates';
-import React, { useContext } from 'react';
+import React from 'react';
 import useSWR from 'swr';
 import { LocalEndpoint } from 'types/api';
 import { firebaseAdmin } from 'utils/firebaseAdmin';
 import { METADATA } from '../../../constants';
-import { ScreenContext } from '../../../contexts/screen';
 
 export const getServerSideProps = async context => {
   // Get user ID from cookie.
@@ -34,7 +36,10 @@ export const getServerSideProps = async context => {
   }
 
   const restaurantData = await restaurantDataApi.getRestaurantData();
-  const templates = restaurantData.email.templates;
+
+  const templates: EmailTemplate[] = Object.entries(
+    restaurantData?.email?.templates ?? {},
+  ).map(([id, template]) => ({ id, ...template }));
 
   return {
     props: {
@@ -49,8 +54,6 @@ const Templates: NextPage<InferGetServerSidePropsType<
   typeof getServerSideProps
 >> = props => {
   const { restaurantId } = props;
-
-  const { isDesktop } = useContext(ScreenContext);
 
   const { data: templates, mutate } = useSWR<GetEmailTemplateReturn>(
     `${LocalEndpoint.GET_EMAIL_TEMPLATES}?restaurantId=${restaurantId}`,
@@ -70,7 +73,10 @@ const Templates: NextPage<InferGetServerSidePropsType<
       },
     );
 
-    mutate(lodash.omit(templates, id), false);
+    mutate(
+      templates.filter(t => t.id !== id),
+      false,
+    );
   };
 
   return (
@@ -106,11 +112,11 @@ const Templates: NextPage<InferGetServerSidePropsType<
           <div className="grid grid-cols-2 gap-4">
             <NewTemplateCard />
 
-            {Object.entries(templates).map(([id, template]) => {
+            {templates.map(template => {
               return (
                 <EmailTemplateCard
-                  key={id}
-                  id={id}
+                  key={template.id}
+                  id={template.id}
                   template={template}
                   restaurantId={restaurantId}
                   onClickDelete={onClickDeleteTemplate}

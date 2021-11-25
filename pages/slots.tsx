@@ -1,8 +1,7 @@
-import { Button } from '@tastiest-io/tastiest-components';
+import { Button, Modal, StatusOrb } from '@tastiest-io/tastiest-ui';
 import {
   CmsApi,
   dlog,
-  formatCurrency,
   humanTimeIntoMins,
   IPost,
   IRestaurantData,
@@ -11,8 +10,6 @@ import {
 } from '@tastiest-io/tastiest-utils';
 import BookingSlotsBlock from 'components/blocks/BookingSlotsBlock';
 import LiveExperienceAdMetrics from 'components/LiveExperienceAdMetrics';
-import { Modal } from 'components/Modal';
-import OnlineOrb from 'components/OnlineOrb';
 import { useAuth } from 'hooks/useAuth';
 import { useRestaurantData } from 'hooks/useRestaurantData';
 import { NextPage } from 'next';
@@ -72,7 +69,7 @@ const Times: NextPage<Props> = props => {
 
       <div className="flex flex-col space-y-10">
         <DefineSlotsSection {...props} />
-        <BoostTablesSection {...props} />
+        {/* <BoostTablesSection {...props} /> */}
       </div>
     </>
   );
@@ -168,7 +165,7 @@ const BoostTablesSection: FC<Props> = props => {
     <div className="">
       <FillTablesModal
         onConfirm={startAI}
-        isOpen={isFillTablesModalOpen}
+        show={isFillTablesModalOpen}
         close={() => setIsFillTablesModalOpen(false)}
       />
 
@@ -181,7 +178,8 @@ const BoostTablesSection: FC<Props> = props => {
         >
           {boosting ? (
             <>
-              <OnlineOrb size={3} /> <span className="pl-2">Running</span>
+              <StatusOrb status="online" size={3} />{' '}
+              <span className="pl-2">Running</span>
             </>
           ) : (
             'Fill tables'
@@ -207,7 +205,7 @@ const BoostTablesSection: FC<Props> = props => {
 };
 
 interface FillTablesModalProps {
-  isOpen: boolean;
+  show: boolean;
   close: () => void;
   onConfirm: () => void;
 }
@@ -259,11 +257,6 @@ const FillTablesModal = (props: FillTablesModalProps) => {
           progress
           onChange={setCoversRequired}
         />
-      </div>
-
-      <div className="pt-6 flex justify-between text-base">
-        <div>Estimated Cost</div>
-        <p className="font-medium">£{formatCurrency(cost)}</p>
       </div>
 
       <div className="pt-10">

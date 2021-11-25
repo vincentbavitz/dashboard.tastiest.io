@@ -1,4 +1,4 @@
-import { InfoCard } from '@tastiest-io/tastiest-components';
+import { InfoCard } from '@tastiest-io/tastiest-ui';
 import {
   dlog,
   formatCurrency,
@@ -50,9 +50,9 @@ export const getServerSideProps = async context => {
           `?restaurantId=${restaurantId}`,
   );
 
-  dlog('index ➡️ data:', data);
   const { payoutTotal = 0, pendingBalance = 0 } = {}; //await data.json();
 
+  dlog('index ➡️ data:', data);
   dlog('index ➡️ process.env:', process.env);
 
   return {
@@ -90,11 +90,7 @@ const Index = (
     <>
       <Head>
         <title>{METADATA.TITLE_SUFFIX}</title>
-        <meta
-          property="og:title"
-          content="Tastiest food no matter where you are"
-          key="title"
-        />
+
         <meta
           name="viewport"
           content="width=device-width, initial-scale=1, maximum-scale=1"
@@ -137,18 +133,17 @@ const Introduction = ({ restaurantName, payoutTotal }: IntroductionProps) => {
   return (
     <div className="flex items-center justify-between text-gray-500">
       <div>
-        <h2 className="text-xl font-medium text-black font-primary">
+        <h2 className="text-xl font-medium text-black leading-none pb-1 font-primary">
           {restaurantName}
         </h2>
         <p className="">Welcome to your dashboard</p>
       </div>
 
       <div className="text-right">
-        <p className="text-sm">Total Payout</p>
-        <p className="text-lg font-medium tracking-wider text-black">
-          <span className="-mt-px font-secondary">£</span>
-          {payout}
-        </p>
+        <span className="text-sm">Total Payout</span>
+        <div className="text-lg font-medium tracking-wider text-black">
+          £{payout}
+        </div>
       </div>
     </div>
   );

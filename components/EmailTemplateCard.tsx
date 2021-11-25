@@ -1,10 +1,10 @@
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
+import { IconButton } from '@tastiest-io/tastiest-ui';
 import { EmailTemplate } from '@tastiest-io/tastiest-utils';
 import clsx from 'clsx';
 import Link from 'next/link';
 import React, { useState } from 'react';
 import { ConfirmationModal } from './ConfirmationModal';
-import IconButton from './IconButton';
 
 interface EmailTemplateCardProps {
   id: string;
@@ -80,7 +80,7 @@ export const EmailTemplateCard = (props: EmailTemplateCardProps) => {
         isOpen={isDeleteModalOpen}
         close={() => setIsDeleteModalOpen(false)}
       >
-        <div className="pt-4 pb-2 text-center">
+        <div className="pt-2">
           Are you sure you want to delete <br />
           <span className="font-medium">{template.name}</span>?
         </div>

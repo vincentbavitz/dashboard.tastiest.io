@@ -41,8 +41,8 @@ export default function BarChart(props: Props) {
         padding={0.3}
         valueScale={{ type: 'linear' }}
         indexScale={{ type: 'band', round: true }}
-        colors={{ scheme: 'yellow_orange_red' }}
-        borderColor={{ from: '#ffd505' }}
+        colors={{ scheme: 'category10' }}
+        borderColor={{ from: '#3882bb' }}
         enableGridY={false}
         axisTop={null}
         axisRight={null}
@@ -59,7 +59,7 @@ export default function BarChart(props: Props) {
         }}
         labelSkipWidth={12}
         labelSkipHeight={12}
-        labelTextColor={{ from: 'color', modifiers: [['darker', 1.6]] }}
+        labelTextColor={{ from: 'color', modifiers: [['darker', -10.0]] }}
         animate={true}
         motionStiffness={90}
         motionDamping={15}

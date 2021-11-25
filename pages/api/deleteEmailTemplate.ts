@@ -34,11 +34,8 @@ export default async function deleteEmailTemplate(
   const { id = null, restaurantId = null } = body as DeleteEmailTemplateParams;
 
   if (!id?.length || !restaurantId?.length) {
-    response.json({
-      success: false,
-      error: 'Invalid parameters given.',
-      data: null,
-    });
+    response.statusMessage = 'Error: Invalid parameters given';
+    response.status(400);
   }
 
   console.log(`/${restaurantId}/email/templates/${id}`);

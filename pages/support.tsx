@@ -1,5 +1,5 @@
-import { Button, Input, TextArea } from '@tastiest-io/tastiest-components';
 import { CheckIcon } from '@tastiest-io/tastiest-icons';
+import { Button, Input, TextArea } from '@tastiest-io/tastiest-ui';
 import { IRestaurant } from '@tastiest-io/tastiest-utils';
 import { useSupport } from 'hooks/useSupport';
 import { GetStaticProps, NextPage } from 'next';

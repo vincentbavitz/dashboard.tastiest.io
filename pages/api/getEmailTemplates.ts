@@ -2,12 +2,10 @@ import { EmailTemplate, RestaurantDataApi } from '@tastiest-io/tastiest-utils';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { firebaseAdmin } from 'utils/firebaseAdmin';
 
-export type GetEmailTemplateReturn = {
-  [id: string]: EmailTemplate;
-};
+export type GetEmailTemplateReturn = EmailTemplate[];
 
 /**
- * Gets a restaurant's email templates/.
+ * Gets a restaurant's email templates.
  * Requires the query parameter `restaurantId`
  *
  * Intended to be used exclusively with useSWR
@@ -37,7 +35,12 @@ export default async function getEmailTemplates(
     );
 
     const restaurantData = await restaurantDataApi.getRestaurantData();
-    const templates = restaurantData?.email?.templates ?? {};
+    const templatesObject = restaurantData?.email?.templates ?? {};
+
+    const templates = Object.entries(templatesObject).map(([id, template]) => ({
+      id,
+      ...template,
+    }));
 
     response.json(templates);
   } catch (error) {

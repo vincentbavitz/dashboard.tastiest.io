@@ -1,7 +1,6 @@
-import { Button, Input } from '@tastiest-io/tastiest-components';
 import { CheckFilledIcon } from '@tastiest-io/tastiest-icons';
+import { Button, Input, Modal } from '@tastiest-io/tastiest-ui';
 import clsx from 'clsx';
-import { Modal } from 'components/Modal';
 import React, { useState } from 'react';
 
 export const HasArrivedCell = ({
@@ -66,7 +65,7 @@ export const HasArrivedCell = ({
     <div className="flex items-center justify-center">
       <Modal
         title="Confirmation Code"
-        isOpen={modalIsOpen}
+        show={modalIsOpen}
         close={() => setModalIsOpen(false)}
       >
         <div

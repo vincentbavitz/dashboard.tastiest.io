@@ -71,16 +71,17 @@ export default async function saveEmailTemplate(
 
     // Does it already exist?
     const restaurantData = await restaurantDataApi.getRestaurantData();
-    const templates = restaurantData?.email?.templates;
+    const templates = restaurantData?.email?.templates ?? {};
+
     const existingKey = Object.keys(templates).find(key => key === id);
     const existing = templates[existingKey];
-
     const createdAt = existing?.createdAt ?? Date.now();
 
     // Saving always sets it to un-approved.
     restaurantDataApi.setRestaurantData(RestaurantData.EMAIL, {
       templates: {
         [id]: {
+          id,
           name,
           html,
           design,

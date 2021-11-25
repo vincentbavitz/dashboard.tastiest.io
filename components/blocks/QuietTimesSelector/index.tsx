@@ -1,4 +1,4 @@
-import { Modal } from 'components/Modal';
+import { Modal } from '@tastiest-io/tastiest-ui';
 import React, { useContext } from 'react';
 import 'rsuite/dist/styles/rsuite-default.css';
 import {
@@ -11,12 +11,12 @@ import { QuietTimesSelectorHoursSection } from './QuietTimesSelectorHoursSection
 
 interface Props {
   restaurantId: string;
-  isOpen: boolean;
+  show: boolean;
   close: () => void;
 }
 
 export default function QuietTimesSelector(props: Props) {
-  const { restaurantId, isOpen, close } = props;
+  const { restaurantId, show, close } = props;
   const { step, resetToDefaults } = useContext(QuietTimesContext);
 
   const closeSelector = () => {
@@ -25,7 +25,7 @@ export default function QuietTimesSelector(props: Props) {
   };
 
   return (
-    <Modal isOpen={isOpen} title="Quiet times" close={closeSelector}>
+    <Modal show={show} title="Quiet times" close={closeSelector}>
       <div
         style={{ width: '300px', minHeight: '300px' }}
         className="relative flex flex-col items-center justify-between h-full"

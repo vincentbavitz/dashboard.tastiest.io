@@ -1,7 +1,7 @@
-import { Button, Checkbox, Input } from '@tastiest-io/tastiest-components';
+import { Button, Checkbox, Input } from '@tastiest-io/tastiest-ui';
 import { IRestaurant, RestaurantDataApi } from '@tastiest-io/tastiest-utils';
 import clsx from 'clsx';
-import Header from 'components/Header';
+import BlankHeader from 'components/BlankHeader';
 import { useAuth } from 'hooks/useAuth';
 import { Layouts } from 'layouts/LayoutHandler';
 import Head from 'next/head';
@@ -154,7 +154,7 @@ const LogIn = (props: Props) => {
         </div>
 
         <div className="absolute top-0 w-full">
-          <Header blank />
+          <BlankHeader />
         </div>
       </div>
     </>

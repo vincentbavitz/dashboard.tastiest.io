@@ -1,17 +1,17 @@
-import { ClockCircleOutlined } from '@ant-design/icons';
-import { Button, Select } from '@tastiest-io/tastiest-components';
+import { ClockCircleOutlined, InfoCircleOutlined } from '@ant-design/icons';
+import { Button, Input, Modal, Select } from '@tastiest-io/tastiest-ui';
 import {
   dlog,
   EmailTemplate,
   IRestaurantData,
   RestaurantDataApi,
 } from '@tastiest-io/tastiest-utils';
-import { Modal } from 'components/Modal';
+import clsx from 'clsx';
 import EmailsTable from 'components/tables/EmailsTable';
 import * as dateFns from 'date-fns';
-import lodash from 'lodash';
 import { NextPage } from 'next';
 import Head from 'next/head';
+import Link from 'next/link';
 import nookies from 'nookies';
 import { GetEmailTemplateReturn } from 'pages/api/getEmailTemplates';
 import React, { useContext, useMemo, useState } from 'react';
@@ -66,6 +66,10 @@ const Followers: NextPage<Props> = props => {
 
   const [isScheduleModalOpen, setIsScheduleModalOpen] = useState(false);
 
+  const templates: EmailTemplate[] = Object.entries(
+    restaurantData?.email?.templates ?? {},
+  ).map(([id, template]) => ({ id, ...template }));
+
   return (
     <>
       <Head>
@@ -98,9 +102,9 @@ const Followers: NextPage<Props> = props => {
         </div>
 
         <ScheduleEmailModal
-          restaurantId={restaurantId}
-          initialTemplates={restaurantData.email?.templates ?? {}}
-          isOpen={isScheduleModalOpen}
+          restaurantData={restaurantData}
+          initialTemplates={templates}
+          show={isScheduleModalOpen}
           close={() => setIsScheduleModalOpen(false)}
         />
       </div>
@@ -109,28 +113,25 @@ const Followers: NextPage<Props> = props => {
 };
 
 interface ScheduleEmailModalProps {
-  restaurantId: string;
-  initialTemplates: { [key: string]: EmailTemplate };
-  isOpen: boolean;
+  restaurantData: IRestaurantData;
+  initialTemplates: EmailTemplate[];
+  show: boolean;
   close: () => void;
 }
 
 const ScheduleEmailModal = (props: ScheduleEmailModalProps) => {
-  const { isOpen, close, restaurantId, initialTemplates: initialData } = props;
+  const { show, close, restaurantData, initialTemplates: initialData } = props;
   const [selected, setSelected] = useState(null);
 
+  const { details } = restaurantData;
+
   const { data: templates } = useSWR<GetEmailTemplateReturn>(
-    `${LocalEndpoint.GET_EMAIL_TEMPLATES}?restaurantId=${restaurantId}`,
+    `${LocalEndpoint.GET_EMAIL_TEMPLATES}?restaurantId=${details.id}`,
     {
       initialData,
       refreshInterval: 30000,
       refreshWhenHidden: true,
     },
-  );
-
-  const approvedTemplates = useMemo(
-    () => lodash.filter(templates, template => template.isApproved),
-    [templates],
   );
 
   /** The scedule is valid IF
@@ -139,66 +140,112 @@ const ScheduleEmailModal = (props: ScheduleEmailModalProps) => {
    *  3. It is not scheduled more than 30 days in advance.
    */
   const isValid = useMemo(() => {
-    return approvedTemplates.length > 0;
+    return templates.length > 0;
   }, [templates]);
 
+  const hasTemplates = useMemo(() => {
+    return templates.length > 0;
+  }, [templates]);
+
+  dlog('index ➡️ hasTemplates:', hasTemplates);
+  dlog('index ➡️ templates:', templates);
+
+  const [subject, setSubject] = useState('');
+  const subjectSuffix = ' - Tastiest';
+
   return (
-    <Modal
-      id="schedule-email-modal"
-      title="Schedule Email"
-      isOpen={isOpen}
-      close={close}
-    >
+    <Modal title="Schedule Email" show={show} close={close}>
       <div style={{ minWidth: '25rem' }} className="flex flex-col space-y-6">
-        <div className="">
-          To schedule an email, choose a template which has been
-        </div>
+        {hasTemplates ? (
+          <>
+            <div className="">
+              To schedule an email, choose a template which has been approved.
+            </div>
 
-        {approvedTemplates.length === 0 ? (
-          <></>
+            <Select onSelect={setSelected}>
+              {templates.map(template => {
+                return (
+                  <Select.Option
+                    id={template.id}
+                    key={template.id}
+                    value={`${template.name}${
+                      template.isApproved ? '' : ' (unapproved)'
+                    }`}
+                    disabled={!template.isApproved}
+                  />
+                );
+              })}
+            </Select>
+
+            <div>
+              <Input
+                label="Subject"
+                value={subject}
+                onValueChange={setSubject}
+                maxLength={33}
+              />
+              <span
+                className={clsx(
+                  'text-base pt-4',
+                  subject?.length ? '' : 'italic opacity-50',
+                )}
+              >
+                {subject?.length
+                  ? subject + subjectSuffix
+                  : `Check out ${details.name}'s new menu! ${subjectSuffix}`}
+              </span>
+            </div>
+
+            <div className="">
+              <DatePicker
+                disabled={!hasTemplates}
+                placeholder="Schedule for"
+                format="yyyy MM-dd HH:mm"
+                style={{ width: '100%' }}
+                ranges={[]}
+                disabledDate={date => dateFns.isBefore(date, new Date())}
+                hideHours={hour => hour < 4 || hour > 24}
+              />
+            </div>
+
+            {/* <div className="text-base">
+              <Toggle /> Notify me when it goes live
+            </div> */}
+
+            <div className="flex space-x-3 justify-end">
+              {/* <Button
+                color="primary"
+                disabled={true}
+                onClick={() => null}
+                prefix={<PictureOutlined />}
+              >
+                Preview
+              </Button> */}
+
+              <Button disabled={!isValid} prefix={<ClockCircleOutlined />}>
+                Schedule
+              </Button>
+            </div>
+          </>
         ) : (
-          <Select
-            label="Template (approved only)"
-            onChange={setSelected}
-            noDefault={true}
-          >
-            {Object.entries(approvedTemplates).map(([id, template]) => {
-              return (
-                <option key={id} value={id} selected={selected === id}>
-                  {template.name}
-                </option>
-              );
-            })}
-          </Select>
+          <>
+            <div className="flex items-center gap-2 mt-2 bg-gray-100 px-4 py-2 rounded-md">
+              <InfoCircleOutlined className="text-lg text-yellow-500" />
+
+              <div>
+                You don't have any email templates.
+                <br />
+                <Link href={'/followers/templates/new'}>
+                  <a className="font-medium text-primary">Create a new one?</a>
+                </Link>
+              </div>
+            </div>
+
+            <div className="flex justify-end">
+              <Button onClick={close}>Cancel</Button>
+            </div>
+          </>
         )}
-
-        <div className="">
-          <div id="datepicker-container" className="bg-blue-200 ">
-            <DatePicker
-              placeholder="Schedule for"
-              format="YYYY MM-DD HH:mm"
-              showTime={{ format: 'HH:mm' }}
-              style={{ width: 260 }}
-              showToday={false}
-              ranges={[]}
-              disabledDate={date => dateFns.isBefore(date, new Date())}
-              hideHours={hour => hour < 6 || hour > 18}
-            />
-          </div>
-        </div>
-
-        <div className="flex space-x-3 justify-end">
-          <Button color="light" onClick={close}>
-            Cancel
-          </Button>
-          <Button
-            disabled={!isValid}
-            color="secondary"
-            prefix={<ClockCircleOutlined />}
-          >
-            Schedule
-          </Button>
-        </div>
       </div>
     </Modal>
   );

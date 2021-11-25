@@ -41,7 +41,7 @@ function QuietTimesBlockInner(props: Props) {
     <>
       <QuietTimesSelector
         restaurantId={restaurantData.details.id}
-        isOpen={quietTimesSelectorOpen}
+        show={quietTimesSelectorOpen}
         close={() => setQuietTimesSelectorOpen(false)}
       />
 

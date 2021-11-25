@@ -1,6 +1,5 @@
 import { PlusOutlined } from '@ant-design/icons';
-import { Button, Input } from '@tastiest-io/tastiest-components';
-import { Modal } from 'components/Modal';
+import { Button, Input, Modal } from '@tastiest-io/tastiest-ui';
 import React, { useState } from 'react';
 
 interface Props {
@@ -39,7 +38,7 @@ export default function PaymentCard(props: Props) {
 
       <Modal
         title="New Payment Card"
-        isOpen={addModalOpen}
+        show={addModalOpen}
         close={() => setAddModalOpen(false)}
       >
         <div className="pt-6 flex flex-col space-y-4">

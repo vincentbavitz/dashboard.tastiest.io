@@ -4,7 +4,7 @@ import {
   RollbackOutlined,
   SaveOutlined,
 } from '@ant-design/icons';
-import { Button, Input } from '@tastiest-io/tastiest-components';
+import { Button, Input } from '@tastiest-io/tastiest-ui';
 import {
   dlog,
   postFetch,
@@ -110,6 +110,7 @@ const Template = (
       userId: restaurantId,
       properties: {
         name,
+        template,
         restaurantDetails: lodash.omit(restaurantData.details, [
           'description',
           'video',

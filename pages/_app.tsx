@@ -5,7 +5,7 @@ import LayoutHandler from 'layouts/LayoutHandler';
 import type { AppProps } from 'next/app';
 import Head from 'next/head';
 import React from 'react';
-import 'rsuite/dist/styles/rsuite-default.min.css';
+import 'rsuite/dist/rsuite.min.css';
 import { METADATA } from '../constants';
 import { AuthProvider } from '../contexts/auth';
 import ScreenProvider from '../contexts/screen';
@@ -34,36 +34,5 @@ function App(props: AppProps) {
     </AuthProvider>
   );
 }
-
-// App.getInitialProps = async context => {
-//   // Get user ID from cookie.
-//   const cookieToken = nookies.get(context)?.token;
-//   // const restaurantDataApi = new RestaurantDataApi(firebaseAdmin);
-//   // const { restaurantId } = await restaurantDataApi.initFromCookieToken(
-//   // cookieToken,
-//   // );
-
-//   // // If no user, redirect to login
-//   // if (!restaurantId) {
-//   //   return {
-//   //     redirect: {
-//   //       destination: '/login',
-//   //       permanent: false,
-//   //     },
-//   //   };
-//   // }
-
-//   // const restaurantData = await restaurantDataApi.getRestaurantField(
-//   //   RestaurantData.DETAILS,
-//   // );
-
-//   // dlog('_app ➡️ context:', context);
-
-//   dlog('_app ➡️   cookieToken:', cookieToken);
-
-//   return {
-//     restaurantData: Math.random() * 1000,
-//   };
-// };
 
 export default App;

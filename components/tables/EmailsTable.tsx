@@ -1,6 +1,6 @@
+import { Table } from '@tastiest-io/tastiest-ui';
 import { Email } from '@tastiest-io/tastiest-utils';
 import clsx from 'clsx';
-import Table from 'components/Table';
 import { DateTime } from 'luxon';
 import React from 'react';
 
@@ -36,6 +36,13 @@ export default function EmailsTable() {
       Header: 'Subject',
       accessor: (row: any) => {
         return <p className="font-medium">{row.subject}</p>;
+      },
+    },
+    {
+      id: 'conversion',
+      Header: 'Conversion %',
+      accessor: (row: any) => {
+        return <p className="font-medium">33%</p>;
       },
     },
     {

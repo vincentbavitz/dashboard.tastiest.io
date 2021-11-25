@@ -1,6 +1,5 @@
-import { Modal } from 'components/Modal';
+import { Modal } from '@tastiest-io/tastiest-ui';
 import React, { useContext } from 'react';
-import 'rsuite/dist/styles/rsuite-default.css';
 import {
   BookingSlotsContext,
   BookingSlotsSelectorSteps,
@@ -11,12 +10,12 @@ import { BookingSlotsSelectorSlotsSection } from './BookingSlotsSelectorSlotsSec
 
 interface Props {
   restaurantId: string;
-  isOpen: boolean;
+  show: boolean;
   close: () => void;
 }
 
 export default function BookingSlotsSelector(props: Props) {
-  const { restaurantId, isOpen, close } = props;
+  const { restaurantId, show, close } = props;
   const { step, resetToDefaults } = useContext(BookingSlotsContext);
 
   const closeSelector = () => {
@@ -25,7 +24,7 @@ export default function BookingSlotsSelector(props: Props) {
   };
 
   return (
-    <Modal isOpen={isOpen} title="Booking Slots" close={closeSelector}>
+    <Modal show={show} title="Booking Slots" close={closeSelector}>
       <div
         style={{ width: '300px', minHeight: '300px' }}
         className="relative flex flex-col items-center justify-between h-full"

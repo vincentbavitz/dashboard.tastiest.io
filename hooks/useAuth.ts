@@ -54,6 +54,8 @@ export const useAuth = () => {
           const token = await credential.user.getIdTokenResult();
           const isRestaurantUser = Boolean(token?.claims?.restaurant);
 
+          dlog('useAuth ➡️ token.claims:', token.claims);
+
           if (!isRestaurantUser) {
             dlog("This user doesn't have the role of 'restaurant'");
             signOut();

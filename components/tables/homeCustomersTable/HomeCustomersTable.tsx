@@ -1,6 +1,6 @@
 /* eslint-disable react/display-name */
+import { Table } from '@tastiest-io/tastiest-ui';
 import { IBooking, postFetch, titleCase } from '@tastiest-io/tastiest-utils';
-import Table from 'components/Table';
 import moment from 'moment';
 import React, { useEffect, useState } from 'react';
 import useSWR, { mutate } from 'swr';
@@ -139,7 +139,7 @@ export default function HomeCustomersTable(props: Props) {
     },
   ];
 
-  // Update data depending on the column
+  // Update data depen17.78ding on the column
   const updateData = React.useMemo(
     () => (value: any, rowIndex: number, columnId: EditableBookingFields) => {
       console.log(`Updating '${columnId}' field on booking to ${value}`);
@@ -167,6 +167,7 @@ export default function HomeCustomersTable(props: Props) {
         updateData={updateData}
         searchFunction={searchFunction}
         isLoadingInitialData={isInitialLoading}
+        paginateInterval={5}
       />
     </div>
   );

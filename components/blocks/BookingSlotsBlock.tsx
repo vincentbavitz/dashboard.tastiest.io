@@ -48,7 +48,7 @@ function BookingSlotsBlockInner(props: Props) {
     <>
       <BookingSlotsSelector
         restaurantId={restaurantData.details.id}
-        isOpen={openTimesSelectorOpen}
+        show={openTimesSelectorOpen}
         close={() => setOpenTimesSelectorOpen(false)}
       />
 
