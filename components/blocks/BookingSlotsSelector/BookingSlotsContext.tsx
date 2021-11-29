@@ -72,19 +72,15 @@ export const BookingSlotsProvider = ({ children }) => {
       return;
     }
 
-    mutate(
-      `${LocalEndpoint.GET_BOOKING_SLOTS}?restaurantId=${restaurantId}`,
-      {
-        [DayOfWeek.SUNDAY]: openTimesMetric[DayOfWeek.SUNDAY],
-        [DayOfWeek.MONDAY]: openTimesMetric[DayOfWeek.MONDAY],
-        [DayOfWeek.TUESDAY]: openTimesMetric[DayOfWeek.TUESDAY],
-        [DayOfWeek.WEDNESDAY]: openTimesMetric[DayOfWeek.WEDNESDAY],
-        [DayOfWeek.THURSDAY]: openTimesMetric[DayOfWeek.THURSDAY],
-        [DayOfWeek.FRIDAY]: openTimesMetric[DayOfWeek.FRIDAY],
-        [DayOfWeek.SATURDAY]: openTimesMetric[DayOfWeek.SATURDAY],
-      },
-      false,
-    );
+    mutate(`${LocalEndpoint.GET_BOOKING_SLOTS}?restaurantId=${restaurantId}`, {
+      [DayOfWeek.SUNDAY]: openTimesMetric[DayOfWeek.SUNDAY],
+      [DayOfWeek.MONDAY]: openTimesMetric[DayOfWeek.MONDAY],
+      [DayOfWeek.TUESDAY]: openTimesMetric[DayOfWeek.TUESDAY],
+      [DayOfWeek.WEDNESDAY]: openTimesMetric[DayOfWeek.WEDNESDAY],
+      [DayOfWeek.THURSDAY]: openTimesMetric[DayOfWeek.THURSDAY],
+      [DayOfWeek.FRIDAY]: openTimesMetric[DayOfWeek.FRIDAY],
+      [DayOfWeek.SATURDAY]: openTimesMetric[DayOfWeek.SATURDAY],
+    });
 
     setSaving(true);
     await postFetch<SetBookingSlotsParams>(LocalEndpoint.SET_BOOKING_SLOTS, {

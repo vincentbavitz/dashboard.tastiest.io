@@ -45,7 +45,7 @@ export const getServerSideProps = async context => {
   const restaurantData = await restaurantDataApi.getRestaurantData();
 
   const templateId = context.params.id;
-  const template = restaurantData.email?.templates?.[templateId] ?? null;
+  const template = restaurantData?.email?.templates?.[templateId] ?? null;
 
   return {
     props: {
@@ -167,7 +167,7 @@ const Template = (
 
           <div className="flex space-x-4">
             <Link href="/followers/templates">
-              <a>
+              <a className="no-underline">
                 <Button
                   color="light"
                   prefix={<RollbackOutlined />}

@@ -5,6 +5,7 @@ import BlankHeader from 'components/BlankHeader';
 import { useAuth } from 'hooks/useAuth';
 import { Layouts } from 'layouts/LayoutHandler';
 import Head from 'next/head';
+import { useRouter } from 'next/router';
 import nookies from 'nookies';
 import React, { useEffect, useState } from 'react';
 import { useLocalStorage } from 'react-use';
@@ -37,6 +38,7 @@ export const getServerSideProps = async context => {
 };
 
 const LogIn = (props: Props) => {
+  const router = useRouter();
   const { signIn, error: authError } = useAuth();
 
   const [email, setEmail] = useState('');
@@ -48,6 +50,11 @@ const LogIn = (props: Props) => {
     'hasAcceptedTerms',
     false,
   );
+
+  // Pre-fetch dashboard
+  useEffect(() => {
+    router.prefetch('/');
+  }, []);
 
   // Accepted terms error
   const [termsError, setTermsError] = useState<string | null>(null);

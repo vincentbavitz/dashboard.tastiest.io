@@ -40,7 +40,7 @@ export default function LayoutDefault({
   return (
     <LayoutWrapper router={router} pageProps={pageProps}>
       <div
-        style={{ minWidth: '700px' }}
+        style={{ minWidth: '400px' }}
         className="absolute inset-0 flex h-full px-8 py-6 overflow-auto bg-gray-100"
       >
         {restaurantData ? (

@@ -9,6 +9,7 @@ import { NextPage } from 'next';
 import Head from 'next/head';
 import React, { useMemo, useState } from 'react';
 import { RangeSlider, Slider } from 'rsuite';
+import 'rsuite/Slider/styles/index.less';
 import { METADATA } from '../constants';
 
 const Times: NextPage<DefaultAuthPageProps> = props => {

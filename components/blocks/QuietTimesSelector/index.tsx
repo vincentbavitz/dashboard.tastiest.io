@@ -1,6 +1,5 @@
 import { Modal } from '@tastiest-io/tastiest-ui';
 import React, { useContext } from 'react';
-import 'rsuite/dist/styles/rsuite-default.css';
 import {
   QuietTimesContext,
   QuietTimesSelectorSteps,

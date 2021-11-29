@@ -7,6 +7,7 @@ import {
 import { TimeRange } from '@tastiest-io/tastiest-utils/dist/types/time';
 import React, { useContext } from 'react';
 import { RangeSlider } from 'rsuite';
+import 'rsuite/Slider/styles/index.less';
 import {
   BookingSlotsContext,
   BookingSlotsSelectorSteps,

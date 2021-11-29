@@ -47,7 +47,7 @@ module.exports = {
         'alt-2': '#F179AD',
         'alt-3': '#FFEFDE',
       },
-      display: ['huge', 'desktop', 'tablet', 'mobile'],
+      display: ['xl', 'lg', 'md', 'sm'],
     },
   },
   variants: {

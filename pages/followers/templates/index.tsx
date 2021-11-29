@@ -19,7 +19,7 @@ const Templates: NextPage<DefaultAuthPageProps> = props => {
     restaurantData?.email?.templates ?? {},
   ).map(([id, template]) => ({ id, ...template }));
 
-  const { data: templates, mutate } = useSWR<GetEmailTemplateReturn>(
+  const { data, mutate } = useSWR<GetEmailTemplateReturn>(
     `${LocalEndpoint.GET_EMAIL_TEMPLATES}?restaurantId=${restaurantId}`,
     {
       initialData: templatesRaw,
@@ -27,6 +27,8 @@ const Templates: NextPage<DefaultAuthPageProps> = props => {
       refreshWhenHidden: true,
     },
   );
+
+  const templates = data.sort((a, b) => a.editedAt - b.editedAt);
 
   const onClickDeleteTemplate = async (id: string) => {
     await postFetch<DeleteEmailTemplateParams>(
@@ -55,7 +57,7 @@ const Templates: NextPage<DefaultAuthPageProps> = props => {
             My Templates
           </h4>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
             <NewTemplateCard />
 
             {templates.map(template => {
