@@ -18,13 +18,13 @@ export function HeaderAvatar(props: Pick<AvatarProps, 'size'>) {
   const displayName = titleCase(restaurantData?.details?.name);
   const initial = displayName?.[0];
 
-  const url = restaurantData?.details?.profilePicture?.url ?? null;
+  const url = restaurantData?.profile?.profilePicture?.url ?? null;
 
   return (
     <Dropdown>
       <Dropdown.Trigger>
         <div className="flex cursor-pointer items-center space-x-2 text-gray-800">
-          <Avatar initial={initial ?? 'T'} size={size} />
+          <Avatar initial={initial ?? 'T'} imageSrc={url} size={size} />
 
           <p>{restaurantData?.details?.name}</p>
           <DownOutlined className="text-xs text-gray-400" />
