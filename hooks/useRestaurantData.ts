@@ -1,8 +1,8 @@
 import {
   FirestoreCollection,
   IGenericAsyncReturnType,
-  IRestaurantData,
   RestaurantData,
+  RestaurantDataKey,
   TRestaurantData,
 } from '@tastiest-io/tastiest-utils';
 import firebase from 'firebase';
@@ -20,12 +20,12 @@ export function useRestaurantData(restaurantUser: firebase.User) {
     },
   ]);
 
-  const restaurantData: Partial<IRestaurantData> = useSelector(
+  const restaurantData: Partial<RestaurantData> = useSelector(
     ({ firestore: { data } }: IState) =>
       data?.[FirestoreCollection.RESTAURANTS]?.[restaurantUser?.uid],
   );
 
-  const setRestaurantData = async <T extends RestaurantData>(
+  const setRestaurantData = async <T extends RestaurantDataKey>(
     field: T,
     value: TRestaurantData<T>,
     onInvalidUser?: () => void,

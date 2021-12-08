@@ -3,7 +3,7 @@ import {
   FirebaseAuthError,
   FirestoreCollection,
   IRestaurantLegal,
-  RestaurantData,
+  RestaurantDataKey,
 } from '@tastiest-io/tastiest-utils';
 import DebouncePromise from 'awesome-debounce-promise';
 import firebaseApp from 'firebase/app';
@@ -95,7 +95,7 @@ export const useAuth = () => {
               .doc(credential.user.uid)
               .set(
                 {
-                  [RestaurantData.LEGAL]: { hasAcceptedTerms: true },
+                  [RestaurantDataKey.LEGAL]: { hasAcceptedTerms: true },
                 },
                 { merge: true },
               );

@@ -1,5 +1,8 @@
 import { Button, Checkbox, Input } from '@tastiest-io/tastiest-ui';
-import { IRestaurant, RestaurantDataApi } from '@tastiest-io/tastiest-utils';
+import {
+  RestaurantDataApi,
+  RestaurantDetails,
+} from '@tastiest-io/tastiest-utils';
 import clsx from 'clsx';
 import BlankHeader from 'components/BlankHeader';
 import { useAuth } from 'hooks/useAuth';
@@ -13,7 +16,7 @@ import { firebaseAdmin } from 'utils/firebaseAdmin';
 import { METADATA } from '../constants';
 
 interface Props {
-  resaurant?: IRestaurant;
+  resaurant?: RestaurantDetails;
 }
 
 export const getServerSideProps = async context => {

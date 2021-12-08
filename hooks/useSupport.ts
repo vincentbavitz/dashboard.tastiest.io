@@ -1,7 +1,7 @@
 import {
   FirestoreCollection,
-  IRestaurantSupportRequest,
-  ISupportMessage,
+  RestaurantSupportRequest,
+  SupportMessage,
   SupportMessageDirection,
 } from '@tastiest-io/tastiest-utils';
 import moment from 'moment';
@@ -32,7 +32,7 @@ export function useSupport() {
     },
   ]);
 
-  const supportRequests: Partial<IRestaurantSupportRequest> = useSelector(
+  const supportRequests: Partial<RestaurantSupportRequest> = useSelector(
     ({ firestore: { data } }: IState) =>
       data?.[FirestoreCollection.SUPPORT_RESTAURANTS],
   );
@@ -53,7 +53,7 @@ export function useSupport() {
       return { success: false, errors };
     }
 
-    const initialMessage: ISupportMessage = {
+    const initialMessage: SupportMessage = {
       name,
       message,
       timestamp: Date.now(),
@@ -63,7 +63,7 @@ export function useSupport() {
     };
 
     const requestId = uuid();
-    const supportRequest: IRestaurantSupportRequest = {
+    const supportRequest: RestaurantSupportRequest = {
       id: requestId,
       restaurantId: restaurantUser.uid,
       email: restaurantUser.email,

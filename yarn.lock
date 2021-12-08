@@ -2991,10 +2991,10 @@
   resolved "https://npm.pkg.github.com/download/@tastiest-io/tastiest-icons/0.28.0/f0df6da3cc0ac9aa8bf955aae481f263cf2fc22458b1c1e1fb0ead12856ba1ca#dacf6710ea830ff82f1547fc3e02c57e16299e8f"
   integrity sha512-b5oF17xayTZmTsAJDkdRuMXB6RqSaNs0iPKoBymOstOp2xSTIWu/hzN0nlEcGkwu8you86NtlWVYhi0ihFi59w==
 
-"@tastiest-io/tastiest-ui@^0.45.0":
-  version "0.45.0"
-  resolved "https://npm.pkg.github.com/download/@tastiest-io/tastiest-ui/0.45.0/92e2d606c6b582c308661d4b96f7e62db8d529c3959088c4772ef500e11a8712#1f2403e440932d8daddca440cab9d80e07d6f84f"
-  integrity sha512-g/agiMy7UefX7PuOkAA5dfpebWfHvi1NKsL3A3ar/I9sZG86tqSPsA31gHLxJyCP5GhGhfxyNk+RKyLrRgPYdQ==
+"@tastiest-io/tastiest-ui@^0.51.0":
+  version "0.51.0"
+  resolved "https://npm.pkg.github.com/download/@tastiest-io/tastiest-ui/0.51.0/bbdf1d73e0792d0c685b60c39858b4b13e23cd17ce6ad0fe7bed07acf39f98a9#8dca495646adfb942bc9196ab42212e0470acbab"
+  integrity sha512-w6n3a3iVQgTBgV9DjV0ibEcwIatdEVtBfgGt1Fcqe8NcP7FeVQwitg8nL9DZ2sW8HazcAoc57u6Pog8pdYepPQ==
   dependencies:
     "@headlessui/react" "^1.4.1"
     "@nivo/core" "^0.74.0"
@@ -3005,10 +3005,10 @@
     react-table "^7.7.0"
     uuid "^8.3.2"
 
-"@tastiest-io/tastiest-utils@^1.22.0":
-  version "1.22.0"
-  resolved "https://npm.pkg.github.com/download/@tastiest-io/tastiest-utils/1.22.0/cea141e393bb2e6c955b2a2c9f25d258477493e307e474f79fc41ecf0e2c61fb#43209383b1c53ca808614e54f0795e91cb0e3243"
-  integrity sha512-fxoZCwKBIc9ouVrbLheQWX2r7YoW7epTE2OgAIHNHl+xjYMLMvKBwcyzANEZAgZgQAaxevWf0ffeeKAaNUeCVQ==
+"@tastiest-io/tastiest-utils@^1.30.0":
+  version "1.30.0"
+  resolved "https://npm.pkg.github.com/download/@tastiest-io/tastiest-utils/1.30.0/289d01839f7d99379cc79017151c5f8484823f3a8737e552c1f5d0e14f214d75#e282bf5eccd87cc95207ee45c0716a957257a8bd"
+  integrity sha512-ife1EPoqWxpyrFEoXExriOzfufI6f83QeFMJdYToBd6FGEon9QGmy9Rlq3DMMb0S1krBKSG4c7CLvh4BZ75X9Q==
   dependencies:
     "@contentful/rich-text-types" "^14.1.2"
     "@shopify/shopify-api" "^1.4.0"

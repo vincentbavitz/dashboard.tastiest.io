@@ -1,3 +1,4 @@
+import '@tastiest-io/tastiest-ui/dist/styles.min.css';
 import AmbianceProvider from 'contexts/ambiance';
 import 'firebase/auth';
 import 'firebase/firestore'; // <- needed if using firestore

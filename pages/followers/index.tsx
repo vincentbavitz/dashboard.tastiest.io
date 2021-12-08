@@ -3,7 +3,7 @@ import { Button, Input, Modal, Select } from '@tastiest-io/tastiest-ui';
 import {
   dlog,
   EmailTemplate,
-  IRestaurantData,
+  RestaurantData,
 } from '@tastiest-io/tastiest-utils';
 import clsx from 'clsx';
 import EmailsTable from 'components/tables/EmailsTable';
@@ -101,7 +101,7 @@ const Followers: NextPage<DefaultAuthPageProps> = props => {
 };
 
 interface ScheduleEmailModalProps {
-  restaurantData: Partial<IRestaurantData>;
+  restaurantData: Partial<RestaurantData>;
   initialTemplates: EmailTemplate[];
   show: boolean;
   close: () => void;

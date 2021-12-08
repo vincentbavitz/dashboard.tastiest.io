@@ -85,7 +85,7 @@ const DefineSlotsSection = (props: DefaultAuthPageProps) => {
 //   const { restaurantData } = props;
 
 //   const cms = new CmsApi();
-//   const [experiences, setExperiences] = useState<IPost[] | null>([]);
+//   const [experiences, setExperiences] = useState<ExperiencePost[] | null>([]);
 //   const [isFillTablesModalOpen, setIsFillTablesModalOpen] = useState(false);
 
 //   const [boosting, setBoosting] = useState(false);

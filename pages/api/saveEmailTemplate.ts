@@ -1,4 +1,7 @@
-import { RestaurantData, RestaurantDataApi } from '@tastiest-io/tastiest-utils';
+import {
+  RestaurantDataApi,
+  RestaurantDataKey,
+} from '@tastiest-io/tastiest-utils';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { firebaseAdmin } from 'utils/firebaseAdmin';
 
@@ -78,7 +81,7 @@ export default async function saveEmailTemplate(
     const createdAt = existing?.createdAt ?? Date.now();
 
     // Saving always sets it to un-approved.
-    restaurantDataApi.setRestaurantData(RestaurantData.EMAIL, {
+    restaurantDataApi.setRestaurantData(RestaurantDataKey.EMAIL, {
       templates: {
         [id]: {
           id,

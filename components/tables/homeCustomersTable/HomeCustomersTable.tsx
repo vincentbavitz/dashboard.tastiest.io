@@ -1,6 +1,6 @@
 /* eslint-disable react/display-name */
 import { Table } from '@tastiest-io/tastiest-ui';
-import { IBooking, postFetch, titleCase } from '@tastiest-io/tastiest-utils';
+import { Booking, postFetch, titleCase } from '@tastiest-io/tastiest-utils';
 import moment from 'moment';
 import React, { useEffect, useState } from 'react';
 import useSWR, { mutate } from 'swr';
@@ -19,7 +19,7 @@ enum EditableBookingFields {
 async function setBookingField<T>(
   field: EditableBookingFields,
   value: T,
-  bookings: IBooking[],
+  bookings: Booking[],
   rowIndex: number,
 ) {
   const booking = bookings[rowIndex];
@@ -44,7 +44,7 @@ async function setBookingField<T>(
   );
 
   // Update booking server side
-  await postFetch<any, IBooking>(LocalEndpoint.UPDATE_BOOKING, {
+  await postFetch<any, Booking>(LocalEndpoint.UPDATE_BOOKING, {
     bookingId: booking.orderId,
     [field]: value,
   });
@@ -62,7 +62,7 @@ interface Props {
 
 export default function HomeCustomersTable(props: Props) {
   const { restaurantId } = props;
-  const { data: bookings } = useSWR<IBooking[]>(
+  const { data: bookings } = useSWR<Booking[]>(
     `${LocalEndpoint.GET_BOOKINGS}?restaurantId=${restaurantId}`,
     {
       refreshInterval: 5000,
@@ -84,14 +84,14 @@ export default function HomeCustomersTable(props: Props) {
     {
       id: 'eaterName',
       Header: 'Name',
-      accessor: (row: IBooking) => {
+      accessor: (row: Booking) => {
         return <p className="font-medium">{row.eaterName}</p>;
       },
     },
     {
       id: 'dealName',
       Header: 'Deal',
-      accessor: (row: IBooking) => {
+      accessor: (row: Booking) => {
         const maxDealNameLength = 25;
         return (
           <p>
@@ -104,12 +104,12 @@ export default function HomeCustomersTable(props: Props) {
     {
       id: 'heads',
       Header: 'Heads',
-      accessor: (row: IBooking) => <p>{row.heads}</p>,
+      accessor: (row: Booking) => <p>{row.heads}</p>,
     },
     {
       id: 'orderTotal',
       Header: 'Order Total',
-      accessor: (row: IBooking) => (
+      accessor: (row: Booking) => (
         <p className="font-medium">
           £{Number(row.price?.final * 0.75)?.toFixed(2)}
         </p>
@@ -118,7 +118,7 @@ export default function HomeCustomersTable(props: Props) {
     {
       id: 'paidAt',
       Header: 'Purchased',
-      accessor: (row: IBooking) => {
+      accessor: (row: Booking) => {
         return <p>{moment(row.paidAt).local().fromNow()}</p>;
       },
     },
@@ -148,7 +148,7 @@ export default function HomeCustomersTable(props: Props) {
     [bookings],
   );
 
-  const searchFunction = (query: string, data: IBooking[]) => {
+  const searchFunction = (query: string, data: Booking[]) => {
     return data.filter(booking => {
       return (
         booking.dealName.toLowerCase().includes(query.toLowerCase()) ||

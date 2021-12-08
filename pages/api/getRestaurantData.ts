@@ -1,11 +1,8 @@
-import {
-  IRestaurantData,
-  RestaurantDataApi,
-} from '@tastiest-io/tastiest-utils';
+import { RestaurantData, RestaurantDataApi } from '@tastiest-io/tastiest-utils';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { firebaseAdmin } from 'utils/firebaseAdmin';
 
-export type GetRestaurantDataReturn = Partial<IRestaurantData>;
+export type GetRestaurantDataReturn = Partial<RestaurantData>;
 
 /**
  * Gets restaurant data for the logged in restaurant.
