@@ -2,7 +2,7 @@ import { PlusOutlined } from '@ant-design/icons';
 import { EmailTemplate, postFetch } from '@tastiest-io/tastiest-utils';
 import { EmailTemplateCard } from 'components/EmailTemplateCard';
 import { DefaultAuthPageProps } from 'layouts/LayoutDefault';
-import { NextPage } from 'next';
+import { GetServerSidePropsContext, NextPage } from 'next';
 import Head from 'next/head';
 import Link from 'next/link';
 import { DeleteEmailTemplateParams } from 'pages/api/deleteEmailTemplate';
@@ -10,7 +10,16 @@ import { GetEmailTemplateReturn } from 'pages/api/getEmailTemplates';
 import React from 'react';
 import useSWR from 'swr';
 import { LocalEndpoint } from 'types/api';
+import { verifyCookieToken } from 'utils/firebaseAdmin';
 import { METADATA } from '../../../constants';
+
+export const getServerSideProps = async (
+  context: GetServerSidePropsContext,
+) => {
+  const { valid, redirect } = await verifyCookieToken(context);
+  if (!valid) return { redirect };
+  return { props: {} };
+};
 
 const Templates: NextPage<DefaultAuthPageProps> = props => {
   const { restaurantId, restaurantData } = props;

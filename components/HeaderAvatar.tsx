@@ -18,7 +18,7 @@ export function HeaderAvatar(props: Pick<AvatarProps, 'size'>) {
   const displayName = titleCase(restaurantData?.details?.name);
   const initial = displayName?.[0];
 
-  const url = restaurantData?.details?.profilePicture?.url ?? null;
+  const url = restaurantData?.profile?.profilePicture?.url ?? null;
 
   return (
     <Dropdown>
@@ -31,11 +31,11 @@ export function HeaderAvatar(props: Pick<AvatarProps, 'size'>) {
         </div>
       </Dropdown.Trigger>
 
-      <Dropdown.Item icon={<SettingOutlined />} href={'/settings'}>
+      {/* <Dropdown.Item icon={<SettingOutlined />} href={'/settings'}>
         Preferences
-      </Dropdown.Item>
+      </Dropdown.Item> */}
 
-      <Dropdown.Divider />
+      {/* <Dropdown.Divider /> */}
 
       <Dropdown.Item
         icon={<ExportOutlined />}

@@ -1,7 +1,7 @@
 import {
   FirestoreCollection,
-  IRestaurantSupportRequest,
-  ISupportMessage,
+  RestaurantSupportRequest,
+  SupportMessage,
   SupportMessageDirection,
 } from '@tastiest-io/tastiest-utils';
 import moment from 'moment';
@@ -21,6 +21,8 @@ export enum SupportRequestGenerationError {
   FIRESTORE_ERROR = 'FIRESTORE_ERROR',
 }
 
+type MappedSupportRequest = Partial<RestaurantSupportRequest> & { id: string };
+
 export function useSupport() {
   const { restaurantUser, isSignedIn } = useAuth();
   const { restaurantData } = useRestaurantData(restaurantUser);
@@ -32,16 +34,30 @@ export function useSupport() {
     },
   ]);
 
-  const supportRequests: Partial<IRestaurantSupportRequest> = useSelector(
+  const supportRequestEntries: Partial<
+    RestaurantSupportRequest
+  >[] = useSelector(
     ({ firestore: { data } }: IState) =>
       data?.[FirestoreCollection.SUPPORT_RESTAURANTS],
   );
+
+  const supportRequests: MappedSupportRequest[] = Object.entries(
+    supportRequestEntries ?? {},
+  )
+    .map(([id, supportRequest]) => {
+      return { id, ...supportRequest };
+    })
+    .filter(r => r.restaurantId === restaurantData.details.id);
 
   const makeSupportRequest = async (
     name: string,
     subject: string,
     message: string,
-  ): Promise<{ success: boolean; errors: SupportRequestGenerationError[] }> => {
+  ): Promise<{
+    success: boolean;
+    data: { id: string } | null;
+    errors: SupportRequestGenerationError[];
+  }> => {
     const errors: SupportRequestGenerationError[] = [];
 
     if (!isSignedIn) errors.push(SupportRequestGenerationError.NOT_SIGNED_IN);
@@ -50,10 +66,10 @@ export function useSupport() {
     if (!message?.length) errors.push(SupportRequestGenerationError.NO_MESSAGE);
 
     if (errors.length) {
-      return { success: false, errors };
+      return { success: false, data: null, errors };
     }
 
-    const initialMessage: ISupportMessage = {
+    const initialMessage: SupportMessage = {
       name,
       message,
       timestamp: Date.now(),
@@ -63,7 +79,7 @@ export function useSupport() {
     };
 
     const requestId = uuid();
-    const supportRequest: IRestaurantSupportRequest = {
+    const supportRequest: RestaurantSupportRequest = {
       id: requestId,
       restaurantId: restaurantUser.uid,
       email: restaurantUser.email,
@@ -82,7 +98,7 @@ export function useSupport() {
     window.analytics.track('Restaurant Support Request', {
       userId: restaurantUser.uid,
       properties: {
-        ...supportRequest,
+        supportRequest,
         restaurantDetails: restaurantData.details,
         dateOfRequest: moment(Date.now()).format('MMMM Do YYYY, h:mm:ss a'),
       },
@@ -94,10 +110,11 @@ export function useSupport() {
         .doc(requestId)
         .set(supportRequest);
 
-      return { success: true, errors: [] };
-    } catch (_) {
+      return { success: true, data: { id: requestId }, errors: [] };
+    } catch {
       return {
         success: false,
+        data: null,
         errors: [SupportRequestGenerationError.FIRESTORE_ERROR],
       };
     }

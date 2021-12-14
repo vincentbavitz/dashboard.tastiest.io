@@ -1,4 +1,4 @@
-import { IBooking } from '@tastiest-io/tastiest-utils';
+import { Booking } from '@tastiest-io/tastiest-utils';
 import useSWR from 'swr';
 import { LocalEndpoint } from 'types/api';
 import { TIME } from '../../constants';
@@ -11,7 +11,7 @@ interface Props {
 }
 
 export default function CoversBarChart({ restaurantId }: Props) {
-  const { data: bookings } = useSWR<IBooking[]>(
+  const { data: bookings } = useSWR<Booking[]>(
     `${LocalEndpoint.GET_BOOKINGS}?restaurantId=${restaurantId}`,
     {
       refreshInterval: 5000,

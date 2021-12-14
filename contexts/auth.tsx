@@ -19,28 +19,6 @@ export function AuthProvider({ children }: any) {
     firebaseClient.User | null | undefined
   >(undefined);
 
-  // Break default layout for certain pages
-  const pagesWithoutAuth = [/^\/login/, /^\/merchant-terms-and-conditions/];
-  const onNoAuthPage = pagesWithoutAuth.some(page =>
-    page.test(router.pathname),
-  );
-
-  // Redirects based upon login state
-  useEffect(() => {
-    dlog('auth ➡️ restaurantUser:', restaurantUser);
-
-    const isLoginPage = /^\/login/.test(router.pathname);
-    // Logged in and on /login, redirect
-    if (restaurantUser !== null && isLoginPage) {
-      router.replace('/');
-    }
-
-    // Not logged in and not on a no auth page, redirect
-    if (restaurantUser === null && !onNoAuthPage) {
-      router.replace('/login');
-    }
-  }, [router.pathname, restaurantUser]);
-
   useEffect(() => {
     if (typeof window !== 'undefined') {
       (window as any).nookies = nookies;
@@ -59,6 +37,7 @@ export function AuthProvider({ children }: any) {
       dlog(`updating token...`);
       const token = await _restaurantUser.getIdToken();
 
+      dlog('auth ➡️ _restaurantUser:', _restaurantUser);
       setRestaurantUser(_restaurantUser);
       nookies.destroy(null, 'token');
       nookies.set(null, 'token', token, { path: '/' });

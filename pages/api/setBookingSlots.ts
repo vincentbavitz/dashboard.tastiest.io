@@ -2,6 +2,7 @@ import {
   DayOfWeek,
   RestaurantData,
   RestaurantDataApi,
+  RestaurantDataKey,
 } from '@tastiest-io/tastiest-utils';
 import { OpenTimesArray } from 'components/blocks/BookingSlotsSelector/BookingSlotsContext';
 import { NextApiRequest, NextApiResponse } from 'next';
@@ -68,7 +69,7 @@ export default async function setBookingSlots(
       [DayOfWeek.SATURDAY]: openTimesArray[DayOfWeek.SATURDAY],
     };
 
-    await restaurantDataApi.setRestaurantData(RestaurantData.METRICS, {
+    await restaurantDataApi.setRestaurantData(RestaurantDataKey.METRICS, {
       seatingDuration,
       openTimes,
     });

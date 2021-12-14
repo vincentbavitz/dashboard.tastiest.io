@@ -2,13 +2,13 @@ import {
   dlog,
   FirebaseAuthError,
   FirestoreCollection,
-  IRestaurantLegal,
-  RestaurantData,
+  RestaurantLegal,
+  RestaurantDataKey,
 } from '@tastiest-io/tastiest-utils';
 import DebouncePromise from 'awesome-debounce-promise';
 import firebaseApp from 'firebase/app';
 import { useRouter } from 'next/router';
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useFirebase, useFirestore } from 'react-redux-firebase';
 import { FIREBASE } from '../constants';
 import { AuthContext } from '../contexts/auth';
@@ -20,6 +20,16 @@ export const useAuth = () => {
 
   const firestore = useFirestore();
   const { restaurantUser } = useContext(AuthContext);
+
+  // Kick them out if they're not a restaurant
+  useEffect(() => {
+    restaurantUser?.getIdTokenResult().then(token => {
+      const isRestaurantUser = Boolean(token?.claims?.restaurant);
+      if (!isRestaurantUser) {
+        signOut();
+      }
+    });
+  }, [restaurantUser]);
 
   // Convert firebase error code to Tastiest auth error message
   const setError = (e: { code: string; message: string }) => {
@@ -85,7 +95,7 @@ export const useAuth = () => {
             .get();
 
           const restaurantData = restaurantDataDoc.data();
-          const legalData = restaurantData?.legal as IRestaurantLegal;
+          const legalData = restaurantData?.legal as RestaurantLegal;
 
           if (!legalData.hasAcceptedTerms) {
             // Manually update TOS acceptance, as setRestaurantData
@@ -95,7 +105,7 @@ export const useAuth = () => {
               .doc(credential.user.uid)
               .set(
                 {
-                  [RestaurantData.LEGAL]: { hasAcceptedTerms: true },
+                  [RestaurantDataKey.LEGAL]: { hasAcceptedTerms: true },
                 },
                 { merge: true },
               );
