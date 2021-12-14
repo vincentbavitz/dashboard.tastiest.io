@@ -2,8 +2,8 @@ import {
   dlog,
   FirebaseAuthError,
   FirestoreCollection,
-  RestaurantLegal,
   RestaurantDataKey,
+  RestaurantLegal,
 } from '@tastiest-io/tastiest-utils';
 import DebouncePromise from 'awesome-debounce-promise';
 import firebaseApp from 'firebase/app';
@@ -73,7 +73,6 @@ export const useAuth = () => {
           }
 
           // Identify restaurant with Segment
-          dlog('useAuth ➡️ credential.user.uid:', credential.user.uid);
           window.analytics.identify(credential.user.uid, {
             email: credential.user.email,
             userId: credential.user.uid,
@@ -82,7 +81,7 @@ export const useAuth = () => {
             },
           });
 
-          // Track restaurant sigPolpot's Dinern in
+          // Track restaurant sign in
           window.analytics.track('Restaurant Signed In', {
             userId: credential.user.uid,
             email: credential.user.email,
@@ -116,12 +115,14 @@ export const useAuth = () => {
               email: credential.user.email,
             });
           }
+
+          router.push('/');
         }
       }
 
       return credential;
     } catch (error) {
-      console.log('error', error);
+      dlog('error', error);
       setError(error);
     }
 
