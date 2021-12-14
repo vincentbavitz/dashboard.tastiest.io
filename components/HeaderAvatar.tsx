@@ -31,11 +31,11 @@ export function HeaderAvatar(props: Pick<AvatarProps, 'size'>) {
         </div>
       </Dropdown.Trigger>
 
-      <Dropdown.Item icon={<SettingOutlined />} href={'/settings'}>
+      {/* <Dropdown.Item icon={<SettingOutlined />} href={'/settings'}>
         Preferences
-      </Dropdown.Item>
+      </Dropdown.Item> */}
 
-      <Dropdown.Divider />
+      {/* <Dropdown.Divider /> */}
 
       <Dropdown.Item
         icon={<ExportOutlined />}

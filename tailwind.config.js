@@ -73,8 +73,9 @@ module.exports = {
   ],
   purge: [
     './pages/**/*.{js,ts,tsx}',
-    './components/**/*.{js,ts,tsx}',
     './layouts/**/*.{js,ts,jsx,tsx}',
+    './components/**/*.{js,ts,tsx}',
+    './contexts/**/*.{js,ts,tsx}',
     './node_modules/@tastiest-io/tastiest-ui/dist/styles.min.css',
   ],
 };

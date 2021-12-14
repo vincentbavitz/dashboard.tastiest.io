@@ -15,31 +15,21 @@ import lodash from 'lodash';
 import { InferGetServerSidePropsType } from 'next';
 import Head from 'next/head';
 import Link from 'next/link';
-import nookies from 'nookies';
 import { SaveEmailTemplateParams } from 'pages/api/saveEmailTemplate';
 import React, { useRef, useState } from 'react';
 import EmailEditor from 'react-email-editor';
 import { LocalEndpoint } from 'types/api';
-import { firebaseAdmin } from 'utils/firebaseAdmin';
+import { firebaseAdmin, verifyCookieToken } from 'utils/firebaseAdmin';
 import { METADATA } from '../../../constants';
 
 export const getServerSideProps = async context => {
-  // Get user ID from cookie.
-  const cookieToken = nookies.get(context)?.token;
+  const { valid, cookieToken, redirect } = await verifyCookieToken(context);
+  if (!valid) return { redirect };
+
   const restaurantDataApi = new RestaurantDataApi(firebaseAdmin);
   const { restaurantId } = await restaurantDataApi.initFromCookieToken(
     cookieToken,
   );
-
-  // If no user, redirect to login
-  if (!restaurantId) {
-    return {
-      redirect: {
-        destination: '/login',
-        permanent: false,
-      },
-    };
-  }
 
   // Attempt to fetch the design
   const restaurantData = await restaurantDataApi.getRestaurantData();

@@ -2,13 +2,13 @@ import {
   dlog,
   FirebaseAuthError,
   FirestoreCollection,
-  IRestaurantLegal,
   RestaurantDataKey,
+  RestaurantLegal,
 } from '@tastiest-io/tastiest-utils';
 import DebouncePromise from 'awesome-debounce-promise';
 import firebaseApp from 'firebase/app';
 import { useRouter } from 'next/router';
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useFirebase, useFirestore } from 'react-redux-firebase';
 import { FIREBASE } from '../constants';
 import { AuthContext } from '../contexts/auth';
@@ -20,6 +20,16 @@ export const useAuth = () => {
 
   const firestore = useFirestore();
   const { restaurantUser } = useContext(AuthContext);
+
+  // Kick them out if they're not a restaurant
+  useEffect(() => {
+    restaurantUser?.getIdTokenResult().then(token => {
+      const isRestaurantUser = Boolean(token?.claims?.restaurant);
+      if (!isRestaurantUser) {
+        signOut();
+      }
+    });
+  }, [restaurantUser]);
 
   // Convert firebase error code to Tastiest auth error message
   const setError = (e: { code: string; message: string }) => {
@@ -63,7 +73,6 @@ export const useAuth = () => {
           }
 
           // Identify restaurant with Segment
-          dlog('useAuth ➡️ credential.user.uid:', credential.user.uid);
           window.analytics.identify(credential.user.uid, {
             email: credential.user.email,
             userId: credential.user.uid,
@@ -72,7 +81,7 @@ export const useAuth = () => {
             },
           });
 
-          // Track restaurant sigPolpot's Dinern in
+          // Track restaurant sign in
           window.analytics.track('Restaurant Signed In', {
             userId: credential.user.uid,
             email: credential.user.email,
@@ -85,7 +94,7 @@ export const useAuth = () => {
             .get();
 
           const restaurantData = restaurantDataDoc.data();
-          const legalData = restaurantData?.legal as IRestaurantLegal;
+          const legalData = restaurantData?.legal as RestaurantLegal;
 
           if (!legalData.hasAcceptedTerms) {
             // Manually update TOS acceptance, as setRestaurantData
@@ -106,12 +115,14 @@ export const useAuth = () => {
               email: credential.user.email,
             });
           }
+
+          router.push('/');
         }
       }
 
       return credential;
     } catch (error) {
-      console.log('error', error);
+      dlog('error', error);
       setError(error);
     }
 

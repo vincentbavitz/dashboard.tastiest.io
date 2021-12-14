@@ -1,6 +1,6 @@
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import { IconButton } from '@tastiest-io/tastiest-ui';
-import { EmailTemplate } from '@tastiest-io/tastiest-utils';
+import { EmailTemplate } from '@tastiest-io/tastiest-utils/dist/types/email';
 import clsx from 'clsx';
 import Link from 'next/link';
 import React, { useState } from 'react';

@@ -1,4 +1,5 @@
 import { ClockCircleOutlined, InfoCircleOutlined } from '@ant-design/icons';
+import { SupportIcon } from '@tastiest-io/tastiest-icons';
 import { Button, Input, Modal, Select } from '@tastiest-io/tastiest-ui';
 import {
   dlog,
@@ -6,10 +7,12 @@ import {
   RestaurantData,
 } from '@tastiest-io/tastiest-utils';
 import clsx from 'clsx';
+import AlphaTestingBlockOverlay from 'components/AlphaTestingBlockOverlay';
+import PageHeader from 'components/PageHeader';
 import EmailsTable from 'components/tables/EmailsTable';
 import * as dateFns from 'date-fns';
 import { DefaultAuthPageProps } from 'layouts/LayoutDefault';
-import { NextPage } from 'next';
+import { GetServerSidePropsContext, NextPage } from 'next';
 import Head from 'next/head';
 import Link from 'next/link';
 import { GetEmailTemplateReturn } from 'pages/api/getEmailTemplates';
@@ -17,17 +20,23 @@ import React, { useContext, useMemo, useState } from 'react';
 import { DatePicker } from 'rsuite';
 import useSWR from 'swr';
 import { LocalEndpoint } from 'types/api';
+import { verifyCookieToken } from 'utils/firebaseAdmin';
 import { METADATA } from '../../constants';
 import { ScreenContext } from '../../contexts/screen';
+
+export const getServerSideProps = async (
+  context: GetServerSidePropsContext,
+) => {
+  const { valid, redirect } = await verifyCookieToken(context);
+  if (!valid) return { redirect };
+  return { props: {} };
+};
 
 const Followers: NextPage<DefaultAuthPageProps> = props => {
   const { restaurantId, restaurantData } = props;
 
   const { isDesktop } = useContext(ScreenContext);
   const [isBoosting, setIsBoosting] = useState(false);
-
-  dlog('times ➡️ restaurantId:', props.restaurantId);
-  dlog('times ➡️ props.restaurantData:', props.restaurantData);
 
   const [isScheduleModalOpen, setIsScheduleModalOpen] = useState(false);
 
@@ -41,28 +50,41 @@ const Followers: NextPage<DefaultAuthPageProps> = props => {
         <title>Followers - {METADATA.TITLE_SUFFIX}</title>
       </Head>
 
-      <div className="flex flex-col space-y-10">
-        <div className="flex justify-between">
-          <h3 className="text-2xl leading-none font-medium text-primary">
-            Notify Followers
-          </h3>
+      <AlphaTestingBlockOverlay label="Followers" />
 
-          <Button onClick={() => setIsScheduleModalOpen(true)}>
-            Schedule email
-          </Button>
-        </div>
+      <PageHeader label="Notify Followers">
+        <Button onClick={() => setIsScheduleModalOpen(true)}>
+          Schedule email
+        </Button>
+      </PageHeader>
 
+      <div className="">
         <div className="text-justify pb-6">
-          Notifying your followers about changes in your menu or ... <br />{' '}
-          Lorem ipsum dolor, sit amet consectetur adipisicing elit. Impedit,
-          minima recusandae sequi delectus mollitia ab odit repellat cumque nisi
-          repudiandae dignissimos quod animi dolorum accusantium? In enim
-          facilis delectus quaerat molestiae fuga modi numquam possimus, minus
-          culpa, perspiciatis repudiandae ratione sapiente rerum tempore quia
-          veniam earum quidem soluta deleniti voluptatibus.
+          <p>
+            <span className="font-bold">Turn your customers into fans!</span>{' '}
+            Customers who follow you love your restaurant and want to know about
+            your new dishes, experiences and general information. We recommend
+            sending at least one email to them all every week. Restaurants that
+            do this get on average 400% more booking than restaurants who don't.
+          </p>
+
+          <p>
+            Find our best practice email templates below. <br />
+            The Tastiest Team will check your emails before they go out to make
+            sure they will look good on all devices.
+          </p>
         </div>
 
-        <div className="bg-green-100 bg-opacity-50 px-4 py-3 rounded-lg border-b-2 mb-6">
+        <div className="bg-gray-200 bg-opacity-50 border-b-2 border-gray-300 rounded-lg py-2 px-4 mb-6">
+          <SupportIcon className="inline h-5 w-5 mr-1 text-secondary fill-current" />
+          If you have any questions, please fill out a support request{' '}
+          <Link href={'/support'}>
+            <a>here</a>
+          </Link>
+          .
+        </div>
+
+        <div className="bg-gray-200 bg-opacity-50 px-4 py-3 rounded-lg border-b-2 border-gray-300 mb-6">
           <p className="pb-2 text-base">
             In order to notify your followers, you must first create an email
             template.

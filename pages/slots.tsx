@@ -4,13 +4,22 @@ import {
   minsIntoHumanTime,
 } from '@tastiest-io/tastiest-utils';
 import BookingSlotsBlock from 'components/blocks/BookingSlotsBlock';
+import PageHeader from 'components/PageHeader';
 import { DefaultAuthPageProps } from 'layouts/LayoutDefault';
-import { NextPage } from 'next';
+import { GetServerSidePropsContext, NextPage } from 'next';
 import Head from 'next/head';
 import React, { useMemo, useState } from 'react';
 import { RangeSlider, Slider } from 'rsuite';
-import 'rsuite/Slider/styles/index.less';
+import { verifyCookieToken } from 'utils/firebaseAdmin';
 import { METADATA } from '../constants';
+
+export const getServerSideProps = async (
+  context: GetServerSidePropsContext,
+) => {
+  const { valid, redirect } = await verifyCookieToken(context);
+  if (!valid) return { redirect };
+  return { props: {} };
+};
 
 const Times: NextPage<DefaultAuthPageProps> = props => {
   const { restaurantData } = props;
@@ -20,6 +29,8 @@ const Times: NextPage<DefaultAuthPageProps> = props => {
       <Head>
         <title>Times - {METADATA.TITLE_SUFFIX}</title>
       </Head>
+
+      <PageHeader label="Booking Slots"></PageHeader>
 
       <div className="flex flex-col space-y-10">
         <DefineSlotsSection {...props} />

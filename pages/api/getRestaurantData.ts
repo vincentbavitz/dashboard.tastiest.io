@@ -1,4 +1,8 @@
-import { RestaurantData, RestaurantDataApi } from '@tastiest-io/tastiest-utils';
+import {
+  dlog,
+  RestaurantData,
+  RestaurantDataApi,
+} from '@tastiest-io/tastiest-utils';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { firebaseAdmin } from 'utils/firebaseAdmin';
 
@@ -30,8 +34,14 @@ export default async function getRestaurantData(
       String(request.query.restaurantId),
     );
 
+    dlog(
+      'getRestaurantData ➡️ String(request.query.restaurantId):',
+      String(request.query.restaurantId),
+    );
+
     const restaurantData = await restaurantDataApi.getRestaurantData();
 
+    dlog('getRestaurantData ➡️ restaurantData:', restaurantData);
     if (!restaurantData) {
       response.status(400).end();
       return;

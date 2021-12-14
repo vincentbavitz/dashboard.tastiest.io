@@ -37,6 +37,10 @@ export default function LayoutDefault({
     compare: (a, b) => JSON.stringify(a) === JSON.stringify(b),
   });
 
+  if (!restaurantId) {
+    return null;
+  }
+
   return (
     <LayoutWrapper router={router} pageProps={pageProps}>
       <div

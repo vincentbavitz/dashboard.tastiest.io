@@ -1,5 +1,11 @@
-import { dlog, FirestoreCollection } from '@tastiest-io/tastiest-utils';
+import {
+  dlog,
+  FirestoreCollection,
+  RestaurantDataApi,
+} from '@tastiest-io/tastiest-utils';
 import * as firebaseAdmin from 'firebase-admin';
+import { GetServerSidePropsContext } from 'next';
+import nookies from 'nookies';
 
 const cert = {
   privateKey: process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, '\n'),
@@ -23,4 +29,27 @@ if (!firebaseAdmin.apps.length) {
 const db = (collection: FirestoreCollection) =>
   firebaseAdmin.firestore().collection(collection);
 
-export { firebaseAdmin, db };
+/** Verify cookie token inside getServerSideProps */
+const verifyCookieToken = async (context: GetServerSidePropsContext) => {
+  const cookieToken = nookies.get(context)?.token;
+  const restaurantDataApi = new RestaurantDataApi(firebaseAdmin);
+  const { restaurantId } = await restaurantDataApi.initFromCookieToken(
+    cookieToken,
+  );
+
+  // If no user, redirect to login
+  if (!restaurantId) {
+    return {
+      valid: false,
+      cookieToken: null,
+      redirect: {
+        destination: '/login',
+        permanent: false,
+      },
+    };
+  }
+
+  return { valid: true, cookieToken, redirect: null };
+};
+
+export { firebaseAdmin, verifyCookieToken, db };

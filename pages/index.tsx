@@ -3,13 +3,22 @@ import { formatCurrency } from '@tastiest-io/tastiest-utils';
 import CoversBarChart from 'components/charts/CoversBarChart';
 import HomeCustomersTable from 'components/tables/homeCustomersTable/HomeCustomersTable';
 import { DefaultAuthPageProps } from 'layouts/LayoutDefault';
-import { NextPage } from 'next';
+import { GetServerSidePropsContext, NextPage } from 'next';
 import Head from 'next/head';
 import React from 'react';
 import useSWR from 'swr';
 import { LocalEndpoint } from 'types/api';
+import { verifyCookieToken } from 'utils/firebaseAdmin';
 import { METADATA } from '../constants';
 import { GetBalanceReturn } from './api/getBalance';
+
+export const getServerSideProps = async (
+  context: GetServerSidePropsContext,
+) => {
+  const { valid, redirect } = await verifyCookieToken(context);
+  if (!valid) return { redirect };
+  return { props: {} };
+};
 
 const Index: NextPage<DefaultAuthPageProps> = props => {
   const { restaurantData } = props;
@@ -42,11 +51,12 @@ const Index: NextPage<DefaultAuthPageProps> = props => {
           restaurantName={restaurantData.details?.name}
         />
 
-        <div className="flex justify-between pt-2 space-x-6">
-          <div style={{ maxWidth: '400px' }} className="w-7/12">
+        <div className="flex flex-wrap justify-between pt-2 gap-6">
+          <div style={{ maxWidth: '500px' }} className="flex-grow">
             <CoversBarChart restaurantId={restaurantData.details.id} />
           </div>
-          <div style={{ maxWidth: '300px' }} className="w-5/12">
+
+          <div>
             <InfoCard
               label="This Payout"
               info={`£${formatCurrency(pendingBalance)}`}

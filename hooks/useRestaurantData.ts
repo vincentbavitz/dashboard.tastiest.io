@@ -1,6 +1,6 @@
 import {
   FirestoreCollection,
-  IGenericAsyncReturnType,
+  GenericAsyncReturnType,
   RestaurantData,
   RestaurantDataKey,
   TRestaurantData,
@@ -29,7 +29,7 @@ export function useRestaurantData(restaurantUser: firebase.User) {
     field: T,
     value: TRestaurantData<T>,
     onInvalidUser?: () => void,
-  ): Promise<IGenericAsyncReturnType> => {
+  ): Promise<GenericAsyncReturnType> => {
     if (!restaurantUser?.uid) {
       // No user signed in
       if (onInvalidUser) {
