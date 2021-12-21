@@ -3,8 +3,8 @@ import {
   humanTimeIntoMins,
   minsIntoHumanTime,
   TIME,
+  TimeRange,
 } from '@tastiest-io/tastiest-utils';
-import { TimeRange } from '@tastiest-io/tastiest-utils/dist/types/time';
 import React, { useContext } from 'react';
 import { RangeSlider } from 'rsuite';
 import {
