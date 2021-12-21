@@ -90,7 +90,7 @@ export default function HomeCustomersTable(props: Props) {
     },
     {
       id: 'dealName',
-      Header: 'Deal',
+      Header: 'Experience',
       accessor: (row: Booking) => {
         const maxDealNameLength = 25;
         return (
@@ -103,7 +103,7 @@ export default function HomeCustomersTable(props: Props) {
     },
     {
       id: 'heads',
-      Header: 'Heads',
+      Header: 'Covers',
       accessor: (row: Booking) => <p>{row.heads}</p>,
     },
     {
@@ -116,7 +116,7 @@ export default function HomeCustomersTable(props: Props) {
       ),
     },
     {
-      id: 'paidAt',
+      id: 'bookedFor',
       Header: 'Purchased',
       accessor: (row: Booking) => {
         return <p>{moment(row.paidAt).local().fromNow()}</p>;
@@ -139,7 +139,7 @@ export default function HomeCustomersTable(props: Props) {
     },
   ];
 
-  // Update data depen17.78ding on the column
+  // Update data depending on the column
   const updateData = React.useMemo(
     () => (value: any, rowIndex: number, columnId: EditableBookingFields) => {
       console.log(`Updating '${columnId}' field on booking to ${value}`);
