@@ -7,7 +7,6 @@ import {
 } from '@tastiest-io/tastiest-utils';
 import React, { useContext } from 'react';
 import { RangeSlider } from 'rsuite';
-import 'rsuite/Slider/styles/index.less';
 import {
   BookingSlotsContext,
   BookingSlotsSelectorSteps,
