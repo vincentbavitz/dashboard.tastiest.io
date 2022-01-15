@@ -35,6 +35,7 @@ export default async function getBookings(
 
     const bookingsSnapshot = await query
       .where('restaurantId', '==', restaurantId)
+      .where('isTest', '==', false)
       .orderBy('paidAt', 'desc')
       .startAt(startAt)
       .limit(limit)

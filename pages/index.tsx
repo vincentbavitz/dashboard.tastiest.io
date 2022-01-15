@@ -32,7 +32,10 @@ const Index: NextPage<DefaultAuthPageProps> = props => {
     refreshWhenHidden: true,
   });
 
-  const { payoutTotal, pendingBalance } = { payoutTotal: 0, pendingBalance: 0 };
+  const { payoutTotal, pendingBalance } = data ?? {
+    payoutTotal: 0,
+    pendingBalance: 0,
+  };
 
   return (
     <>
@@ -65,7 +68,10 @@ const Index: NextPage<DefaultAuthPageProps> = props => {
           </div>
         </div>
 
-        <HomeCustomersTable restaurantId={restaurantData.details.id} />
+        <HomeCustomersTable
+          restaurantId={restaurantData.details.id}
+          // metrics={restaurantData.metrics}
+        />
       </div>
     </>
   );
