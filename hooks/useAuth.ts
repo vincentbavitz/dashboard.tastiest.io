@@ -24,6 +24,8 @@ export const useAuth = () => {
   // Kick them out if they're not a restaurant
   useEffect(() => {
     restaurantUser?.getIdTokenResult().then(token => {
+      dlog('useAuth ➡️ token:', token.token);
+
       const isRestaurantUser = Boolean(token?.claims?.restaurant);
       if (!isRestaurantUser) {
         signOut();
@@ -146,23 +148,6 @@ export const useAuth = () => {
       setError(error);
     }
   };
-
-  // const resetPassword = async (email: string) => {
-  //   _setError(null);
-
-  //   //  Email must be given as a parameter because user might not be logged in.
-  //   if (!email?.length) {
-  //     return;
-  //   }
-
-  //   try {
-  //     await firebase.auth().sendPasswordResetEmail(email);
-  //     return true;
-  //   } catch (error) {
-  //     setError(error);
-  //     return false;
-  //   }
-  // };
 
   // Null if the user information has not been loaded yet. else boolean
   const isSignedIn =

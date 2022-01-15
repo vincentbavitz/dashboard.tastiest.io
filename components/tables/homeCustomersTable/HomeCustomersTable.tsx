@@ -1,5 +1,5 @@
 /* eslint-disable react/display-name */
-import { Table } from '@tastiest-io/tastiest-ui';
+import { Table, Tooltip } from '@tastiest-io/tastiest-ui';
 import { Booking, postFetch, titleCase } from '@tastiest-io/tastiest-utils';
 import moment from 'moment';
 import React, { useEffect, useState } from 'react';
@@ -85,8 +85,24 @@ export default function HomeCustomersTable(props: Props) {
       id: 'eaterName',
       Header: 'Name',
       accessor: (row: Booking) => {
-        return <p className="font-medium">{row.eaterName}</p>;
+        return (
+          <div className="flex items-center font-medium">
+            {row.isUserFollowing ? (
+              <Tooltip
+                content={`${
+                  row.eaterName.split(' ')[0]
+                } was following you when they made this booking.`}
+              >
+                <div className="flex items-center justify-center bg-alt-1 bg-opacity-75 rounded-full h-5 w-5 text-white mr-1 cursor-pointer">
+                  F
+                </div>
+              </Tooltip>
+            ) : null}
+            {row.eaterName}{' '}
+          </div>
+        );
       },
+      minWidth: 200,
     },
     {
       id: 'dealName',
@@ -111,7 +127,7 @@ export default function HomeCustomersTable(props: Props) {
       Header: 'Order Total',
       accessor: (row: Booking) => (
         <p className="font-medium">
-          £{Number(row.price?.final * 0.75)?.toFixed(2)}
+          £{Number(row.restaurantCut?.amount ?? 0)?.toFixed(2)}
         </p>
       ),
     },
@@ -167,7 +183,7 @@ export default function HomeCustomersTable(props: Props) {
         updateData={updateData}
         searchFunction={searchFunction}
         isLoadingInitialData={isInitialLoading}
-        paginateInterval={5}
+        paginateInterval={10}
       />
     </div>
   );

@@ -60,6 +60,7 @@ export default async function getBookingSlots(
     ];
 
     response.json({ openTimes, seatingDuration });
+    return;
   } catch (error) {
     response.status(400).statusMessage = `Error: ${error}`;
     response.end();

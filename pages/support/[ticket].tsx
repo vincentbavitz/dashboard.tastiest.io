@@ -1,13 +1,15 @@
 import { RollbackOutlined } from '@ant-design/icons';
 import { Button, TextArea, Tooltip } from '@tastiest-io/tastiest-ui';
 import {
-  FirestoreCollection,
+  Horus,
   RestaurantSupportRequest,
   SupportMessage,
   SupportMessageDirection,
+  useHorusSWR,
 } from '@tastiest-io/tastiest-utils';
 import clsx from 'clsx';
 import PageHeader from 'components/PageHeader';
+import { AuthContext } from 'contexts/auth';
 import { DefaultAuthPageProps } from 'layouts/LayoutDefault';
 import { DateTime } from 'luxon';
 import {
@@ -17,9 +19,9 @@ import {
 } from 'next';
 import Head from 'next/head';
 import Link from 'next/link';
-import React from 'react';
+import React, { useContext, useEffect, useMemo, useState } from 'react';
 import { useController, useForm } from 'react-hook-form';
-import { db, verifyCookieToken } from 'utils/firebaseAdmin';
+import { verifyCookieToken } from 'utils/firebaseAdmin';
 import { METADATA } from '../../constants';
 
 type TicketFormData = {
@@ -31,7 +33,7 @@ const MESSAGE_CHARACTER_LIMIT = 2000;
 export const getServerSideProps = async (
   context: GetServerSidePropsContext,
 ) => {
-  const { valid, redirect } = await verifyCookieToken(context);
+  const { valid, redirect, cookieToken } = await verifyCookieToken(context);
   if (!valid) return { redirect };
 
   const ticketId = String(context.params.ticket);
@@ -46,11 +48,20 @@ export const getServerSideProps = async (
     };
   }
 
-  const ticketSnapshot = await db(FirestoreCollection.SUPPORT_RESTAURANTS)
-    .doc(ticketId)
-    .get();
+  const horus = new Horus(cookieToken);
+  const { data: ticket } = await horus.get<any, RestaurantSupportRequest>(
+    `/support/restaurants/ticket/${ticketId}`,
+  );
 
-  const ticket = ticketSnapshot.data() as RestaurantSupportRequest;
+  if (!ticket) {
+    return {
+      props: {},
+      redirect: {
+        destination: '/support',
+        permanent: false,
+      },
+    };
+  }
 
   return { props: { ticket } };
 };
@@ -58,7 +69,24 @@ export const getServerSideProps = async (
 const Ticket: NextPage<
   DefaultAuthPageProps & InferGetServerSidePropsType<typeof getServerSideProps>
 > = props => {
-  const { ticket } = props;
+  const [token, setToken] = useState<string | null>(null);
+  const { restaurantUser: user } = useContext(AuthContext);
+
+  // Set token as soon as it's available.
+  useEffect(() => {
+    user.getIdToken().then(setToken);
+  }, [user]);
+
+  const horus = useMemo(() => (token ? new Horus(token) : null), [token]);
+
+  const { data: ticket, mutate } = useHorusSWR<RestaurantSupportRequest>(
+    `/support/restaurants/ticket/${props.ticket.id}`,
+    user,
+    {
+      initialData: props.ticket,
+      refreshInterval: 120000,
+    },
+  );
 
   const {
     handleSubmit,
@@ -93,8 +121,19 @@ const Ticket: NextPage<
   });
 
   const reply = async ({ message }: TicketFormData) => {
-    alert(message);
-    null;
+    const { data: replyData } = await horus?.post<any, SupportMessage>(
+      '/support/restaurants/reply',
+      {
+        id: ticket.id,
+        name: ticket.name,
+        message,
+      },
+    );
+
+    mutate(
+      { ...ticket, conversation: [...ticket.conversation, replyData] },
+      true,
+    );
   };
 
   return (
@@ -184,7 +223,7 @@ const SupportMessageBlock = (message: SupportMessage) => {
         </div>
 
         <div className="text-xs tracking-wide opacity-75">
-          {DateTime.fromMillis(message.timestamp).toFormat('hh:mm D')}
+          {DateTime.fromMillis(message?.timestamp ?? 0).toFormat('hh:mm D')}
         </div>
       </div>
 
