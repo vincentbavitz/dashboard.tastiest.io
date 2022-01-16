@@ -1,4 +1,4 @@
-import { RollbackOutlined } from '@ant-design/icons';
+import { CheckOutlined, RollbackOutlined } from '@ant-design/icons';
 import { Button, TextArea, Tooltip } from '@tastiest-io/tastiest-ui';
 import {
   Horus,
@@ -166,32 +166,43 @@ const Ticket: NextPage<
         <div className="h-px w-full"></div>
       </Tooltip>
 
-      <div className="flex flex-col gap-4 mb-10">
-        <TextArea
-          ref={messageFieldRef}
-          placeholder="Reply..."
-          rows={5}
-          size="large"
-          maxLength={MESSAGE_CHARACTER_LIMIT}
-          {...messageFieldProps}
-        />
-
-        <div className="flex justify-between items-start">
-          <Button
+      {ticket.resolved ? null : (
+        <div className="flex flex-col gap-4 mb-10">
+          <TextArea
+            ref={messageFieldRef}
+            placeholder="Reply..."
+            rows={5}
             size="large"
-            onClick={handleSubmit(reply)}
-            disabled={!formData.message?.length}
-          >
-            Post reply
-          </Button>
+            maxLength={MESSAGE_CHARACTER_LIMIT}
+            {...messageFieldProps}
+          />
 
-          <div className="py-1 px-2 rounded-md text-2xs bg-gray-200">
-            {formData?.message?.length ?? 0} / {MESSAGE_CHARACTER_LIMIT}
+          <div className="flex justify-between items-start">
+            <Button
+              size="large"
+              onClick={handleSubmit(reply)}
+              disabled={!formData.message?.length}
+            >
+              Post reply
+            </Button>
+
+            <div className="py-1 px-2 rounded-md text-2xs bg-gray-200">
+              {formData?.message?.length ?? 0} / {MESSAGE_CHARACTER_LIMIT}
+            </div>
           </div>
         </div>
+      )}
+
+      <div className="flex items-center justify-between mb-4">
+        <h4 className="text-2xl font-medium">Ticket Messges</h4>
+
+        {ticket.resolved ? (
+          <h4 className="flex items-center text-xl font-medium px-3 rounded-md bg-green-100 text-dark">
+            <CheckOutlined className="text-green-700 mr-2" /> Resolved
+          </h4>
+        ) : null}
       </div>
 
-      <h4 className="text-2xl font-medium mb-4">Ticket Messges</h4>
       <div className="flex flex-col space-y-4">
         {ticket.conversation.map((message, key) => {
           return <SupportMessageBlock key={key} {...message} />;
