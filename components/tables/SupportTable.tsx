@@ -48,7 +48,7 @@ export default function SupportTable(props: Props) {
           <p className="font-medium">
             {row.resolved ? (
               <div>
-                <StatusOrb status="online" /> Resolved
+                <StatusOrb status="online" ping={false} /> Resolved
               </div>
             ) : (
               <div>
