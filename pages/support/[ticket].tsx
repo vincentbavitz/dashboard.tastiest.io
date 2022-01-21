@@ -74,7 +74,7 @@ const Ticket: NextPage<
 
   // Set token as soon as it's available.
   useEffect(() => {
-    user.getIdToken().then(setToken);
+    user?.getIdToken().then(setToken);
   }, [user]);
 
   const horus = useMemo(() => (token ? new Horus(token) : null), [token]);

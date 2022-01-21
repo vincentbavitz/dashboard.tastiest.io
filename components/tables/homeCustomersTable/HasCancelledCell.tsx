@@ -72,15 +72,15 @@ export const HasCancelledCell = ({
       >
         <>
           <p className="font-medium text-gray-700">
-            Note! Cancelling the booking is final.
+            <span className="text-danger">Note!</span> Cancelling the booking is
+            final.
           </p>
 
           <div className="pt-3 justify">
             <p>
               Cancelling will notify the user via email and register with our
               payments department. If you are sure you want to cancel the
-              booking for
-              <br />
+              booking for{' '}
               <span className="font-medium">{booking.eaterName}</span>, click{' '}
               <span className="font-medium">Ok</span>.
             </p>

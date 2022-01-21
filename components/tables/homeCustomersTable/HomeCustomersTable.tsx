@@ -1,10 +1,15 @@
 /* eslint-disable react/display-name */
 import { Table, Tooltip } from '@tastiest-io/tastiest-ui';
-import { Booking, postFetch, titleCase } from '@tastiest-io/tastiest-utils';
+import {
+  Booking,
+  Horus,
+  titleCase,
+  useHorusSWR,
+} from '@tastiest-io/tastiest-utils';
+import { AuthContext } from 'contexts/auth';
 import moment from 'moment';
-import React, { useEffect, useState } from 'react';
-import useSWR, { mutate } from 'swr';
-import { LocalEndpoint } from 'types/api';
+import React, { useContext, useEffect, useState } from 'react';
+import { BookingDateCell } from './BookingDateCell';
 import { HasArrivedCell } from './HasArrivedCell';
 import { HasCancelledCell } from './HasCancelledCell';
 
@@ -20,6 +25,7 @@ async function setBookingField<T>(
   field: EditableBookingFields,
   value: T,
   bookings: Booking[],
+  token: string,
   rowIndex: number,
 ) {
   const booking = bookings[rowIndex];
@@ -34,26 +40,15 @@ async function setBookingField<T>(
     return;
   }
 
-  const updatedBookings = bookings.map((row, index) =>
-    index === rowIndex
-      ? {
-          ...booking,
-          [field]: value,
-        }
-      : row,
-  );
-
-  // Update booking server side
-  await postFetch<any, Booking>(LocalEndpoint.UPDATE_BOOKING, {
+  const horus = new Horus(token);
+  const { data } = await horus.post('/bookings/update', {
     bookingId: booking.orderId,
     [field]: value,
   });
 
-  mutate(
-    `${LocalEndpoint.GET_BOOKINGS}?restaurantId=${booking.restaurantId}`,
-    updatedBookings,
-    false,
-  );
+  if (!data) {
+    return;
+  }
 }
 
 interface Props {
@@ -62,10 +57,19 @@ interface Props {
 
 export default function HomeCustomersTable(props: Props) {
   const { restaurantId } = props;
-  const { data: bookings } = useSWR<Booking[]>(
-    `${LocalEndpoint.GET_BOOKINGS}?restaurantId=${restaurantId}`,
+
+  const { restaurantUser: user } = useContext(AuthContext);
+  // Set token as soon as it's available.
+  const [token, setToken] = useState(null);
+  useEffect(() => {
+    user?.getIdToken().then(setToken);
+  }, [user]);
+
+  const { data: bookings, mutate } = useHorusSWR<Booking[]>(
+    `/bookings?restaurantId=${restaurantId}`,
+    user,
     {
-      refreshInterval: 5000,
+      refreshInterval: 30000,
       initialData: null,
       refreshWhenHidden: true,
       compare: (a, b) => JSON.stringify(a) === JSON.stringify(b),
@@ -132,7 +136,13 @@ export default function HomeCustomersTable(props: Props) {
       ),
     },
     {
-      id: 'bookedFor',
+      Header: 'Booking Date',
+      accessor: 'bookingDate',
+      Cell: BookingDateCell,
+    },
+
+    {
+      id: 'purchased',
       Header: 'Purchased',
       accessor: (row: Booking) => {
         return <p>{moment(row.paidAt).local().fromNow()}</p>;
@@ -143,11 +153,7 @@ export default function HomeCustomersTable(props: Props) {
       accessor: 'hasCancelled',
       Cell: HasCancelledCell,
     },
-    // {
-    //   Header: 'Booking Date',
-    //   accessor: 'bookingDate',
-    //   Cell: BookingDateCell,
-    // },
+
     {
       Header: 'Arrived',
       accessor: 'hasArrived',
@@ -159,7 +165,19 @@ export default function HomeCustomersTable(props: Props) {
   const updateData = React.useMemo(
     () => (value: any, rowIndex: number, columnId: EditableBookingFields) => {
       console.log(`Updating '${columnId}' field on booking to ${value}`);
-      setBookingField(columnId, value, bookings, rowIndex);
+      setBookingField(columnId, value, bookings, token, rowIndex);
+
+      const booking = bookings[rowIndex];
+      const updatedBookings = bookings.map((row, index) =>
+        index === rowIndex
+          ? {
+              ...booking,
+              [columnId]: value,
+            }
+          : row,
+      );
+
+      mutate(updatedBookings, false);
     },
     [bookings],
   );
