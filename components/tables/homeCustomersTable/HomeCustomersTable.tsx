@@ -70,7 +70,7 @@ export default function HomeCustomersTable(props: Props) {
     },
   );
 
-  const bookings = data.filter(
+  const bookings = data?.filter(
     booking => booking.isTest === (process.env.NODE_ENV === 'development'),
   );
 
