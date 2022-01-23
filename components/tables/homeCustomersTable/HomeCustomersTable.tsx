@@ -59,7 +59,7 @@ export default function HomeCustomersTable(props: Props) {
   const { restaurantId } = props;
   const { token } = useContext(AuthContext);
 
-  const { data: bookings, mutate } = useHorusSWR<Booking[]>(
+  const { data, mutate } = useHorusSWR<Booking[]>(
     `/bookings?restaurantId=${restaurantId}`,
     token,
     {
@@ -68,6 +68,10 @@ export default function HomeCustomersTable(props: Props) {
       refreshWhenHidden: true,
       compare: (a, b) => JSON.stringify(a) === JSON.stringify(b),
     },
+  );
+
+  const bookings = data.filter(
+    booking => booking.isTest === (process.env.NODE_ENV === 'development'),
   );
 
   const [isInitialLoading, setIsInitialLoading] = useState(true);
