@@ -1,10 +1,15 @@
 /* eslint-disable react/display-name */
 import { Table, Tooltip } from '@tastiest-io/tastiest-ui';
-import { Booking, postFetch, titleCase } from '@tastiest-io/tastiest-utils';
+import {
+  Booking,
+  Horus,
+  titleCase,
+  useHorusSWR,
+} from '@tastiest-io/tastiest-utils';
+import { AuthContext } from 'contexts/auth';
 import moment from 'moment';
-import React, { useEffect, useState } from 'react';
-import useSWR, { mutate } from 'swr';
-import { LocalEndpoint } from 'types/api';
+import React, { useContext, useEffect, useState } from 'react';
+import { BookingDateCell } from './BookingDateCell';
 import { HasArrivedCell } from './HasArrivedCell';
 import { HasCancelledCell } from './HasCancelledCell';
 
@@ -20,6 +25,7 @@ async function setBookingField<T>(
   field: EditableBookingFields,
   value: T,
   bookings: Booking[],
+  token: string,
   rowIndex: number,
 ) {
   const booking = bookings[rowIndex];
@@ -34,26 +40,15 @@ async function setBookingField<T>(
     return;
   }
 
-  const updatedBookings = bookings.map((row, index) =>
-    index === rowIndex
-      ? {
-          ...booking,
-          [field]: value,
-        }
-      : row,
-  );
-
-  // Update booking server side
-  await postFetch<any, Booking>(LocalEndpoint.UPDATE_BOOKING, {
+  const horus = new Horus(token);
+  const { data } = await horus.post('/bookings/update', {
     bookingId: booking.orderId,
     [field]: value,
   });
 
-  mutate(
-    `${LocalEndpoint.GET_BOOKINGS}?restaurantId=${booking.restaurantId}`,
-    updatedBookings,
-    false,
-  );
+  if (!data) {
+    return;
+  }
 }
 
 interface Props {
@@ -62,10 +57,13 @@ interface Props {
 
 export default function HomeCustomersTable(props: Props) {
   const { restaurantId } = props;
-  const { data: bookings } = useSWR<Booking[]>(
-    `${LocalEndpoint.GET_BOOKINGS}?restaurantId=${restaurantId}`,
+  const { token } = useContext(AuthContext);
+
+  const { data: bookings, mutate } = useHorusSWR<Booking[]>(
+    `/bookings?restaurantId=${restaurantId}`,
+    token,
     {
-      refreshInterval: 5000,
+      refreshInterval: 30000,
       initialData: null,
       refreshWhenHidden: true,
       compare: (a, b) => JSON.stringify(a) === JSON.stringify(b),
@@ -86,45 +84,70 @@ export default function HomeCustomersTable(props: Props) {
       Header: 'Name',
       accessor: (row: Booking) => {
         return (
-          <div className="flex items-center font-medium">
+          <div className="flex flex-col justify-center font-medium">
+            <span>{row.eaterName}</span>
+
             {row.isUserFollowing ? (
-              <Tooltip
-                content={`${
-                  row.eaterName.split(' ')[0]
-                } was following you when they made this booking.`}
+              <span
+                style={{ width: 'fit-content' }}
+                className="px-2 rounded text-sm bg-green-100"
               >
-                <div className="flex items-center justify-center bg-alt-1 bg-opacity-75 rounded-full h-5 w-5 text-white mr-1 cursor-pointer">
-                  F
-                </div>
-              </Tooltip>
+                Follower
+              </span>
             ) : null}
-            {row.eaterName}{' '}
           </div>
         );
       },
-      minWidth: 200,
+      minWidth: 150,
+    },
+    {
+      Header: 'Arrived',
+      accessor: 'hasArrived',
+      Cell: HasArrivedCell,
+      width: 90,
+    },
+    {
+      Header: 'Cancelled',
+      accessor: 'hasCancelled',
+      Cell: HasCancelledCell,
+      width: 90,
+    },
+    {
+      Header: 'Booking Date',
+      accessor: 'bookingDate',
+      Cell: BookingDateCell,
     },
     {
       id: 'dealName',
       Header: 'Experience',
+      minWidth: 200,
       accessor: (row: Booking) => {
-        const maxDealNameLength = 25;
+        const maxExperienceNameLength = 35;
+        const exceedsLimit = row.dealName.length > maxExperienceNameLength;
+
         return (
-          <p>
-            {titleCase(row.dealName).slice(0, maxDealNameLength)}
-            {row.dealName.length > maxDealNameLength && '...'}
-          </p>
+          <Tooltip
+            show={exceedsLimit ? undefined : false}
+            content={row.dealName}
+          >
+            <p className="whitespace-pre-wrap">
+              {titleCase(row.dealName).slice(0, maxExperienceNameLength)}
+              {exceedsLimit && '...'}
+            </p>
+          </Tooltip>
         );
       },
     },
     {
       id: 'heads',
       Header: 'Covers',
+      width: 80,
       accessor: (row: Booking) => <p>{row.heads}</p>,
     },
     {
       id: 'orderTotal',
       Header: 'Order Total',
+      width: 100,
       accessor: (row: Booking) => (
         <p className="font-medium">
           £{Number(row.restaurantCut?.amount ?? 0)?.toFixed(2)}
@@ -132,26 +155,11 @@ export default function HomeCustomersTable(props: Props) {
       ),
     },
     {
-      id: 'bookedFor',
+      id: 'purchased',
       Header: 'Purchased',
       accessor: (row: Booking) => {
         return <p>{moment(row.paidAt).local().fromNow()}</p>;
       },
-    },
-    {
-      Header: 'Cancelled',
-      accessor: 'hasCancelled',
-      Cell: HasCancelledCell,
-    },
-    // {
-    //   Header: 'Booking Date',
-    //   accessor: 'bookingDate',
-    //   Cell: BookingDateCell,
-    // },
-    {
-      Header: 'Arrived',
-      accessor: 'hasArrived',
-      Cell: HasArrivedCell,
     },
   ];
 
@@ -159,7 +167,19 @@ export default function HomeCustomersTable(props: Props) {
   const updateData = React.useMemo(
     () => (value: any, rowIndex: number, columnId: EditableBookingFields) => {
       console.log(`Updating '${columnId}' field on booking to ${value}`);
-      setBookingField(columnId, value, bookings, rowIndex);
+      setBookingField(columnId, value, bookings, token, rowIndex);
+
+      const booking = bookings[rowIndex];
+      const updatedBookings = bookings.map((row, index) =>
+        index === rowIndex
+          ? {
+              ...booking,
+              [columnId]: value,
+            }
+          : row,
+      );
+
+      mutate(updatedBookings, false);
     },
     [bookings],
   );

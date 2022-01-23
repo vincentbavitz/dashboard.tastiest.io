@@ -1,6 +1,6 @@
-import { Booking } from '@tastiest-io/tastiest-utils';
-import useSWR from 'swr';
-import { LocalEndpoint } from 'types/api';
+import { Booking, useHorusSWR } from '@tastiest-io/tastiest-utils';
+import { AuthContext } from 'contexts/auth';
+import { useContext } from 'react';
 import { TIME } from '../../constants';
 import BarChart from './BarChart';
 
@@ -11,10 +11,12 @@ interface Props {
 }
 
 export default function CoversBarChart({ restaurantId }: Props) {
-  const { data: bookings } = useSWR<Booking[]>(
-    `${LocalEndpoint.GET_BOOKINGS}?restaurantId=${restaurantId}`,
+  const { token } = useContext(AuthContext);
+  const { data: bookings } = useHorusSWR<Booking[]>(
+    `/bookings?restaurantId=${restaurantId}`,
+    token,
     {
-      refreshInterval: 5000,
+      refreshInterval: 60000,
       initialData: null,
       refreshWhenHidden: true,
       compare: (a, b) => JSON.stringify(a) === JSON.stringify(b),

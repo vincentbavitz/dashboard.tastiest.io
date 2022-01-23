@@ -1,8 +1,4 @@
-import {
-  DownOutlined,
-  ExportOutlined,
-  SettingOutlined,
-} from '@ant-design/icons';
+import { DownOutlined, ExportOutlined } from '@ant-design/icons';
 import { Avatar, AvatarProps, Dropdown } from '@tastiest-io/tastiest-ui';
 import { titleCase } from '@tastiest-io/tastiest-utils';
 import { useAuth } from 'hooks/useAuth';

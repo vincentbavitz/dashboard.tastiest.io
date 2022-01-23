@@ -3158,10 +3158,10 @@
     react-table "^7.7.0"
     uuid "^8.3.2"
 
-"@tastiest-io/tastiest-utils@^1.48.0":
-  version "1.48.0"
-  resolved "https://npm.pkg.github.com/download/@tastiest-io/tastiest-utils/1.48.0/62fd7de013867f2fec098c48c4bc8c3af673eefcb4ffbfeada976bdf86ac8fa0#70a877701adf2248374288f31ddcb10a44f8b7d2"
-  integrity sha512-++rgN9MRrqeqZ2cLcwTe0RfI236U5SMBJhF2CYF1rxcd6Q1Q5z9rObUxCZ5PDgC0wUf0ZwRikwVk1tULEOKwbg==
+"@tastiest-io/tastiest-utils@^1.55.0":
+  version "1.55.0"
+  resolved "https://npm.pkg.github.com/download/@tastiest-io/tastiest-utils/1.55.0/01cc0c3138dca55803e8476f2346999cf56cdc2705b302d63132397e6496078a#f504f1907e9c37ecba4b9903da155e1002554a28"
+  integrity sha512-MEiUnyuDMlBBNawE0r2U82AKJPrEI06AY5BxztUlyekGRK/+87xMf027A7L7b+BuC8IXz2S8aIGZ0x9GbOC9QA==
   dependencies:
     "@contentful/rich-text-types" "^14.1.2"
     "@shopify/shopify-api" "^1.4.0"

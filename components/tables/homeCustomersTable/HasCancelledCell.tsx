@@ -1,4 +1,5 @@
 import { ExitFilledIcon } from '@tastiest-io/tastiest-icons';
+import { Tooltip } from '@tastiest-io/tastiest-ui';
 import { Booking } from '@tastiest-io/tastiest-utils';
 import clsx from 'clsx';
 import { ConfirmationModal } from 'components/ConfirmationModal';
@@ -61,6 +62,8 @@ export const HasCancelledCell = ({
     setCancelled(initialValue ?? false);
   }, [initialValue]);
 
+  const buttonDisabled = booking.hasArrived || cancelled;
+
   return (
     <div className="flex items-center justify-center">
       <ConfirmationModal
@@ -72,15 +75,15 @@ export const HasCancelledCell = ({
       >
         <>
           <p className="font-medium text-gray-700">
-            Note! Cancelling the booking is final.
+            <span className="text-danger">Note!</span> Cancelling the booking is
+            final.
           </p>
 
           <div className="pt-3 justify">
             <p>
               Cancelling will notify the user via email and register with our
               payments department. If you are sure you want to cancel the
-              booking for
-              <br />
+              booking for{' '}
               <span className="font-medium">{booking.eaterName}</span>, click{' '}
               <span className="font-medium">Ok</span>.
             </p>
@@ -88,14 +91,19 @@ export const HasCancelledCell = ({
         </>
       </ConfirmationModal>
 
-      <ExitFilledIcon
-        onClick={onClickIcon}
-        className={clsx(
-          'fill-current w-8',
-          cancelled ? 'text-primary' : 'text-gray-300',
-          !cancelled && 'cursor-pointer',
-        )}
-      />
+      <Tooltip
+        show={buttonDisabled ? undefined : false}
+        content="You can't modify a booking after the customer has arrived or cancelled."
+      >
+        <ExitFilledIcon
+          onClick={buttonDisabled ? null : onClickIcon}
+          className={clsx(
+            'fill-current w-8',
+            cancelled ? 'text-primary' : 'text-gray-300',
+            buttonDisabled ? '' : 'cursor-pointer',
+          )}
+        />
+      </Tooltip>
     </div>
   );
 };

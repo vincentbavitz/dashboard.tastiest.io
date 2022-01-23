@@ -1,5 +1,5 @@
 import { CheckFilledIcon } from '@tastiest-io/tastiest-icons';
-import { Button, Input, Modal } from '@tastiest-io/tastiest-ui';
+import { Button, Input, Modal, Tooltip } from '@tastiest-io/tastiest-ui';
 import clsx from 'clsx';
 import React, { useState } from 'react';
 
@@ -46,7 +46,7 @@ export const HasArrivedCell = ({
     }
 
     if (typedCode !== code) {
-      setCodeError('Invalid confirmation code');
+      setCodeError('Incorrect confirmation code');
       return;
     }
 
@@ -61,6 +61,8 @@ export const HasArrivedCell = ({
     setArrived(initialValue ?? false);
   }, [initialValue]);
 
+  const buttonDisabled = booking.hasCancelled || arrived;
+
   return (
     <div className="flex items-center justify-center">
       <Modal
@@ -68,49 +70,54 @@ export const HasArrivedCell = ({
         show={modalIsOpen}
         close={() => setModalIsOpen(false)}
       >
-        <div
-          style={{ maxWidth: '25rem' }}
-          className="flex flex-col items-center mt-4 space-y-6"
-        >
-          <div>
-            <p className="text-sm text-gray-600">
-              Please ask the customer for the code they got in <br />
-              their confirmation email
-            </p>
-          </div>
+        <div style={{ maxWidth: '25rem' }} className="flex flex-col space-y-6">
+          <p className="text-base text-gray-600 pt-4">
+            Please ask the customer for the code they got in <br />
+            their confirmation email
+          </p>
 
-          <div className="flex items-center space-x-2">
+          <div className="flex justify-center">
             <div className="w-20">
               <Input
                 center
                 value={typedCode}
                 onValueChange={setTypedCode}
-                style={{ background: 'rgb(229, 231, 235)' }}
+                onChange={() => setCodeError(null)}
                 placeholder={'0000'}
                 maxLength={4}
+                size="large"
+                inputClassName="text-lg"
+                formatter={value => (isNaN(value as any) ? '' : value)}
+                error={codeError}
               />
             </div>
-
-            <Button color="primary" size="small" onClick={submitCode}>
-              Confirm
-            </Button>
           </div>
 
-          {codeError && (
-            <div className="">
-              <p className="text-sm text-danger">{codeError}</p>
-            </div>
-          )}
+          <div className="flex justify-end space-x-2 pt-2">
+            <Button color="primary" onClick={submitCode}>
+              Confirm
+            </Button>
+
+            <Button color="light" onClick={() => setModalIsOpen(false)}>
+              Close
+            </Button>
+          </div>
         </div>
       </Modal>
 
-      <CheckFilledIcon
-        onClick={onClickIcon}
-        className={clsx(
-          'fill-current w-8 cursor-pointer',
-          arrived ? 'text-primary' : 'text-gray-300',
-        )}
-      />
+      <Tooltip
+        show={buttonDisabled ? undefined : false}
+        content="You can't modify a booking after the customer has arrived or cancelled."
+      >
+        <CheckFilledIcon
+          onClick={buttonDisabled ? null : onClickIcon}
+          className={clsx(
+            'fill-current w-8',
+            arrived ? 'text-primary' : 'text-gray-300',
+            buttonDisabled ? '' : 'cursor-pointer',
+          )}
+        />
+      </Tooltip>
     </div>
   );
 };
