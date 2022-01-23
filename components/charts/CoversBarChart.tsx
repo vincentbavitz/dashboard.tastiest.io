@@ -11,10 +11,10 @@ interface Props {
 }
 
 export default function CoversBarChart({ restaurantId }: Props) {
-  const { restaurantUser: user } = useContext(AuthContext);
+  const { token } = useContext(AuthContext);
   const { data: bookings } = useHorusSWR<Booking[]>(
     `/bookings?restaurantId=${restaurantId}`,
-    user,
+    token,
     {
       refreshInterval: 60000,
       initialData: null,

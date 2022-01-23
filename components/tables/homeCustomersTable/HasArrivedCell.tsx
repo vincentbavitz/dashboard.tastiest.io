@@ -1,5 +1,5 @@
 import { CheckFilledIcon } from '@tastiest-io/tastiest-icons';
-import { Button, Input, Modal } from '@tastiest-io/tastiest-ui';
+import { Button, Input, Modal, Tooltip } from '@tastiest-io/tastiest-ui';
 import clsx from 'clsx';
 import React, { useState } from 'react';
 
@@ -61,6 +61,8 @@ export const HasArrivedCell = ({
     setArrived(initialValue ?? false);
   }, [initialValue]);
 
+  const buttonDisabled = booking.hasCancelled || arrived;
+
   return (
     <div className="flex items-center justify-center">
       <Modal
@@ -104,13 +106,19 @@ export const HasArrivedCell = ({
         </div>
       </Modal>
 
-      <CheckFilledIcon
-        onClick={onClickIcon}
-        className={clsx(
-          'fill-current w-8 cursor-pointer',
-          arrived ? 'text-primary' : 'text-gray-300',
-        )}
-      />
+      <Tooltip
+        show={buttonDisabled ? undefined : false}
+        content="You can't modify a booking after the customer has arrived or cancelled."
+      >
+        <CheckFilledIcon
+          onClick={buttonDisabled ? null : onClickIcon}
+          className={clsx(
+            'fill-current w-8',
+            arrived ? 'text-primary' : 'text-gray-300',
+            buttonDisabled ? '' : 'cursor-pointer',
+          )}
+        />
+      </Tooltip>
     </div>
   );
 };

@@ -4,7 +4,7 @@ import { Booking } from '@tastiest-io/tastiest-utils';
 import clsx from 'clsx';
 import { AuthContext } from 'contexts/auth';
 import { DateTime } from 'luxon';
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { DatePicker } from 'rsuite';
 
 export const BookingDateCell = ({
@@ -18,9 +18,8 @@ export const BookingDateCell = ({
   column: any;
   updateData: any;
 }) => {
-  const { restaurantUser: user } = useContext(AuthContext);
+  const { token } = useContext(AuthContext);
   const booking: Booking = original;
-  const [token, setToken] = useState(null);
 
   const [showDateModal, setShowDateModal] = useState(false);
   const [submitting, setSubmitting] = useState(false);
@@ -28,11 +27,6 @@ export const BookingDateCell = ({
   const [bookingDate, setBookingDate] = useState(
     new Date(booking.bookedForTimestamp),
   );
-
-  // Set token as soon as it's available.
-  useEffect(() => {
-    user?.getIdToken().then(setToken);
-  }, [user]);
 
   const setNewBookingDate = async (value: Date) => {
     if (!token) {

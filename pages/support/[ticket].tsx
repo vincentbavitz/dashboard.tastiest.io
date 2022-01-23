@@ -19,7 +19,7 @@ import {
 } from 'next';
 import Head from 'next/head';
 import Link from 'next/link';
-import React, { useContext, useEffect, useMemo, useState } from 'react';
+import React, { useContext, useMemo } from 'react';
 import { useController, useForm } from 'react-hook-form';
 import { verifyCookieToken } from 'utils/firebaseAdmin';
 import { METADATA } from '../../constants';
@@ -69,19 +69,12 @@ export const getServerSideProps = async (
 const Ticket: NextPage<
   DefaultAuthPageProps & InferGetServerSidePropsType<typeof getServerSideProps>
 > = props => {
-  const [token, setToken] = useState<string | null>(null);
-  const { restaurantUser: user } = useContext(AuthContext);
-
-  // Set token as soon as it's available.
-  useEffect(() => {
-    user?.getIdToken().then(setToken);
-  }, [user]);
-
+  const { token } = useContext(AuthContext);
   const horus = useMemo(() => (token ? new Horus(token) : null), [token]);
 
   const { data: ticket, mutate } = useHorusSWR<RestaurantSupportRequest>(
     `/support/restaurants/ticket/${props.ticket.id}`,
-    user,
+    token,
     {
       initialData: props.ticket,
       refreshInterval: 120000,

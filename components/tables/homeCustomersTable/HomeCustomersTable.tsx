@@ -57,17 +57,11 @@ interface Props {
 
 export default function HomeCustomersTable(props: Props) {
   const { restaurantId } = props;
-
-  const { restaurantUser: user } = useContext(AuthContext);
-  // Set token as soon as it's available.
-  const [token, setToken] = useState(null);
-  useEffect(() => {
-    user?.getIdToken().then(setToken);
-  }, [user]);
+  const { token } = useContext(AuthContext);
 
   const { data: bookings, mutate } = useHorusSWR<Booking[]>(
     `/bookings?restaurantId=${restaurantId}`,
-    user,
+    token,
     {
       refreshInterval: 30000,
       initialData: null,
@@ -90,45 +84,70 @@ export default function HomeCustomersTable(props: Props) {
       Header: 'Name',
       accessor: (row: Booking) => {
         return (
-          <div className="flex items-center font-medium">
+          <div className="flex flex-col justify-center font-medium">
+            <span>{row.eaterName}</span>
+
             {row.isUserFollowing ? (
-              <Tooltip
-                content={`${
-                  row.eaterName.split(' ')[0]
-                } was following you when they made this booking.`}
+              <span
+                style={{ width: 'fit-content' }}
+                className="px-2 rounded text-sm bg-green-100"
               >
-                <div className="flex items-center justify-center bg-alt-1 bg-opacity-75 rounded-full h-5 w-5 text-white mr-1 cursor-pointer">
-                  F
-                </div>
-              </Tooltip>
+                Follower
+              </span>
             ) : null}
-            {row.eaterName}{' '}
           </div>
         );
       },
-      minWidth: 200,
+      minWidth: 150,
+    },
+    {
+      Header: 'Arrived',
+      accessor: 'hasArrived',
+      Cell: HasArrivedCell,
+      width: 90,
+    },
+    {
+      Header: 'Cancelled',
+      accessor: 'hasCancelled',
+      Cell: HasCancelledCell,
+      width: 90,
+    },
+    {
+      Header: 'Booking Date',
+      accessor: 'bookingDate',
+      Cell: BookingDateCell,
     },
     {
       id: 'dealName',
       Header: 'Experience',
+      minWidth: 200,
       accessor: (row: Booking) => {
-        const maxDealNameLength = 25;
+        const maxExperienceNameLength = 35;
+        const exceedsLimit = row.dealName.length > maxExperienceNameLength;
+
         return (
-          <p>
-            {titleCase(row.dealName).slice(0, maxDealNameLength)}
-            {row.dealName.length > maxDealNameLength && '...'}
-          </p>
+          <Tooltip
+            show={exceedsLimit ? undefined : false}
+            content={row.dealName}
+          >
+            <p className="whitespace-pre-wrap">
+              {titleCase(row.dealName).slice(0, maxExperienceNameLength)}
+              {exceedsLimit && '...'}
+            </p>
+          </Tooltip>
         );
       },
     },
     {
       id: 'heads',
       Header: 'Covers',
+      width: 80,
       accessor: (row: Booking) => <p>{row.heads}</p>,
     },
     {
       id: 'orderTotal',
       Header: 'Order Total',
+      width: 100,
       accessor: (row: Booking) => (
         <p className="font-medium">
           £{Number(row.restaurantCut?.amount ?? 0)?.toFixed(2)}
@@ -136,28 +155,11 @@ export default function HomeCustomersTable(props: Props) {
       ),
     },
     {
-      Header: 'Booking Date',
-      accessor: 'bookingDate',
-      Cell: BookingDateCell,
-    },
-
-    {
       id: 'purchased',
       Header: 'Purchased',
       accessor: (row: Booking) => {
         return <p>{moment(row.paidAt).local().fromNow()}</p>;
       },
-    },
-    {
-      Header: 'Cancelled',
-      accessor: 'hasCancelled',
-      Cell: HasCancelledCell,
-    },
-
-    {
-      Header: 'Arrived',
-      accessor: 'hasArrived',
-      Cell: HasArrivedCell,
     },
   ];
 
