@@ -32,7 +32,7 @@ const Index: NextPage<DefaultAuthPageProps> = props => {
     refreshWhenHidden: true,
   });
 
-  const { payoutTotal, pendingBalance } = data ?? {
+  const { total, pending, available } = data ?? {
     payoutTotal: 0,
     pendingBalance: 0,
   };
@@ -50,7 +50,7 @@ const Index: NextPage<DefaultAuthPageProps> = props => {
 
       <div className="flex flex-col h-full space-y-8">
         <Introduction
-          payoutTotal={payoutTotal}
+          payoutTotal={total}
           restaurantName={restaurantData.details?.name}
         />
 
@@ -62,7 +62,7 @@ const Index: NextPage<DefaultAuthPageProps> = props => {
           <div>
             <InfoCard
               label="This Payout"
-              info={`£${formatCurrency(pendingBalance)}`}
+              info={`£${formatCurrency(available + pending)}`}
               chart
             />
           </div>
