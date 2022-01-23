@@ -1,15 +1,16 @@
 import {
+  dlog,
   RestaurantDataApi,
   transformPriceFromStripe,
 } from '@tastiest-io/tastiest-utils';
 import { NextApiRequest, NextApiResponse } from 'next';
 import Stripe from 'stripe';
-import { dlog } from 'utils/development';
 import { firebaseAdmin } from 'utils/firebaseAdmin';
 
 export interface GetBalanceReturn {
-  payoutTotal: number;
-  pendingBalance: number;
+  total: number;
+  pending: number;
+  available: number;
 }
 
 /**
@@ -50,32 +51,38 @@ export default async function getBalance(
 
   // Get Stripe account information
   const stripeAccount = restaurantData?.financial?.stripeConnectedAccount?.id;
-  const externalAccounts = (
-    restaurantData?.financial?.stripeConnectedAccount?.external_accounts
-      ?.data ?? []
-  ).map(account => account.id);
 
-  dlog('index ➡️ externalAccounts:', externalAccounts);
-
-  let payoutTotal = 0;
-  let pendingBalance = 0;
+  let total = 0;
+  let pending = 0;
+  let available = 0;
 
   try {
     const payouts = await stripe.payouts.list({
       stripeAccount,
     });
 
-    payoutTotal = transformPriceFromStripe(
-      payouts.data.reduce((a, b) => a + b?.amount ?? 0, 0),
+    dlog('getBalance ➡️  payouts.data:', payouts.data);
+
+    total = transformPriceFromStripe(
+      payouts.data
+        .filter(a => a.currency === 'gbp')
+        .reduce((a, b) => a + b?.amount ?? 0, 0),
     );
 
     const balance = await stripe.balance.retrieve({
       stripeAccount,
     });
 
-    pendingBalance = transformPriceFromStripe(
-      balance?.pending.reduce((a, b) => a + b?.amount ?? 0, 0) +
-        balance?.available.reduce((a, b) => a + b?.amount ?? 0, 0),
+    pending = transformPriceFromStripe(
+      balance?.pending
+        .filter(a => a.currency === 'gbp')
+        .reduce((a, b) => a + b?.amount ?? 0, 0),
+    );
+
+    available = transformPriceFromStripe(
+      balance?.available
+        .filter(a => a.currency === 'gbp')
+        .reduce((a, b) => a + b?.amount ?? 0, 0),
     );
   } catch (error) {
     response.status(400).end();
@@ -83,7 +90,8 @@ export default async function getBalance(
   }
 
   response.json({
-    payoutTotal,
-    pendingBalance,
+    total,
+    available,
+    pending,
   });
 }
