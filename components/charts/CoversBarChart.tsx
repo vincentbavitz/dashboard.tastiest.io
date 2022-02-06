@@ -1,5 +1,10 @@
-import { Booking, useHorusSWR } from '@tastiest-io/tastiest-utils';
+import {
+  Booking,
+  TIME as UTILS_TIME,
+  useHorusSWR,
+} from '@tastiest-io/tastiest-utils';
 import { AuthContext } from 'contexts/auth';
+import { DateTime } from 'luxon';
 import { useContext } from 'react';
 import { TIME } from '../../constants';
 import BarChart from './BarChart';
@@ -12,7 +17,7 @@ interface Props {
 
 export default function CoversBarChart({ restaurantId }: Props) {
   const { token } = useContext(AuthContext);
-  const { data: bookings } = useHorusSWR<Booking[]>(
+  const { data } = useHorusSWR<Booking[]>(
     `/bookings?restaurantId=${restaurantId}`,
     token,
     {
@@ -23,34 +28,42 @@ export default function CoversBarChart({ restaurantId }: Props) {
     },
   );
 
+  const bookings = data?.filter(
+    booking => booking.isTest === (process.env.NODE_ENV === 'development'),
+  );
+
   const coverHistory =
     bookings?.map(booking => ({
       covers: booking.heads,
-      timestamp: booking.paidAt,
+      timestamp: booking.bookedForTimestamp,
     })) ?? [];
 
-  const startOfToday = new Date();
-  startOfToday.setHours(0, 0, 0, 0);
-  const startOfTodayTimestamp = startOfToday.getTime();
+  const firstOfWeek = DateTime.now()
+    .setZone(UTILS_TIME.LOCALES.LONDON)
+    .set({ day: 1, hour: 0, second: 0 });
 
   // Day of the week corresponds to Date.getDay() numerals;
   // where Sunday = 0 and Saturday = 6.
-  const pastSevenDays = [
-    startOfTodayTimestamp - 6 * ONE_DAY_IN_MS,
-    startOfTodayTimestamp - 5 * ONE_DAY_IN_MS,
-    startOfTodayTimestamp - 4 * ONE_DAY_IN_MS,
-    startOfTodayTimestamp - 3 * ONE_DAY_IN_MS,
-    startOfTodayTimestamp - 2 * ONE_DAY_IN_MS,
-    startOfTodayTimestamp - ONE_DAY_IN_MS,
-    startOfTodayTimestamp,
+  const thisWeek = [
+    firstOfWeek.plus({ days: 6 }).toMillis(),
+    firstOfWeek.plus({ days: 5 }).toMillis(),
+    firstOfWeek.plus({ days: 4 }).toMillis(),
+    firstOfWeek.plus({ days: 3 }).toMillis(),
+    firstOfWeek.plus({ days: 2 }).toMillis(),
+    firstOfWeek.plus({ days: 1 }).toMillis(),
+    firstOfWeek.toMillis(),
   ];
 
   // Get covers for each day of the week
-  const coversOverPastSevenDays = pastSevenDays.map(timestamp => {
-    // First, let's just do today.
-    let coversForThisDay = 0;
-    const dayName = TIME.DAYS_OF_THE_WEEK[new Date(timestamp).getDay()];
+  const coversThisWeek = thisWeek.map(timestamp => {
+    // prettier-ignore
+    const dayNumber = DateTime
+      .fromMillis(timestamp).setZone(UTILS_TIME.LOCALES.LONDON)
+      .weekday - 1;
 
+    const dayName = TIME.DAYS_OF_THE_WEEK[dayNumber];
+
+    let coversForThisDay = 0;
     coverHistory.forEach(coverRecord => {
       if (
         coverRecord.timestamp >= timestamp &&
@@ -63,7 +76,7 @@ export default function CoversBarChart({ restaurantId }: Props) {
     return { day: dayName, covers: coversForThisDay };
   });
 
-  const totalCovers = coversOverPastSevenDays.reduce((a, b) => a + b.covers, 0);
+  const totalCovers = coversThisWeek.reduce((a, b) => a + b.covers, 0);
 
   return (
     <div className="px-2 py-4 bg-white rounded-xl">
@@ -72,11 +85,7 @@ export default function CoversBarChart({ restaurantId }: Props) {
       </h4>
 
       <div className="relative w-full aspect-w-16 aspect-h-7">
-        <BarChart
-          data={coversOverPastSevenDays}
-          indexBy="day"
-          keys={['covers']}
-        />
+        <BarChart data={coversThisWeek} indexBy="day" keys={['covers']} />
       </div>
     </div>
   );
