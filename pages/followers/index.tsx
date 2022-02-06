@@ -52,7 +52,7 @@ const Followers: NextPage<DefaultAuthPageProps> = props => {
 
       <AlphaTestingBlockOverlay label="Followers" />
 
-      <PageHeader label="Notify Followers">
+      <PageHeader label="Followers">
         <Button onClick={() => setIsScheduleModalOpen(true)}>
           Schedule email
         </Button>

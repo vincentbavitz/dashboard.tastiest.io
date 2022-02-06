@@ -3,12 +3,14 @@ import { Table, Tooltip } from '@tastiest-io/tastiest-ui';
 import {
   Booking,
   Horus,
+  TIME,
   titleCase,
   useHorusSWR,
 } from '@tastiest-io/tastiest-utils';
 import { AuthContext } from 'contexts/auth';
+import { DateTime } from 'luxon';
 import moment from 'moment';
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useMemo, useState } from 'react';
 import { BookingDateCell } from './BookingDateCell';
 import { HasArrivedCell } from './HasArrivedCell';
 import { HasCancelledCell } from './HasCancelledCell';
@@ -70,8 +72,13 @@ export default function HomeCustomersTable(props: Props) {
     },
   );
 
-  const bookings = data?.filter(
-    booking => booking.isTest === (process.env.NODE_ENV === 'development'),
+  const bookings = useMemo(
+    () =>
+      // prettier-ignore
+      data
+        ?.filter(booking => booking.isTest === (process.env.NODE_ENV === 'development'))
+        .sort((a, b) => b.bookedForTimestamp - a.bookedForTimestamp),
+    [data],
   );
 
   const [isInitialLoading, setIsInitialLoading] = useState(true);
@@ -82,22 +89,45 @@ export default function HomeCustomersTable(props: Props) {
     }
   }, [bookings]);
 
+  const todayMidnightTimestamp = DateTime.now()
+    .setLocale(TIME.LOCALES.LONDON)
+    .set({ hour: 0, minute: 0, second: 0 })
+    .toMillis();
+
   const columns = [
     {
       id: 'eaterName',
       Header: 'Name',
       accessor: (row: Booking) => {
+        const rowIsToday =
+          row.bookedForTimestamp >
+            todayMidnightTimestamp - 3 * TIME.MS_IN_ONE_DAY &&
+          row.bookedForTimestamp < todayMidnightTimestamp + TIME.MS_IN_ONE_DAY;
+
         return (
           <div className="flex flex-col justify-center font-medium">
             <span>{row.eaterName}</span>
 
-            {row.isUserFollowing ? (
-              <span
-                style={{ width: 'fit-content' }}
-                className="px-2 rounded text-sm bg-green-100"
-              >
-                Follower
-              </span>
+            {row.isUserFollowing || rowIsToday ? (
+              <div className="flex space-x-2">
+                {rowIsToday ? (
+                  <span
+                    style={{ width: 'fit-content' }}
+                    className="px-2 rounded text-sm bg-blue-100"
+                  >
+                    Today
+                  </span>
+                ) : null}
+
+                {row.isUserFollowing ? (
+                  <span
+                    style={{ width: 'fit-content' }}
+                    className="px-2 rounded text-sm bg-green-100"
+                  >
+                    Follower
+                  </span>
+                ) : null}
+              </div>
             ) : null}
           </div>
         );
@@ -118,7 +148,7 @@ export default function HomeCustomersTable(props: Props) {
     },
     {
       Header: 'Booking Date',
-      accessor: 'bookingDate',
+      accessor: 'bookedForTimestamp',
       Cell: BookingDateCell,
     },
     {
@@ -161,6 +191,7 @@ export default function HomeCustomersTable(props: Props) {
     {
       id: 'purchased',
       Header: 'Purchased',
+      sortBy: 'paidAt',
       accessor: (row: Booking) => {
         return <p>{moment(row.paidAt).local().fromNow()}</p>;
       },

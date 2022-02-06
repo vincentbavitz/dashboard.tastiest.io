@@ -19,7 +19,7 @@ export default function LayoutWrapper({
   pageProps,
   children,
 }: LayoutWrapperProps) {
-  // And automatically re-route to /login if they're not logged in.
+  // Automatically re-route to /login if they're not logged in.
   const { isSignedIn } = useAuth();
   if (isSignedIn === false) {
     router.replace('/login');
