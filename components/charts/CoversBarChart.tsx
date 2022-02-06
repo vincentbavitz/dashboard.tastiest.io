@@ -45,13 +45,13 @@ export default function CoversBarChart({ restaurantId }: Props) {
   // Day of the week corresponds to Date.getDay() numerals;
   // where Sunday = 0 and Saturday = 6.
   const thisWeek = [
-    firstOfWeek.plus({ days: 6 }).toMillis(),
-    firstOfWeek.plus({ days: 5 }).toMillis(),
-    firstOfWeek.plus({ days: 4 }).toMillis(),
-    firstOfWeek.plus({ days: 3 }).toMillis(),
-    firstOfWeek.plus({ days: 2 }).toMillis(),
-    firstOfWeek.plus({ days: 1 }).toMillis(),
     firstOfWeek.toMillis(),
+    firstOfWeek.plus({ days: 1 }).toMillis(),
+    firstOfWeek.plus({ days: 2 }).toMillis(),
+    firstOfWeek.plus({ days: 3 }).toMillis(),
+    firstOfWeek.plus({ days: 4 }).toMillis(),
+    firstOfWeek.plus({ days: 5 }).toMillis(),
+    firstOfWeek.plus({ days: 6 }).toMillis(),
   ];
 
   // Get covers for each day of the week
