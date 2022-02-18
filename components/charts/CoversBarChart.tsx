@@ -40,7 +40,7 @@ export default function CoversBarChart({ restaurantId }: Props) {
 
   const firstOfWeek = DateTime.now()
     .setZone(UTILS_TIME.LOCALES.LONDON)
-    .set({ day: 1, hour: 0, second: 0 });
+    .set({ weekday: 1, hour: 0, second: 0 });
 
   // Day of the week corresponds to Date.getDay() numerals;
   // where Sunday = 0 and Saturday = 6.
