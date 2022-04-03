@@ -10,8 +10,8 @@ export interface DeleteEmailTemplateParams {
 /**
  * Deletes an email HTML template of a restaurant.
  * Requires the body parameters:
- * @param restaurantId string
- * @param id string --> The template ID
+ * @param restaurantId  string
+ * @param id            string --> The template ID
  */
 export default async function deleteEmailTemplate(
   request: NextApiRequest,

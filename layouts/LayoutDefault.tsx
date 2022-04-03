@@ -1,9 +1,8 @@
 import { LoadingOutlined } from '@ant-design/icons';
+import { HorusRestaurantEnchanted } from 'contexts/auth';
+import firebaseApp from 'firebase/app';
 import { useAuth } from 'hooks/useAuth';
-import { GetRestaurantDataReturn } from 'pages/api/getRestaurantData';
 import React from 'react';
-import useSWR from 'swr';
-import { LocalEndpoint } from 'types/api';
 import { LayoutProps } from './LayoutHandler';
 import LayoutWrapper from './LayoutWrapper';
 
@@ -11,31 +10,18 @@ interface LayoutDefaultProps extends LayoutProps {
   children: any;
 }
 
-export type DefaultAuthPageProps = {
-  restaurantId: string;
-  restaurantData: GetRestaurantDataReturn;
-  restaurantUser: firebase.default.User;
-};
+export interface DefaultAuthPageProps {
+  restaurantUser: firebaseApp.User;
+  restaurantData: HorusRestaurantEnchanted;
+}
 
 export default function LayoutDefault({
   router,
   pageProps,
   children: Component,
 }: LayoutDefaultProps) {
-  const { restaurantUser } = useAuth();
+  const { restaurantUser, restaurantData } = useAuth();
   const restaurantId = restaurantUser?.uid;
-
-  // Give all children restaurnatData in the props
-  const swrURL = restaurantId
-    ? `${LocalEndpoint.GET_RESTAURANT_DATA}?restaurantId=${restaurantId}`
-    : null;
-
-  const { data: restaurantData } = useSWR<GetRestaurantDataReturn>(swrURL, {
-    refreshInterval: 30000,
-    initialData: null,
-    refreshWhenHidden: true,
-    compare: (a, b) => JSON.stringify(a) === JSON.stringify(b),
-  });
 
   if (!restaurantId) {
     return null;
@@ -51,9 +37,8 @@ export default function LayoutDefault({
           <div style={{ height: 'max-content' }} className="w-full">
             <Component
               {...pageProps}
-              restaurantData={restaurantData}
               restaurantUser={restaurantUser}
-              restaurantId={restaurantData.details.id}
+              restaurantData={restaurantData}
             />
           </div>
         ) : (

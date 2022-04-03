@@ -2,19 +2,17 @@ import { DownOutlined, ExportOutlined } from '@ant-design/icons';
 import { Avatar, AvatarProps, Dropdown } from '@tastiest-io/tastiest-ui';
 import { titleCase } from '@tastiest-io/tastiest-utils';
 import { useAuth } from 'hooks/useAuth';
-import { useRestaurantData } from 'hooks/useRestaurantData';
 import React from 'react';
 
 export function HeaderAvatar(props: Pick<AvatarProps, 'size'>) {
   const { size = 8 } = props;
 
-  const { restaurantUser, isSignedIn, signOut } = useAuth();
-  const { restaurantData } = useRestaurantData(restaurantUser);
+  const { restaurantUser, restaurantData, isSignedIn, signOut } = useAuth();
 
-  const displayName = titleCase(restaurantData?.details?.name);
+  const displayName = titleCase(restaurantData?.name);
   const initial = displayName?.[0];
 
-  const url = restaurantData?.profile?.profilePicture?.url ?? null;
+  const url = restaurantData?.profile?.profile_picture?.url ?? null;
 
   return (
     <Dropdown>
@@ -22,7 +20,7 @@ export function HeaderAvatar(props: Pick<AvatarProps, 'size'>) {
         <div className="flex cursor-pointer items-center space-x-2 text-gray-800">
           <Avatar initial={initial ?? 'T'} imageSrc={url} size={size} />
 
-          <p>{restaurantData?.details?.name}</p>
+          <p>{restaurantData?.name}</p>
           <DownOutlined className="text-xs text-gray-400" />
         </div>
       </Dropdown.Trigger>

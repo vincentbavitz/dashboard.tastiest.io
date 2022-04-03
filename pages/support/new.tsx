@@ -1,7 +1,6 @@
 import { RollbackOutlined } from '@ant-design/icons';
 import { Button, Input, TextArea } from '@tastiest-io/tastiest-ui';
 import PageHeader from 'components/PageHeader';
-import { useSupport } from 'hooks/useSupport';
 import { DefaultAuthPageProps } from 'layouts/LayoutDefault';
 import { GetServerSidePropsContext, NextPage } from 'next';
 import Head from 'next/head';
@@ -30,7 +29,14 @@ const NewSupportTicket: NextPage<DefaultAuthPageProps> = ({
   restaurantData,
 }) => {
   const router = useRouter();
-  const { supportRequests, makeSupportRequest } = useSupport();
+
+  // FIX ME CORRECT ME
+  // const { supportRequests, makeSupportRequest } = useSupport();
+  const supportRequests = [];
+  const makeSupportRequest = (a: string, b: string, c: string) => ({
+    success: true,
+    data: { id: a, b, c },
+  });
 
   const [submitting, setSubmitting] = useState(false);
 

@@ -2,7 +2,6 @@ import { PlusOutlined } from '@ant-design/icons';
 import { Button } from '@tastiest-io/tastiest-ui';
 import PageHeader from 'components/PageHeader';
 import SupportTable from 'components/tables/SupportTable';
-import { useSupport } from 'hooks/useSupport';
 import { DefaultAuthPageProps } from 'layouts/LayoutDefault';
 import { GetServerSidePropsContext, NextPage } from 'next';
 import Head from 'next/head';
@@ -20,7 +19,9 @@ export const getServerSideProps = async (
 };
 
 const Support: NextPage<DefaultAuthPageProps> = () => {
-  const { supportRequests } = useSupport();
+  // FIX ME CORRECT ME
+  // const { supportRequests } = useSupport();
+  const supportRequests = [];
 
   return (
     <>

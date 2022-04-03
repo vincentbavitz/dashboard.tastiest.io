@@ -5,28 +5,24 @@ import {
   SaveOutlined,
 } from '@ant-design/icons';
 import { Button, Input } from '@tastiest-io/tastiest-ui';
-import {
-  dlog,
-  postFetch,
-  RestaurantDataApi,
-} from '@tastiest-io/tastiest-utils';
+import { dlog } from '@tastiest-io/tastiest-utils';
 import { Layouts } from 'layouts/LayoutHandler';
 import lodash from 'lodash';
 import { InferGetServerSidePropsType } from 'next';
 import Head from 'next/head';
 import Link from 'next/link';
-import { SaveEmailTemplateParams } from 'pages/api/saveEmailTemplate';
 import React, { useRef, useState } from 'react';
 import EmailEditor from 'react-email-editor';
-import { LocalEndpoint } from 'types/api';
-import { firebaseAdmin, verifyCookieToken } from 'utils/firebaseAdmin';
+import { verifyCookieToken } from 'utils/firebaseAdmin';
 import { METADATA } from '../../../constants';
 
 export const getServerSideProps = async context => {
   const { valid, cookieToken, redirect } = await verifyCookieToken(context);
   if (!valid) return { redirect };
 
-  const restaurantDataApi = new RestaurantDataApi(firebaseAdmin);
+  // FIX ME CORRECT ME
+  // const restaurantDataApi = new RestaurantDataApi(firebaseAdmin);
+  const restaurantDataApi = null as any;
   const { restaurantId } = await restaurantDataApi.initFromCookieToken(
     cookieToken,
   );
@@ -79,16 +75,16 @@ const Template = (
 
       const { design, html } = data;
 
-      await postFetch<SaveEmailTemplateParams>(
-        LocalEndpoint.SAVE_EMAIL_TEMPLATE,
-        {
-          id: templateId,
-          restaurantId,
-          name,
-          design,
-          html,
-        },
-      );
+      // await postFetch<SaveEmailTemplateParams>(
+      //   LocalEndpoint.SAVE_EMAIL_TEMPLATE,
+      //   {
+      //     id: templateId,
+      //     restaurantId,
+      //     name,
+      //     design,
+      //     html,
+      //   },
+      // );
 
       setSaving(false);
     });

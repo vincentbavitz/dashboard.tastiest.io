@@ -1,16 +1,20 @@
 import { InfoCard } from '@tastiest-io/tastiest-ui';
-import { formatCurrency } from '@tastiest-io/tastiest-utils';
+import { formatCurrency, useHorusSWR } from '@tastiest-io/tastiest-utils';
 import CoversBarChart from 'components/charts/CoversBarChart';
 import HomeCustomersTable from 'components/tables/homeCustomersTable/HomeCustomersTable';
+import { useAuth } from 'hooks/useAuth';
 import { DefaultAuthPageProps } from 'layouts/LayoutDefault';
 import { GetServerSidePropsContext, NextPage } from 'next';
 import Head from 'next/head';
 import React from 'react';
-import useSWR from 'swr';
-import { LocalEndpoint } from 'types/api';
 import { verifyCookieToken } from 'utils/firebaseAdmin';
 import { METADATA } from '../constants';
-import { GetBalanceReturn } from './api/getBalance';
+
+type GetBalanceReturn = {
+  total: number;
+  pending: number;
+  available: number;
+};
 
 export const getServerSideProps = async (
   context: GetServerSidePropsContext,
@@ -21,21 +25,21 @@ export const getServerSideProps = async (
 };
 
 const Index: NextPage<DefaultAuthPageProps> = props => {
+  const { token } = useAuth();
+
+  // Grabbing this from props is faster than from useAuth
   const { restaurantData } = props;
 
-  const swrURL = restaurantData?.details?.id
-    ? `${LocalEndpoint.GET_BALANCE}?restaurantId=${restaurantData?.details.id}`
-    : null;
+  const { data } = useHorusSWR<GetBalanceReturn>(
+    token ? '/restaurants/get-balances' : null,
+    { token },
+    {
+      refreshInterval: 60000,
+      refreshWhenHidden: true,
+    },
+  );
 
-  const { data } = useSWR<GetBalanceReturn>(swrURL, {
-    refreshInterval: 60000,
-    refreshWhenHidden: true,
-  });
-
-  const { total, pending, available } = data ?? {
-    payoutTotal: 0,
-    pendingBalance: 0,
-  };
+  console.log('index ➡️ data:', data);
 
   return (
     <>
@@ -50,26 +54,26 @@ const Index: NextPage<DefaultAuthPageProps> = props => {
 
       <div className="flex flex-col h-full space-y-8">
         <Introduction
-          payoutTotal={total}
-          restaurantName={restaurantData.details?.name}
+          payoutTotal={data?.total}
+          restaurantName={restaurantData?.name}
         />
 
         <div className="flex flex-wrap justify-between pt-2 gap-6">
           <div style={{ maxWidth: '500px' }} className="flex-grow">
-            <CoversBarChart restaurantId={restaurantData.details.id} />
+            <CoversBarChart restaurantId={restaurantData?.id} />
           </div>
 
           <div>
             <InfoCard
               label="This Payout"
-              info={`£${formatCurrency(available + pending)}`}
+              info={`£${formatCurrency(data?.available + data?.pending)}`}
               chart
             />
           </div>
         </div>
 
         <HomeCustomersTable
-          restaurantId={restaurantData.details.id}
+          restaurantId={restaurantData?.id}
           // metrics={restaurantData.metrics}
         />
       </div>

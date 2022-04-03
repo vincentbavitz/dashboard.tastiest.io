@@ -1,53 +1,56 @@
 import { EditOutlined } from '@ant-design/icons';
+import { WeekOpenTimes } from '@tastiest-io/tastiest-horus';
 import {
   dlog,
   minsIntoHumanTime,
-  RestaurantData,
   TIME,
+  useHorusSWR,
 } from '@tastiest-io/tastiest-utils';
-import { GetBookingSlotsReturn } from 'pages/api/getBookingSlots';
+import { useAuth } from 'hooks/useAuth';
 import React, { useState } from 'react';
-import useSWR from 'swr';
-import { LocalEndpoint } from 'types/api';
 import BlockTemplate from './BlockTemplate';
 import BookingSlotsSelector from './BookingSlotsSelector';
 import { BookingSlotsProvider } from './BookingSlotsSelector/BookingSlotsContext';
 
-interface Props {
-  restaurantData: Partial<RestaurantData>;
-}
+export type OpenTimesData = {
+  open_times: WeekOpenTimes;
+  seating_duration: number;
+};
 
-export default function BookingSlotsBlock(props: Props) {
+export default function BookingSlotsBlock() {
   return (
     <BookingSlotsProvider>
-      <BookingSlotsBlockInner {...props} />
+      <BookingSlotsBlockInner />
     </BookingSlotsProvider>
   );
 }
 
-function BookingSlotsBlockInner(props: Props) {
-  const { restaurantData } = props;
+function BookingSlotsBlockInner() {
   const [openTimesSelectorOpen, setOpenTimesSelectorOpen] = useState(false);
 
-  const {
-    data: { openTimes, seatingDuration } = {
-      openTimes: null,
-      seatingDuration: null,
+  const { token, restaurantData } = useAuth();
+
+  const { data } = useHorusSWR<OpenTimesData>(
+    '/restaurants/public/open-times',
+    {
+      token,
+      query: { restaurant_id: restaurantData.id },
     },
-  } = useSWR<GetBookingSlotsReturn>(
-    `${LocalEndpoint.GET_BOOKING_SLOTS}?restaurantId=${restaurantData.details.id}`,
     {
       refreshInterval: 30000,
       refreshWhenHidden: true,
     },
   );
 
+  const openTimes = data.open_times;
+  const seatingDuration = data.seating_duration;
+
   dlog('BookingSlotsBlock ➡️ openTimes:', openTimes);
 
   return (
     <>
       <BookingSlotsSelector
-        restaurantId={restaurantData.details.id}
+        restaurantId={restaurantData.id}
         show={openTimesSelectorOpen}
         close={() => setOpenTimesSelectorOpen(false)}
       />

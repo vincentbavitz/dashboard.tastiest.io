@@ -1,6 +1,5 @@
-import { EmailTemplate, RestaurantDataApi } from '@tastiest-io/tastiest-utils';
+import { EmailTemplate } from '@tastiest-io/tastiest-utils';
 import { NextApiRequest, NextApiResponse } from 'next';
-import { firebaseAdmin } from 'utils/firebaseAdmin';
 
 export type GetEmailTemplateReturn = EmailTemplate[];
 
@@ -29,17 +28,19 @@ export default async function getEmailTemplates(
   }
 
   try {
-    const restaurantDataApi = new RestaurantDataApi(
-      firebaseAdmin,
-      restaurantId,
-    );
+    // FIX ME CORRECT ME
+    // const restaurantDataApi = new RestaurantDataApi(
+    //   firebaseAdmin,
+    //   restaurantId,
+    // );
+    const restaurantDataApi = null as any;
 
     const restaurantData = await restaurantDataApi.getRestaurantData();
     const templatesObject = restaurantData?.email?.templates ?? {};
 
     const templates = Object.entries(templatesObject).map(([id, template]) => ({
       id,
-      ...template,
+      ...(template as any),
     }));
 
     response.json(templates);

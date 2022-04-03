@@ -1,9 +1,4 @@
-import {
-  RestaurantDataApi,
-  RestaurantDataKey,
-} from '@tastiest-io/tastiest-utils';
 import { NextApiRequest, NextApiResponse } from 'next';
-import { firebaseAdmin } from 'utils/firebaseAdmin';
 
 export interface SaveEmailTemplateParams {
   restaurantId: string;
@@ -67,10 +62,12 @@ export default async function saveEmailTemplate(
   }
 
   try {
-    const restaurantDataApi = new RestaurantDataApi(
-      firebaseAdmin,
-      restaurantId,
-    );
+    // FIX ME CORRECT ME
+    // const restaurantDataApi = new RestaurantDataApi(
+    //   firebaseAdmin,
+    //   restaurantId,
+    // );
+    const restaurantDataApi = null as any;
 
     // Does it already exist?
     const restaurantData = await restaurantDataApi.getRestaurantData();
@@ -81,20 +78,20 @@ export default async function saveEmailTemplate(
     const createdAt = existing?.createdAt ?? Date.now();
 
     // Saving always sets it to un-approved.
-    restaurantDataApi.setRestaurantData(RestaurantDataKey.EMAIL, {
-      templates: {
-        [id]: {
-          id,
-          name,
-          html,
-          design,
-          createdAt,
-          editedAt: Date.now(),
-          isApproved: false,
-          approvedAt: null,
-        },
-      },
-    });
+    // restaurantDataApi.setRestaurantData(RestaurantDataKey.EMAIL, {
+    //   templates: {
+    //     [id]: {
+    //       id,
+    //       name,
+    //       html,
+    //       design,
+    //       createdAt,
+    //       editedAt: Date.now(),
+    //       isApproved: false,
+    //       approvedAt: null,
+    //     },
+    //   },
+    // });
 
     response.json({ success: true, error: null, data: null });
   } catch (error) {

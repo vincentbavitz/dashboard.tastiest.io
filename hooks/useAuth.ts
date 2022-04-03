@@ -1,10 +1,4 @@
-import {
-  dlog,
-  FirebaseAuthError,
-  FirestoreCollection,
-  RestaurantDataKey,
-  RestaurantLegal,
-} from '@tastiest-io/tastiest-utils';
+import { dlog, FirebaseAuthError } from '@tastiest-io/tastiest-utils';
 import DebouncePromise from 'awesome-debounce-promise';
 import firebaseApp from 'firebase/app';
 import { useRouter } from 'next/router';
@@ -19,7 +13,7 @@ export const useAuth = () => {
   const [error, _setError] = useState<string>(null);
 
   const firestore = useFirestore();
-  const { restaurantUser } = useContext(AuthContext);
+  const { restaurantUser, restaurantData, token } = useContext(AuthContext);
 
   // Kick them out if they're not a restaurant
   useEffect(() => {
@@ -89,34 +83,35 @@ export const useAuth = () => {
             email: credential.user.email,
           });
 
-          // If restaurant's first time accepting TOS, log this
-          const restaurantDataDoc = await firestore
-            .collection(FirestoreCollection.RESTAURANTS)
-            .doc(credential.user.uid)
-            .get();
+          // FIX ME CORRECT ME; Make restaurant accepting TOS work
+          // // If restaurant's first time accepting TOS, log this
+          // const restaurantDataDoc = await firestore
+          //   .collection(FirestoreCollection.RESTAURANTS)
+          //   .doc(credential.user.uid)
+          //   .get();
 
-          const restaurantData = restaurantDataDoc.data();
-          const legalData = restaurantData?.legal as RestaurantLegal;
+          // const restaurantData = restaurantDataDoc.data();
+          // const legalData = restaurantData?.legal as RestaurantLegal;
 
-          if (!legalData.hasAcceptedTerms) {
-            // Manually update TOS acceptance, as setRestaurantData
-            // will not be defined yet
-            await firestore
-              .collection(FirestoreCollection.RESTAURANTS)
-              .doc(credential.user.uid)
-              .set(
-                {
-                  [RestaurantDataKey.LEGAL]: { hasAcceptedTerms: true },
-                },
-                { merge: true },
-              );
+          // if (!legalData.hasAcceptedTerms) {
+          //   // Manually update TOS acceptance, as setRestaurantData
+          //   // will not be defined yet
+          //   await firestore
+          //     .collection(FirestoreCollection.RESTAURANTS)
+          //     .doc(credential.user.uid)
+          //     .set(
+          //       {
+          //         [RestaurantDataKey.LEGAL]: { hasAcceptedTerms: true },
+          //       },
+          //       { merge: true },
+          //     );
 
-            // Fire off event with Segment which triggers Klaviyo email confirmation
-            window.analytics.track('Restaurant Accepted TOS', {
-              userId: credential.user.uid,
-              email: credential.user.email,
-            });
-          }
+          //   // Fire off event with Segment which triggers Klaviyo email confirmation
+          //   window.analytics.track('Restaurant Accepted TOS', {
+          //     userId: credential.user.uid,
+          //     email: credential.user.email,
+          //   });
+          // }
 
           router.push('/');
         }
@@ -155,6 +150,8 @@ export const useAuth = () => {
 
   return {
     restaurantUser,
+    restaurantData,
+    token,
     signIn,
     signOut,
     isSignedIn,

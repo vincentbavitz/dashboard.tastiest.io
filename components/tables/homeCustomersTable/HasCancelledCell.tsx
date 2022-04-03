@@ -1,10 +1,9 @@
+import { HorusBooking } from '@tastiest-io/tastiest-horus';
 import { ExitFilledIcon } from '@tastiest-io/tastiest-icons';
 import { Tooltip } from '@tastiest-io/tastiest-ui';
-import { Booking } from '@tastiest-io/tastiest-utils';
 import clsx from 'clsx';
 import { ConfirmationModal } from 'components/ConfirmationModal';
 import { useAuth } from 'hooks/useAuth';
-import { useRestaurantData } from 'hooks/useRestaurantData';
 import moment from 'moment';
 import React, { useState } from 'react';
 
@@ -19,14 +18,13 @@ export const HasCancelledCell = ({
   column: any;
   updateData: any;
 }) => {
-  const booking: Booking = original;
+  const booking: HorusBooking = original;
   const [modalIsOpen, setModalIsOpen] = useState(false);
 
   // We need to keep and update the state of the cell normally
   const [cancelled, setCancelled] = React.useState(initialValue ?? false);
 
-  const { restaurantUser } = useAuth();
-  const { restaurantData } = useRestaurantData(restaurantUser);
+  const { restaurantUser, restaurantData } = useAuth();
 
   // Update locally and on server side on change
   const onClickIcon = () => {
@@ -39,7 +37,7 @@ export const HasCancelledCell = ({
     // Cancellation is final. Can't un-cancel.
     if (cancelled) {
       window.analytics.track('Booking Cancelled', {
-        userId: restaurantData.details.id,
+        userId: restaurantData.id,
         properties: {
           ...booking,
           timestamp: Date.now(),
@@ -62,7 +60,9 @@ export const HasCancelledCell = ({
     setCancelled(initialValue ?? false);
   }, [initialValue]);
 
-  const buttonDisabled = booking.hasArrived || cancelled;
+  console.log('HasCancelledCell ➡️ booking:', booking);
+
+  const buttonDisabled = booking.has_arrived || cancelled;
 
   return (
     <div className="flex items-center justify-center">
@@ -83,8 +83,7 @@ export const HasCancelledCell = ({
             <p>
               Cancelling will notify the user via email and register with our
               payments department. If you are sure you want to cancel the
-              booking for{' '}
-              <span className="font-medium">{booking.eaterName}</span>, click{' '}
+              booking for <span className="font-medium">{'TEEST'}</span>, click{' '}
               <span className="font-medium">Ok</span>.
             </p>
           </div>

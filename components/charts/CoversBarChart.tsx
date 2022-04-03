@@ -1,5 +1,6 @@
 import {
   Booking,
+  dlog,
   TIME as UTILS_TIME,
   useHorusSWR,
 } from '@tastiest-io/tastiest-utils';
@@ -28,7 +29,9 @@ export default function CoversBarChart({ restaurantId }: Props) {
     },
   );
 
-  const bookings = data?.filter(
+  dlog('CoversBarChart ➡️ data:', data);
+
+  const bookings = data?.filter?.(
     booking => booking.isTest === (process.env.NODE_ENV === 'development'),
   );
 

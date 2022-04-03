@@ -1,11 +1,11 @@
 import { CalendarOutlined } from '@ant-design/icons';
 import { Button, Modal } from '@tastiest-io/tastiest-ui';
-import { Booking } from '@tastiest-io/tastiest-utils';
 import clsx from 'clsx';
 import { AuthContext } from 'contexts/auth';
 import { DateTime } from 'luxon';
 import React, { useContext, useState } from 'react';
 import { DatePicker } from 'rsuite';
+import { HorusBookingEnchanted } from './HomeCustomersTable';
 
 export const BookingDateCell = ({
   value: initialValue,
@@ -19,14 +19,12 @@ export const BookingDateCell = ({
   updateData: any;
 }) => {
   const { token } = useContext(AuthContext);
-  const booking: Booking = original;
+  const booking: HorusBookingEnchanted = original;
 
   const [showDateModal, setShowDateModal] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [editedDate, setEditedDate] = useState<Date | null>(null);
-  const [bookingDate, setBookingDate] = useState(
-    new Date(booking.bookedForTimestamp),
-  );
+  const [bookingDate, setBookingDate] = useState(new Date(booking.booked_for));
 
   const setNewBookingDate = async (value: Date) => {
     if (!token) {
@@ -34,7 +32,7 @@ export const BookingDateCell = ({
     }
 
     setSubmitting(true);
-    await updateData(value.getTime(), index, 'bookedForTimestamp');
+    await updateData(value.getTime(), index, 'bookedFor');
 
     setSubmitting(false);
     setBookingDate(value);
@@ -56,14 +54,16 @@ export const BookingDateCell = ({
   return (
     <div className="flex items-center space-x-2">
       <p className="opacity-75">
-        {DateTime.fromMillis(original.bookedForTimestamp).toFormat('h:mm a')}
+        {DateTime.fromJSDate(
+          new Date((original as HorusBookingEnchanted).booked_for),
+        ).toFormat('h:mm a')}
         <br />
-        {DateTime.fromMillis(original.bookedForTimestamp).toFormat(
-          'dd LLL yyyy',
-        )}
+        {DateTime.fromJSDate(
+          new Date((original as HorusBookingEnchanted).booked_for),
+        ).toFormat('dd LLL yyyy')}
       </p>
 
-      {booking.hasArrived || booking.hasCancelled ? null : (
+      {booking.has_arrived || booking.has_cancelled ? null : (
         <CalendarOutlined
           onClick={() => setShowDateModal(true)}
           className="text-lg text-primary hover:text-secondary duration-300 cursor-pointer"
@@ -82,9 +82,9 @@ export const BookingDateCell = ({
           <h4 className="font-medium text-primary">Current Booking Date</h4>
 
           <span>
-            {DateTime.fromMillis(original.bookedForTimestamp).toFormat(
-              'h:mm a dd LLL yyyy',
-            )}
+            {DateTime.fromJSDate(
+              new Date((original as HorusBookingEnchanted).booked_for),
+            ).toFormat('h:mm a dd LLL yyyy')}
           </span>
         </div>
 
@@ -95,7 +95,7 @@ export const BookingDateCell = ({
           <DatePicker
             format="dd MMM yy hh:mm aa"
             ranges={ranges}
-            disabled={booking.hasCancelled}
+            disabled={booking.has_cancelled}
             disabledDate={date =>
               DateTime.fromJSDate(date).year < DateTime.now().year ||
               DateTime.fromJSDate(date).ordinal < DateTime.now().ordinal

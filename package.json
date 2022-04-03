@@ -30,8 +30,8 @@
     "@stripe/stripe-js": "^1.12.1",
     "@svgr/cli": "^5.5.0",
     "@tastiest-io/tastiest-icons": "^0.24.0",
-    "@tastiest-io/tastiest-ui": "^0.77.0",
-    "@tastiest-io/tastiest-utils": "^1.55.0",
+    "@tastiest-io/tastiest-ui": "^0.95.0",
+    "@tastiest-io/tastiest-utils": "^1.95.0",
     "@types/analytics-node": "^3.1.4",
     "@types/react-table": "^7.0.29",
     "@zeit/next-css": "^1.0.1",
@@ -93,6 +93,7 @@
   "devDependencies": {
     "@tailwindcss/aspect-ratio": "^0.2.0",
     "@tailwindcss/forms": "^0.2.1",
+    "@tastiest-io/tastiest-horus": "^0.36.0",
     "@testing-library/react": "^11.2.5",
     "@types/crypto-js": "^4.0.1",
     "@types/jest": "^26.0.20",

@@ -1,8 +1,5 @@
-import {
-  dlog,
-  FirestoreCollection,
-  RestaurantDataApi,
-} from '@tastiest-io/tastiest-utils';
+import { HorusRestaurant } from '@tastiest-io/tastiest-horus';
+import { dlog, FirestoreCollection, Horus } from '@tastiest-io/tastiest-utils';
 import * as firebaseAdmin from 'firebase-admin';
 import { GetServerSidePropsContext } from 'next';
 import nookies from 'nookies';
@@ -32,13 +29,14 @@ const db = (collection: FirestoreCollection) =>
 /** Verify cookie token inside getServerSideProps */
 const verifyCookieToken = async (context: GetServerSidePropsContext) => {
   const cookieToken = nookies.get(context)?.token;
-  const restaurantDataApi = new RestaurantDataApi(firebaseAdmin);
-  const { restaurantId } = await restaurantDataApi.initFromCookieToken(
-    cookieToken,
+
+  const horus = new Horus(cookieToken);
+  const { data: restaurantData } = await horus.get<HorusRestaurant>(
+    '/restaurants/me',
   );
 
   // If no user, redirect to login
-  if (!restaurantId) {
+  if (!restaurantData) {
     return {
       valid: false,
       cookieToken: null,
@@ -49,7 +47,7 @@ const verifyCookieToken = async (context: GetServerSidePropsContext) => {
     };
   }
 
-  return { valid: true, cookieToken, redirect: null };
+  return { valid: true, cookieToken, restaurantData, redirect: null };
 };
 
 export { firebaseAdmin, verifyCookieToken, db };

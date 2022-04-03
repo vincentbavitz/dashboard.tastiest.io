@@ -1,11 +1,5 @@
-import {
-  DayOfWeek,
-  RestaurantDataApi,
-  RestaurantDataKey,
-} from '@tastiest-io/tastiest-utils';
 import { QuietTimesArray } from 'components/blocks/QuietTimesSelector/QuietTimesContext';
 import { NextApiRequest, NextApiResponse } from 'next';
-import { firebaseAdmin } from 'utils/firebaseAdmin';
 
 export interface SetQuietTimesParams {
   restaurantId: string;
@@ -50,24 +44,25 @@ export default async function setQuietTimes(
   }
 
   try {
-    const restaurantDataApi = new RestaurantDataApi(
-      firebaseAdmin,
-      restaurantId,
-    );
+    // FIX ME CORRECT ME
+    // const restaurantDataApi = new RestaurantDataApi(
+    //   firebaseAdmin,
+    //   restaurantId,
+    // );
 
-    const quietTimes = {
-      [DayOfWeek.SUNDAY]: quietTimesArray[DayOfWeek.SUNDAY],
-      [DayOfWeek.MONDAY]: quietTimesArray[DayOfWeek.MONDAY],
-      [DayOfWeek.TUESDAY]: quietTimesArray[DayOfWeek.TUESDAY],
-      [DayOfWeek.WEDNESDAY]: quietTimesArray[DayOfWeek.WEDNESDAY],
-      [DayOfWeek.THURSDAY]: quietTimesArray[DayOfWeek.THURSDAY],
-      [DayOfWeek.FRIDAY]: quietTimesArray[DayOfWeek.FRIDAY],
-      [DayOfWeek.SATURDAY]: quietTimesArray[DayOfWeek.SATURDAY],
-    };
+    // const quietTimes = {
+    //   [DayOfWeek.SUNDAY]: quietTimesArray[DayOfWeek.SUNDAY],
+    //   [DayOfWeek.MONDAY]: quietTimesArray[DayOfWeek.MONDAY],
+    //   [DayOfWeek.TUESDAY]: quietTimesArray[DayOfWeek.TUESDAY],
+    //   [DayOfWeek.WEDNESDAY]: quietTimesArray[DayOfWeek.WEDNESDAY],
+    //   [DayOfWeek.THURSDAY]: quietTimesArray[DayOfWeek.THURSDAY],
+    //   [DayOfWeek.FRIDAY]: quietTimesArray[DayOfWeek.FRIDAY],
+    //   [DayOfWeek.SATURDAY]: quietTimesArray[DayOfWeek.SATURDAY],
+    // };
 
-    await restaurantDataApi.setRestaurantData(RestaurantDataKey.METRICS, {
-      quietTimes,
-    });
+    // await restaurantDataApi.setRestaurantData(RestaurantDataKey.METRICS, {
+    //   quietTimes,
+    // });
 
     response.json({ success: true, error: null, data: null });
   } catch (error) {

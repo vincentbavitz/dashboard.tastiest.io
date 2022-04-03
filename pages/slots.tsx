@@ -16,9 +16,10 @@ import { METADATA } from '../constants';
 export const getServerSideProps = async (
   context: GetServerSidePropsContext,
 ) => {
-  const { valid, redirect } = await verifyCookieToken(context);
+  const { valid, restaurantData, redirect } = await verifyCookieToken(context);
   if (!valid) return { redirect };
-  return { props: {} };
+
+  return { props: { restaurantData } };
 };
 
 const Times: NextPage<DefaultAuthPageProps> = props => {
@@ -77,9 +78,7 @@ const DefineSlotsSection = (props: DefaultAuthPageProps) => {
     <div>
       <div className="flex space-x-4">
         <div className="flex-1">
-          {restaurantData ? (
-            <BookingSlotsBlock restaurantData={restaurantData} />
-          ) : null}
+          {restaurantData ? <BookingSlotsBlock /> : null}
         </div>
 
         <div className="flex-1">

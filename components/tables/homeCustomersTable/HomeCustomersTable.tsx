@@ -1,7 +1,12 @@
 /* eslint-disable react/display-name */
+import {
+  HorusBooking,
+  HorusOrder,
+  HorusRestaurant,
+  HorusUser,
+} from '@tastiest-io/tastiest-horus';
 import { Table, Tooltip } from '@tastiest-io/tastiest-ui';
 import {
-  Booking,
   Horus,
   TIME,
   titleCase,
@@ -21,12 +26,18 @@ enum EditableBookingFields {
   BOOKED_FOR_TIMESTAMP = 'bookedForTimestamp',
 }
 
+export type HorusBookingEnchanted = HorusBooking & {
+  user?: HorusUser;
+  order?: HorusOrder;
+  restaurant?: HorusRestaurant;
+};
+
 // Update any field in the current booking
 // instantly using mutate SWR
 async function setBookingField<T>(
   field: EditableBookingFields,
   value: T,
-  bookings: Booking[],
+  bookings: HorusBookingEnchanted[],
   token: string,
   rowIndex: number,
 ) {
@@ -37,14 +48,14 @@ async function setBookingField<T>(
   }
 
   // Can't modify a cancelled booking
-  if (booking.hasCancelled) {
+  if (booking.has_cancelled) {
     console.log("Can't modify a cancelled booking");
     return;
   }
 
   const horus = new Horus(token);
   const { data } = await horus.post('/bookings/update', {
-    bookingId: booking.orderId,
+    bookingId: booking.order_id,
     [field]: value,
   });
 
@@ -61,11 +72,14 @@ export default function HomeCustomersTable(props: Props) {
   const { restaurantId } = props;
   const { token } = useContext(AuthContext);
 
-  const { data, mutate } = useHorusSWR<Booking[]>(
-    `/bookings?restaurantId=${restaurantId}`,
-    token,
+  const { data, mutate, isValidating } = useHorusSWR<HorusBookingEnchanted[]>(
+    '/bookings/',
     {
-      refreshInterval: 30000,
+      token,
+      query: { restaurant_id: restaurantId },
+    },
+    {
+      refreshInterval: 10000,
       initialData: null,
       refreshWhenHidden: true,
       compare: (a, b) => JSON.stringify(a) === JSON.stringify(b),
@@ -76,15 +90,15 @@ export default function HomeCustomersTable(props: Props) {
     () =>
       // prettier-ignore
       data
-        ?.filter(booking => booking.isTest === (process.env.NODE_ENV === 'development'))
-        .sort((a, b) => b.bookedForTimestamp - a.bookedForTimestamp),
+        ?.filter(booking => booking.is_test === (process.env.NODE_ENV === 'development'))
+        .sort((a, b) => new Date(b.booked_for).getTime() - new Date(a.booked_for).getTime()),
     [data],
   );
 
   const [isInitialLoading, setIsInitialLoading] = useState(true);
 
   useEffect(() => {
-    if (bookings) {
+    if (bookings || !isValidating) {
       setIsInitialLoading(false);
     }
   }, [bookings]);
@@ -98,17 +112,18 @@ export default function HomeCustomersTable(props: Props) {
     {
       id: 'eaterName',
       Header: 'Name',
-      accessor: (row: Booking) => {
+      accessor: (row: HorusBookingEnchanted) => {
+        const rowTimestamp = new Date(row.booked_for).getTime();
+
         const rowIsToday =
-          row.bookedForTimestamp >
-            todayMidnightTimestamp - 3 * TIME.MS_IN_ONE_DAY &&
-          row.bookedForTimestamp < todayMidnightTimestamp + TIME.MS_IN_ONE_DAY;
+          rowTimestamp > todayMidnightTimestamp - 3 * TIME.MS_IN_ONE_DAY &&
+          rowTimestamp < todayMidnightTimestamp + TIME.MS_IN_ONE_DAY;
 
         return (
           <div className="flex flex-col justify-center font-medium">
-            <span>{row.eaterName}</span>
+            <span>{row.user.first_name}</span>
 
-            {row.isUserFollowing || rowIsToday ? (
+            {row.order.is_user_following || rowIsToday ? (
               <div className="flex space-x-2">
                 {rowIsToday ? (
                   <span
@@ -119,7 +134,7 @@ export default function HomeCustomersTable(props: Props) {
                   </span>
                 ) : null}
 
-                {row.isUserFollowing ? (
+                {row.order.is_user_following ? (
                   <span
                     style={{ width: 'fit-content' }}
                     className="px-2 rounded text-sm bg-green-100"
@@ -155,17 +170,21 @@ export default function HomeCustomersTable(props: Props) {
       id: 'dealName',
       Header: 'Experience',
       minWidth: 200,
-      accessor: (row: Booking) => {
+      accessor: (row: HorusBookingEnchanted) => {
         const maxExperienceNameLength = 35;
-        const exceedsLimit = row.dealName.length > maxExperienceNameLength;
+        const exceedsLimit =
+          row.user.first_name.length > maxExperienceNameLength;
 
         return (
           <Tooltip
             show={exceedsLimit ? undefined : false}
-            content={row.dealName}
+            content={row.order.product_name}
           >
             <p className="whitespace-pre-wrap">
-              {titleCase(row.dealName).slice(0, maxExperienceNameLength)}
+              {titleCase(row.order.product_name).slice(
+                0,
+                maxExperienceNameLength,
+              )}
               {exceedsLimit && '...'}
             </p>
           </Tooltip>
@@ -176,15 +195,15 @@ export default function HomeCustomersTable(props: Props) {
       id: 'heads',
       Header: 'Covers',
       width: 80,
-      accessor: (row: Booking) => <p>{row.heads}</p>,
+      accessor: (row: HorusBookingEnchanted) => <p>{row.order.heads}</p>,
     },
     {
       id: 'orderTotal',
       Header: 'Order Total',
       width: 100,
-      accessor: (row: Booking) => (
+      accessor: (row: HorusBookingEnchanted) => (
         <p className="font-medium">
-          £{Number(row.restaurantCut?.amount ?? 0)?.toFixed(2)}
+          £{Number(row.order.restaurant_portion ?? 0)?.toFixed(2)}
         </p>
       ),
     },
@@ -192,8 +211,8 @@ export default function HomeCustomersTable(props: Props) {
       id: 'purchased',
       Header: 'Purchased',
       sortBy: 'paidAt',
-      accessor: (row: Booking) => {
-        return <p>{moment(row.paidAt).local().fromNow()}</p>;
+      accessor: (row: HorusBookingEnchanted) => {
+        return <p>{moment(row.order.paid_at).local().fromNow()}</p>;
       },
     },
   ];
@@ -219,11 +238,13 @@ export default function HomeCustomersTable(props: Props) {
     [bookings],
   );
 
-  const searchFunction = (query: string, data: Booking[]) => {
+  const searchFunction = (query: string, data: HorusBookingEnchanted[]) => {
     return data.filter(booking => {
       return (
-        booking.dealName.toLowerCase().includes(query.toLowerCase()) ||
-        booking.eaterName.toLowerCase().includes(query.toLowerCase())
+        booking.order.product_name
+          .toLowerCase()
+          .includes(query.toLowerCase()) ||
+        booking.user.first_name.toLowerCase().includes(query.toLowerCase())
       );
     });
   };
