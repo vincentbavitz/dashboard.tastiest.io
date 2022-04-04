@@ -1,3 +1,4 @@
+import { HorusBooking } from '@tastiest-io/tastiest-horus';
 import { CheckFilledIcon } from '@tastiest-io/tastiest-icons';
 import { Button, Input, Modal, Tooltip } from '@tastiest-io/tastiest-ui';
 import clsx from 'clsx';
@@ -14,7 +15,7 @@ export const HasArrivedCell = ({
   column: any;
   updateData: any;
 }) => {
-  const code = booking.confirmationCode;
+  const code = (booking as HorusBooking).confirmation_code;
   const [typedCode, setTypedCode] = useState<string>();
   const [codeError, setCodeError] = useState<string>();
 
@@ -61,7 +62,7 @@ export const HasArrivedCell = ({
     setArrived(initialValue ?? false);
   }, [initialValue]);
 
-  const buttonDisabled = booking.hasCancelled || arrived;
+  const buttonDisabled = (booking as HorusBooking).has_cancelled || arrived;
 
   return (
     <div className="flex items-center justify-center">

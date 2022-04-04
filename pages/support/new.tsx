@@ -49,7 +49,7 @@ const NewSupportTicket: NextPage<DefaultAuthPageProps> = ({
     setSubmitting(true);
 
     const { success, data } = await makeSupportRequest(
-      restaurantData.details.contact.firstName,
+      restaurantData.contact_first_name,
       form.subject,
       form.message,
     );

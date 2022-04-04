@@ -20,7 +20,7 @@ export default function AlphaTestingBlockOverlay({ label }: Props) {
         style={{ filter: 'drop-shadow(0 0 33px rgba(255,255,255,0.33))' }}
         className="text-2xl -mt-20 py-6 px-8 bg-secondary rounded-xl font-bold text-white shadow-lg"
       >
-        {label} is disabled for alpha testing.
+        {label} is disabled for Beta.
       </div>
     </div>
   );

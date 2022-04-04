@@ -1,11 +1,10 @@
 import { StatusOrb, Table } from '@tastiest-io/tastiest-ui';
-import { RestaurantSupportRequest } from '@tastiest-io/tastiest-utils';
 import { DateTime } from 'luxon';
 import Link from 'next/link';
 import React from 'react';
 
 interface Props {
-  supportRequests: Partial<RestaurantSupportRequest>[];
+  supportRequests: Partial<any>[];
 }
 
 export default function SupportTable(props: Props) {
@@ -15,7 +14,7 @@ export default function SupportTable(props: Props) {
     {
       id: 'subject',
       Header: 'Subject',
-      accessor: (row: Partial<RestaurantSupportRequest>) => {
+      accessor: (row: Partial<any>) => {
         return (
           <Link href={`/support/${row.id}`}>
             <a className="font-medium">{row.subject}</a>
@@ -26,7 +25,7 @@ export default function SupportTable(props: Props) {
     {
       id: 'conversion',
       Header: 'Last Reply',
-      accessor: (row: Partial<RestaurantSupportRequest>) => {
+      accessor: (row: Partial<any>) => {
         return (
           <span className="font-medium">
             {row.conversation.length
@@ -43,7 +42,7 @@ export default function SupportTable(props: Props) {
     {
       id: 'status',
       Header: 'Status',
-      accessor: (row: Partial<RestaurantSupportRequest>) => {
+      accessor: (row: Partial<any>) => {
         return (
           <p className="font-medium">
             {row.resolved ? (

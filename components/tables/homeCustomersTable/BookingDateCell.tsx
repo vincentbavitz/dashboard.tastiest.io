@@ -32,7 +32,7 @@ export const BookingDateCell = ({
     }
 
     setSubmitting(true);
-    await updateData(value.getTime(), index, 'bookedFor');
+    await updateData(value.getTime(), index, 'booked_for_timestamp');
 
     setSubmitting(false);
     setBookingDate(value);

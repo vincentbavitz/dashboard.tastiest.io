@@ -7,6 +7,7 @@ import {
 } from '@tastiest-io/tastiest-horus';
 import { Table, Tooltip } from '@tastiest-io/tastiest-ui';
 import {
+  dlog,
   Horus,
   TIME,
   titleCase,
@@ -21,9 +22,9 @@ import { HasArrivedCell } from './HasArrivedCell';
 import { HasCancelledCell } from './HasCancelledCell';
 
 enum EditableBookingFields {
-  HAS_ARRIVED = 'hasArrived',
-  HAS_CANCELLED = 'hasCancelled',
-  BOOKED_FOR_TIMESTAMP = 'bookedForTimestamp',
+  HAS_ARRIVED = 'has_arrived',
+  HAS_CANCELLED = 'has_cancelled',
+  BOOKED_FOR_TIMESTAMP = 'booked_for_timestamp',
 }
 
 export type HorusBookingEnchanted = HorusBooking & {
@@ -47,6 +48,8 @@ async function setBookingField<T>(
     return;
   }
 
+  dlog('HomeCustomersTable ➡️ booking:', booking);
+
   // Can't modify a cancelled booking
   if (booking.has_cancelled) {
     console.log("Can't modify a cancelled booking");
@@ -55,7 +58,7 @@ async function setBookingField<T>(
 
   const horus = new Horus(token);
   const { data } = await horus.post('/bookings/update', {
-    bookingId: booking.order_id,
+    booking_id: booking.id,
     [field]: value,
   });
 
@@ -94,6 +97,8 @@ export default function HomeCustomersTable(props: Props) {
         .sort((a, b) => new Date(b.booked_for).getTime() - new Date(a.booked_for).getTime()),
     [data],
   );
+
+  console.log('HomeCustomersTable ➡️ bookings:', bookings);
 
   const [isInitialLoading, setIsInitialLoading] = useState(true);
 
@@ -151,23 +156,23 @@ export default function HomeCustomersTable(props: Props) {
     },
     {
       Header: 'Arrived',
-      accessor: 'hasArrived',
+      accessor: 'has_arrived',
       Cell: HasArrivedCell,
       width: 90,
     },
     {
       Header: 'Cancelled',
-      accessor: 'hasCancelled',
+      accessor: 'has_cancelled',
       Cell: HasCancelledCell,
       width: 90,
     },
     {
       Header: 'Booking Date',
-      accessor: 'bookedForTimestamp',
+      accessor: 'booked_for_timestamp',
       Cell: BookingDateCell,
     },
     {
-      id: 'dealName',
+      id: 'productName',
       Header: 'Experience',
       minWidth: 200,
       accessor: (row: HorusBookingEnchanted) => {
@@ -198,7 +203,7 @@ export default function HomeCustomersTable(props: Props) {
       accessor: (row: HorusBookingEnchanted) => <p>{row.order.heads}</p>,
     },
     {
-      id: 'orderTotal',
+      id: 'total',
       Header: 'Order Total',
       width: 100,
       accessor: (row: HorusBookingEnchanted) => (
@@ -210,7 +215,7 @@ export default function HomeCustomersTable(props: Props) {
     {
       id: 'purchased',
       Header: 'Purchased',
-      sortBy: 'paidAt',
+      sortBy: 'paid_at',
       accessor: (row: HorusBookingEnchanted) => {
         return <p>{moment(row.order.paid_at).local().fromNow()}</p>;
       },
@@ -220,7 +225,10 @@ export default function HomeCustomersTable(props: Props) {
   // Update data depending on the column
   const updateData = React.useMemo(
     () => (value: any, rowIndex: number, columnId: EditableBookingFields) => {
-      console.log(`Updating '${columnId}' field on booking to ${value}`);
+      console.log(
+        `HomeCustomersTable ➡️ Updating '${columnId}' field on booking to ${value}`,
+      );
+      console.log('HomeCustomersTable ➡️ columnId:', columnId);
       setBookingField(columnId, value, bookings, token, rowIndex);
 
       const booking = bookings[rowIndex];

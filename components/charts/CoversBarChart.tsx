@@ -1,9 +1,5 @@
-import {
-  Booking,
-  dlog,
-  TIME as UTILS_TIME,
-  useHorusSWR,
-} from '@tastiest-io/tastiest-utils';
+import { TIME as UTILS_TIME, useHorusSWR } from '@tastiest-io/tastiest-utils';
+import { HorusBookingEnchanted } from 'components/tables/homeCustomersTable/HomeCustomersTable';
 import { AuthContext } from 'contexts/auth';
 import { DateTime } from 'luxon';
 import { useContext } from 'react';
@@ -18,9 +14,14 @@ interface Props {
 
 export default function CoversBarChart({ restaurantId }: Props) {
   const { token } = useContext(AuthContext);
-  const { data } = useHorusSWR<Booking[]>(
-    `/bookings?restaurantId=${restaurantId}`,
-    token,
+  const { data } = useHorusSWR<HorusBookingEnchanted[]>(
+    '/bookings/',
+    {
+      token,
+      query: {
+        restaurant_id: restaurantId,
+      },
+    },
     {
       refreshInterval: 60000,
       initialData: null,
@@ -29,17 +30,17 @@ export default function CoversBarChart({ restaurantId }: Props) {
     },
   );
 
-  dlog('CoversBarChart ➡️ data:', data);
-
   const bookings = data?.filter?.(
-    booking => booking.isTest === (process.env.NODE_ENV === 'development'),
+    booking => booking.is_test === (process.env.NODE_ENV === 'development'),
   );
 
   const coverHistory =
     bookings?.map(booking => ({
-      covers: booking.heads,
-      timestamp: booking.bookedForTimestamp,
+      covers: Number(booking.order.heads),
+      timestamp: new Date(booking.booked_for).getTime(),
     })) ?? [];
+
+  console.log('CoversBarChart ➡️ coverHistory:', coverHistory);
 
   const firstOfWeek = DateTime.now()
     .setZone(UTILS_TIME.LOCALES.LONDON)
@@ -78,6 +79,8 @@ export default function CoversBarChart({ restaurantId }: Props) {
 
     return { day: dayName, covers: coversForThisDay };
   });
+
+  console.log('CoversBarChart ➡️ coversThisWeek:', coversThisWeek);
 
   const totalCovers = coversThisWeek.reduce((a, b) => a + b.covers, 0);
 

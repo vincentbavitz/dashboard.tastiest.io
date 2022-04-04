@@ -1,14 +1,17 @@
 import {
   DayOfWeek,
-  humanTimeIntoMins,
   OpenTimesMetricDay,
-  postFetch,
+  WeekOpenTimes,
+} from '@tastiest-io/tastiest-horus';
+import {
+  Horus,
+  humanTimeIntoMins,
   TIME,
+  useHorusSWR,
 } from '@tastiest-io/tastiest-utils';
-import { SetBookingSlotsParams } from 'pages/api/setBookingSlots';
+import { useAuth } from 'hooks/useAuth';
 import React, { useState } from 'react';
-import { mutate } from 'swr';
-import { LocalEndpoint } from 'types/api';
+import { OpenTimesData } from '../BookingSlotsBlock';
 
 export enum BookingSlotsSelectorSteps {
   DAYS,
@@ -31,6 +34,7 @@ type BookingSlots = {
   setStep: React.Dispatch<React.SetStateAction<BookingSlotsSelectorSteps>>;
   saving: boolean;
   seatingDuration: number; // in minutes
+  openTimes: WeekOpenTimes;
   setSeatingDuration: React.Dispatch<React.SetStateAction<number>>;
   openTimesMetric: OpenTimesMetricDay[];
   setOpenTimesMetric: React.Dispatch<
@@ -52,6 +56,22 @@ export type DayNumeral = 0 | 1 | 2 | 3 | 4 | 5 | 6;
 export const BookingSlotsContext = React.createContext<BookingSlots>(undefined);
 
 export const BookingSlotsProvider = ({ children }) => {
+  const { token, restaurantData } = useAuth();
+
+  const { data, mutate } = useHorusSWR<OpenTimesData>(
+    '/restaurants/public/open-times',
+    {
+      token,
+      query: { restaurant_id: restaurantData.id },
+    },
+    {
+      refreshInterval: 30000,
+      refreshWhenHidden: true,
+    },
+  );
+
+  const openTimes = data?.open_times ?? null;
+
   const [step, setStep] = useState<BookingSlotsSelectorSteps>(
     BookingSlotsSelectorSteps.DAYS,
   );
@@ -72,21 +92,36 @@ export const BookingSlotsProvider = ({ children }) => {
       return;
     }
 
-    mutate(`${LocalEndpoint.GET_BOOKING_SLOTS}?restaurantId=${restaurantId}`, {
-      [DayOfWeek.SUNDAY]: openTimesMetric[DayOfWeek.SUNDAY],
-      [DayOfWeek.MONDAY]: openTimesMetric[DayOfWeek.MONDAY],
-      [DayOfWeek.TUESDAY]: openTimesMetric[DayOfWeek.TUESDAY],
-      [DayOfWeek.WEDNESDAY]: openTimesMetric[DayOfWeek.WEDNESDAY],
-      [DayOfWeek.THURSDAY]: openTimesMetric[DayOfWeek.THURSDAY],
-      [DayOfWeek.FRIDAY]: openTimesMetric[DayOfWeek.FRIDAY],
-      [DayOfWeek.SATURDAY]: openTimesMetric[DayOfWeek.SATURDAY],
+    mutate({
+      open_times: {
+        [DayOfWeek.SUNDAY]: openTimesMetric[DayOfWeek.SUNDAY],
+        [DayOfWeek.MONDAY]: openTimesMetric[DayOfWeek.MONDAY],
+        [DayOfWeek.TUESDAY]: openTimesMetric[DayOfWeek.TUESDAY],
+        [DayOfWeek.WEDNESDAY]: openTimesMetric[DayOfWeek.WEDNESDAY],
+        [DayOfWeek.THURSDAY]: openTimesMetric[DayOfWeek.THURSDAY],
+        [DayOfWeek.FRIDAY]: openTimesMetric[DayOfWeek.FRIDAY],
+        [DayOfWeek.SATURDAY]: openTimesMetric[DayOfWeek.SATURDAY],
+      },
+      seating_duration: seatingDuration,
     });
 
     setSaving(true);
-    await postFetch<SetBookingSlotsParams>(LocalEndpoint.SET_BOOKING_SLOTS, {
-      restaurantId,
-      openTimesArray: openTimesMetric,
-      seatingDuration,
+
+    const transformedForDto = openTimesMetric.map(c =>
+      c.open ? c.range : [0, 0],
+    );
+
+    const horus = new Horus(token);
+    await horus.post('/restaurants/set-open-times', {
+      restaurant_id: restaurantId,
+      seating_duration: Math.round(seatingDuration),
+      0: transformedForDto[0],
+      1: transformedForDto[1],
+      2: transformedForDto[2],
+      3: transformedForDto[3],
+      4: transformedForDto[4],
+      5: transformedForDto[5],
+      6: transformedForDto[6],
     });
 
     setSaving(false);
@@ -103,6 +138,7 @@ export const BookingSlotsProvider = ({ children }) => {
     step,
     setStep,
     saving,
+    openTimes,
     saveBookingSlots,
     resetToDefaults,
     openTimesMetric,

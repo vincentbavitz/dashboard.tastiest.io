@@ -1,8 +1,4 @@
-import {
-  ClockCircleOutlined,
-  PlusOutlined,
-  WalletOutlined,
-} from '@ant-design/icons';
+import { ClockCircleOutlined, WalletOutlined } from '@ant-design/icons';
 import { HomeIcon, SupportIcon } from '@tastiest-io/tastiest-icons';
 import { Sidebar } from '@tastiest-io/tastiest-ui';
 import Header, { HEADER_HEIGHT_REM } from 'components/Header';
@@ -43,12 +39,12 @@ export default function LayoutWrapper({
             icon={ClockCircleOutlined}
             float="top"
           />
-          <Sidebar.Item
+          {/* <Sidebar.Item
             label="Followers"
             page="/followers"
             icon={PlusOutlined}
             float="top"
-          />
+          /> */}
           <Sidebar.Item
             label="Billing"
             page="/billing"

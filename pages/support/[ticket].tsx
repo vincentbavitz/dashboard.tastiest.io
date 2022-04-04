@@ -1,12 +1,6 @@
 import { CheckOutlined, RollbackOutlined } from '@ant-design/icons';
 import { Button, TextArea, Tooltip } from '@tastiest-io/tastiest-ui';
-import {
-  Horus,
-  RestaurantSupportRequest,
-  SupportMessage,
-  SupportMessageDirection,
-  useHorusSWR,
-} from '@tastiest-io/tastiest-utils';
+import { Horus } from '@tastiest-io/tastiest-utils';
 import clsx from 'clsx';
 import PageHeader from 'components/PageHeader';
 import { AuthContext } from 'contexts/auth';
@@ -49,9 +43,10 @@ export const getServerSideProps = async (
   }
 
   const horus = new Horus(cookieToken);
-  const { data: ticket } = await horus.get<any, RestaurantSupportRequest>(
-    `/support/restaurants/ticket/${ticketId}`,
-  );
+  // const { data: ticket } = await horus.get<any>(
+  //   `/support/restaurants/ticket/${ticketId}`,
+  // );
+  const ticket = null;
 
   if (!ticket) {
     return {
@@ -72,14 +67,16 @@ const Ticket: NextPage<
   const { token } = useContext(AuthContext);
   const horus = useMemo(() => (token ? new Horus(token) : null), [token]);
 
-  const { data: ticket, mutate } = useHorusSWR<RestaurantSupportRequest>(
-    `/support/restaurants/ticket/${props.ticket.id}`,
-    token,
-    {
-      initialData: props.ticket,
-      refreshInterval: 120000,
-    },
-  );
+  // const { data: ticket, mutate } = useHorusSWR<any>(
+  //   `/support/restaurants/ticket/${props.ticket.id}`,
+  //   token,
+  //   {
+  //     initialData: props.ticket,
+  //     refreshInterval: 120000,
+  //   },
+  // );
+
+  const ticket = null;
 
   const {
     handleSubmit,
@@ -114,19 +111,21 @@ const Ticket: NextPage<
   });
 
   const reply = async ({ message }: TicketFormData) => {
-    const { data: replyData } = await horus?.post<any, SupportMessage>(
-      '/support/restaurants/reply',
-      {
-        id: ticket.id,
-        name: ticket.name,
-        message,
-      },
-    );
+    // const { data: replyData } = await horus?.post<any, SupportMessage>(
+    //   '/support/restaurants/reply',
+    //   {
+    //     id: ticket.id,
+    //     name: ticket.name,
+    //     message,
+    //   },
+    // );
 
-    mutate(
-      { ...ticket, conversation: [...ticket.conversation, replyData] },
-      true,
-    );
+    // mutate(
+    //   { ...ticket, conversation: [...ticket.conversation, replyData] },
+    //   true,
+    // );
+
+    return true;
   };
 
   return (
@@ -205,21 +204,18 @@ const Ticket: NextPage<
   );
 };
 
-const SupportMessageBlock = (message: SupportMessage) => {
+const SupportMessageBlock = (message: any) => {
   return (
     <div
       className={clsx(
         'w-full rounded bg-white p-4 border border-l-4',
-        message.direction === SupportMessageDirection.SUPPORT_TO_RESTAURANT
-          ? 'border-green-600'
-          : 'border-secondary',
+        message.direction === '' ? 'border-green-600' : 'border-secondary',
       )}
     >
       <div className="flex justify-between">
         <div className="font-medium">
           {message.name}{' '}
-          {message.direction ===
-          SupportMessageDirection.SUPPORT_TO_RESTAURANT ? (
+          {message.direction === '' ? (
             <span className="py-1 px-2 ml-1 bg-green-600 rounded text-white text-2xs">
               Tastiest Team
             </span>
