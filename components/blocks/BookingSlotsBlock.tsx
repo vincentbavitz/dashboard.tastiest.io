@@ -1,16 +1,14 @@
 import { EditOutlined } from '@ant-design/icons';
 import { WeekOpenTimes } from '@tastiest-io/tastiest-horus';
-import {
-  dlog,
-  minsIntoHumanTime,
-  TIME,
-  useHorusSWR,
-} from '@tastiest-io/tastiest-utils';
+import { minsIntoHumanTime, TIME } from '@tastiest-io/tastiest-utils';
 import { useAuth } from 'hooks/useAuth';
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import BlockTemplate from './BlockTemplate';
 import BookingSlotsSelector from './BookingSlotsSelector';
-import { BookingSlotsProvider } from './BookingSlotsSelector/BookingSlotsContext';
+import {
+  BookingSlotsContext,
+  BookingSlotsProvider,
+} from './BookingSlotsSelector/BookingSlotsContext';
 
 export type OpenTimesData = {
   open_times: WeekOpenTimes;
@@ -28,24 +26,8 @@ export default function BookingSlotsBlock() {
 function BookingSlotsBlockInner() {
   const [openTimesSelectorOpen, setOpenTimesSelectorOpen] = useState(false);
 
-  const { token, restaurantData } = useAuth();
-
-  const { data } = useHorusSWR<OpenTimesData>(
-    '/restaurants/public/open-times',
-    {
-      token,
-      query: { restaurant_id: restaurantData.id },
-    },
-    {
-      refreshInterval: 30000,
-      refreshWhenHidden: true,
-    },
-  );
-
-  const openTimes = data.open_times;
-  const seatingDuration = data.seating_duration;
-
-  dlog('BookingSlotsBlock ➡️ openTimes:', openTimes);
+  const { restaurantData } = useAuth();
+  const { openTimes, seatingDuration } = useContext(BookingSlotsContext);
 
   return (
     <>

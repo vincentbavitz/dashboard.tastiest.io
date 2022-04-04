@@ -1,13 +1,7 @@
 import { EditOutlined } from '@ant-design/icons';
-import {
-  minsIntoHumanTime,
-  RestaurantData,
-  TIME,
-  WeekQuietTimes,
-} from '@tastiest-io/tastiest-utils';
+import { minsIntoHumanTime, TIME } from '@tastiest-io/tastiest-utils';
 import React, { useState } from 'react';
 import useSWR from 'swr';
-import { LocalEndpoint } from 'types/api';
 import BlockTemplate from './BlockTemplate';
 import QuietTimesSelector from './QuietTimesSelector';
 import { QuietTimesProvider } from './QuietTimesSelector/QuietTimesContext';
