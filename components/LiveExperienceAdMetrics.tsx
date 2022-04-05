@@ -1,11 +1,11 @@
 import { PoweroffOutlined } from '@ant-design/icons';
 import { StatusOrb } from '@tastiest-io/tastiest-ui';
-import { ExperiencePost, formatCurrency } from '@tastiest-io/tastiest-utils';
+import { ContentfulPost, formatCurrency } from '@tastiest-io/tastiest-utils';
 import clsx from 'clsx';
 import React from 'react';
 
 interface Props {
-  experience: ExperiencePost;
+  experience: ContentfulPost;
 }
 
 export default function LiveExperienceAdMetrics(props: Props) {

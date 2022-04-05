@@ -1,9 +1,9 @@
+import { TimeRange } from '@tastiest-io/tastiest-horus';
 import { Button } from '@tastiest-io/tastiest-ui';
 import {
   humanTimeIntoMins,
   minsIntoHumanTime,
   TIME,
-  TimeRange,
 } from '@tastiest-io/tastiest-utils';
 import React, { useContext } from 'react';
 import { RangeSlider } from 'rsuite';

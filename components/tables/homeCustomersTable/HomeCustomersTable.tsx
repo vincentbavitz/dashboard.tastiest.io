@@ -5,14 +5,8 @@ import {
   HorusRestaurant,
   HorusUser,
 } from '@tastiest-io/tastiest-horus';
-import { Table, Tooltip } from '@tastiest-io/tastiest-ui';
-import {
-  dlog,
-  Horus,
-  TIME,
-  titleCase,
-  useHorusSWR,
-} from '@tastiest-io/tastiest-utils';
+import { Table } from '@tastiest-io/tastiest-ui';
+import { dlog, Horus, TIME, useHorusSWR } from '@tastiest-io/tastiest-utils';
 import { AuthContext } from 'contexts/auth';
 import { DateTime } from 'luxon';
 import moment from 'moment';
@@ -115,7 +109,7 @@ export default function HomeCustomersTable(props: Props) {
 
   const columns = [
     {
-      id: 'eaterName',
+      id: 'eater-name',
       Header: 'Name',
       accessor: (row: HorusBookingEnchanted) => {
         const rowTimestamp = new Date(row.booked_for).getTime();
@@ -126,7 +120,9 @@ export default function HomeCustomersTable(props: Props) {
 
         return (
           <div className="flex flex-col justify-center font-medium">
-            <span>{row.user.first_name}</span>
+            <span>
+              {row.user.first_name} {row.user.last_name}
+            </span>
 
             {row.order.is_user_following || rowIsToday ? (
               <div className="flex space-x-2">
@@ -176,24 +172,7 @@ export default function HomeCustomersTable(props: Props) {
       Header: 'Experience',
       minWidth: 200,
       accessor: (row: HorusBookingEnchanted) => {
-        const maxExperienceNameLength = 35;
-        const exceedsLimit =
-          row.user.first_name.length > maxExperienceNameLength;
-
-        return (
-          <Tooltip
-            show={exceedsLimit ? undefined : false}
-            content={row.order.product_name}
-          >
-            <p className="whitespace-pre-wrap">
-              {titleCase(row.order.product_name).slice(
-                0,
-                maxExperienceNameLength,
-              )}
-              {exceedsLimit && '...'}
-            </p>
-          </Tooltip>
-        );
+        return <p className="whitespace-pre-wrap">{row.order.product_name}</p>;
       },
     },
     {

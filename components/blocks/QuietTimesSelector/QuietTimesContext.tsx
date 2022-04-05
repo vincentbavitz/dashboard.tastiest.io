@@ -1,14 +1,6 @@
-import {
-  DayOfWeek,
-  humanTimeIntoMins,
-  postFetch,
-  QuietTimesMetricDay,
-  TIME,
-} from '@tastiest-io/tastiest-utils';
-import { SetQuietTimesParams } from 'pages/api/setQuietTimes';
+import { QuietTimesMetricDay } from '@tastiest-io/tastiest-horus';
+import { humanTimeIntoMins, TIME } from '@tastiest-io/tastiest-utils';
 import React, { useState } from 'react';
-import { mutate } from 'swr';
-import { LocalEndpoint } from 'types/api';
 
 export enum QuietTimesSelectorSteps {
   DAYS,
@@ -65,25 +57,25 @@ export const QuietTimesProvider = ({ children }) => {
       return;
     }
 
-    mutate(
-      `${LocalEndpoint.GET_QUIET_TIMES}?restaurantId=${restaurantId}`,
-      {
-        [DayOfWeek.SUNDAY]: days[DayOfWeek.SUNDAY],
-        [DayOfWeek.MONDAY]: days[DayOfWeek.MONDAY],
-        [DayOfWeek.TUESDAY]: days[DayOfWeek.TUESDAY],
-        [DayOfWeek.WEDNESDAY]: days[DayOfWeek.WEDNESDAY],
-        [DayOfWeek.THURSDAY]: days[DayOfWeek.THURSDAY],
-        [DayOfWeek.FRIDAY]: days[DayOfWeek.FRIDAY],
-        [DayOfWeek.SATURDAY]: days[DayOfWeek.SATURDAY],
-      },
-      false,
-    );
+    // mutate(
+    //   `${LocalEndpoint.GET_QUIET_TIMES}?restaurantId=${restaurantId}`,
+    //   {
+    //     [DayOfWeek.SUNDAY]: days[DayOfWeek.SUNDAY],
+    //     [DayOfWeek.MONDAY]: days[DayOfWeek.MONDAY],
+    //     [DayOfWeek.TUESDAY]: days[DayOfWeek.TUESDAY],
+    //     [DayOfWeek.WEDNESDAY]: days[DayOfWeek.WEDNESDAY],
+    //     [DayOfWeek.THURSDAY]: days[DayOfWeek.THURSDAY],
+    //     [DayOfWeek.FRIDAY]: days[DayOfWeek.FRIDAY],
+    //     [DayOfWeek.SATURDAY]: days[DayOfWeek.SATURDAY],
+    //   },
+    //   false,
+    // );
 
     setSaving(true);
-    await postFetch<SetQuietTimesParams>(LocalEndpoint.SET_QUIET_TIMES, {
-      restaurantId,
-      quietTimesArray: days,
-    });
+    // await postFetch<SetQuietTimesParams>(LocalEndpoint.SET_QUIET_TIMES, {
+    //   restaurantId,
+    //   quietTimesArray: days,
+    // });
 
     setSaving(false);
   };
