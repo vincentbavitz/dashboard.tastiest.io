@@ -119,7 +119,9 @@ const Experiences: NextPage<
             ).length;
 
             const followingPc =
-              100 * (_notFollowing === 0 ? 1 : _following / _notFollowing);
+              bookingsFromExperience.length === 0
+                ? 0
+                : 100 * (_notFollowing === 0 ? 1 : _following / _notFollowing);
 
             return (
               <ExperienceRow
