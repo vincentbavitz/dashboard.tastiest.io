@@ -1,14 +1,5 @@
-<<<<<<< HEAD
-import { EditOutlined } from '@ant-design/icons';
-import { minsIntoHumanTime, TIME } from '@tastiest-io/tastiest-utils';
-import React, { useState } from 'react';
-import useSWR from 'swr';
-import BlockTemplate from './BlockTemplate';
-import QuietTimesSelector from './QuietTimesSelector';
-=======
 import { HorusRestaurantEnchanted } from 'contexts/auth';
 import React from 'react';
->>>>>>> staging
 import { QuietTimesProvider } from './QuietTimesSelector/QuietTimesContext';
 
 interface Props {
