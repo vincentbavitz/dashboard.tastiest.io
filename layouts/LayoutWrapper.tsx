@@ -1,4 +1,8 @@
-import { ClockCircleOutlined, WalletOutlined } from '@ant-design/icons';
+import {
+  BookOutlined,
+  ClockCircleOutlined,
+  WalletOutlined,
+} from '@ant-design/icons';
 import { HomeIcon, SupportIcon } from '@tastiest-io/tastiest-icons';
 import { Sidebar } from '@tastiest-io/tastiest-ui';
 import Header, { HEADER_HEIGHT_REM } from 'components/Header';
@@ -33,30 +37,42 @@ export default function LayoutWrapper({
       <div className="flex h-full">
         <Sidebar router={router}>
           <Sidebar.Item label="Home" page="/" icon={HomeIcon} float="top" />
+
+          <Sidebar.Item
+            label="Experiences"
+            page="/experiences"
+            icon={BookOutlined}
+            float="top"
+          />
+
           <Sidebar.Item
             label="Slots"
             page="/slots"
             icon={ClockCircleOutlined}
             float="top"
           />
+
           {/* <Sidebar.Item
             label="Followers"
             page="/followers"
             icon={PlusOutlined}
             float="top"
           /> */}
+
           <Sidebar.Item
             label="Billing"
             page="/billing"
             icon={WalletOutlined}
             float="bottom"
           />
+
           <Sidebar.Item
             label="Support"
             page="/support"
             icon={SupportIcon}
             float="bottom"
           />
+
           {/* <Sidebar.Item
             label="Settings"
             page="/settings"

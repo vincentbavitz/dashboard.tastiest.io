@@ -13,6 +13,9 @@ const nextConfig = {
   experimental: {
     jsconfigPaths: true,
   },
+  images: {
+    domains: ['images.cfassets.net', 'images.ctfassets.net'],
+  },
 };
 
 module.exports = withPlugins([withSvgr], nextConfig);
